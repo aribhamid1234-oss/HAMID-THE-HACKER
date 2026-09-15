@@ -7,12 +7,24 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#000000"
     >
 
     <title>HAMID THE HACKER</title>
 
     <style>
+
+        :root {
+            --red: #ff1010;
+            --dark-red: #650000;
+            --soft-red: #ff5555;
+            --black: #000000;
+        }
 
         * {
             margin: 0;
@@ -23,136 +35,38 @@
         html,
         body {
             width: 100%;
-            height: 100%;
-            overflow: hidden;
+            min-height: 100%;
             background: #000;
-            font-family: "Courier New", monospace;
         }
 
         body {
+            overflow: hidden;
+            font-family: "Courier New", monospace;
             user-select: none;
-            cursor: default;
         }
 
         /* =====================================
-           PHONE ROTATION SCREEN
-        ===================================== */
-
-        #rotateScreen {
-            display: none;
-            position: fixed;
-            inset: 0;
-            z-index: 99999;
-            width: 100vw;
-            height: 100vh;
-            background:
-                radial-gradient(
-                    circle at center,
-                    #260000 0%,
-                    #080000 45%,
-                    #000000 100%
-                );
-            color: #ff1111;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-
-        #rotateBox {
-            width: 90vw;
-            padding: 30px 15px;
-            border-top: 2px solid #ff0000;
-            border-bottom: 2px solid #ff0000;
-            box-shadow:
-                0 0 20px red,
-                0 0 50px rgba(255, 0, 0, 0.35);
-        }
-
-        .rotateIcon {
-            font-size: 70px;
-            color: #ff0000;
-            text-shadow:
-                0 0 10px red,
-                0 0 30px red;
-            animation:
-                rotatePhone
-                1.5s
-                infinite
-                alternate;
-        }
-
-        @keyframes rotatePhone {
-
-            from {
-                transform: rotate(0deg) scale(0.9);
-            }
-
-            to {
-                transform: rotate(90deg) scale(1.1);
-            }
-
-        }
-
-        .rotateTitle {
-            margin-top: 8px;
-            color: #ffffff;
-            font-size: clamp(25px, 8vw, 55px);
-            font-weight: 900;
-            letter-spacing: 3px;
-            text-shadow:
-                0 0 8px red,
-                0 0 20px red;
-        }
-
-        .rotateText {
-            margin-top: 22px;
-            color: #ff5555;
-            font-size: clamp(12px, 3vw, 20px);
-            letter-spacing: 3px;
-        }
-
-        .rotateWarning {
-            margin-top: 25px;
-            color: #ff0000;
-            font-size: clamp(12px, 3vw, 19px);
-            font-weight: bold;
-            letter-spacing: 2px;
-            animation:
-                rotateWarningBlink
-                0.6s
-                infinite
-                alternate;
-        }
-
-        @keyframes rotateWarningBlink {
-
-            from {
-                opacity: 0.35;
-            }
-
-            to {
-                opacity: 1;
-            }
-
-        }
-
-        /* =====================================
-           MAIN SCREEN
+           MAIN FULL SCREEN CONTAINER
         ===================================== */
 
         #screen {
             position: relative;
             width: 100%;
-            height: 100vh;
+            height: 100dvh;
+            min-height: 100svh;
             overflow: hidden;
             background:
                 radial-gradient(
-                    circle at center,
-                    #180000 0%,
-                    #070000 35%,
-                    #000000 75%
+                    ellipse at center,
+                    #260000 0%,
+                    #0b0000 42%,
+                    #000000 100%
                 );
         }
+
+        /* =====================================
+           BACKGROUND EFFECTS
+        ===================================== */
 
         #glow {
             position: absolute;
@@ -161,27 +75,23 @@
             pointer-events: none;
             background:
                 radial-gradient(
-                    circle at center,
-                    rgba(255, 0, 0, 0.15),
-                    transparent 62%
+                    ellipse at center,
+                    rgba(255, 0, 0, 0.22),
+                    transparent 65%
                 );
-            animation:
-                glowPulse
-                2.5s
-                infinite
-                alternate;
+            animation: glowPulse 3s infinite alternate;
         }
 
         @keyframes glowPulse {
 
             from {
                 opacity: 0.25;
-                transform: scale(0.9);
+                transform: scale(0.95);
             }
 
             to {
                 opacity: 1;
-                transform: scale(1.1);
+                transform: scale(1.08);
             }
 
         }
@@ -208,9 +118,9 @@
             pointer-events: none;
             background:
                 radial-gradient(
-                    circle,
-                    transparent 30%,
-                    rgba(0, 0, 0, 0.4) 60%,
+                    ellipse at center,
+                    transparent 25%,
+                    rgba(0, 0, 0, 0.35) 60%,
                     rgba(0, 0, 0, 0.96) 100%
                 );
         }
@@ -227,37 +137,44 @@
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 20px;
+            padding:
+                env(safe-area-inset-top)
+                20px
+                env(safe-area-inset-bottom)
+                20px;
         }
 
         #introText {
-            color: #ff1515;
-            font-size: clamp(28px, 5vw, 72px);
+            max-width: 95vw;
+            color: var(--red);
+            font-size: clamp(24px, 5vw, 72px);
             font-weight: 900;
-            letter-spacing: 5px;
+            line-height: 1.2;
+            overflow-wrap: anywhere;
+            letter-spacing: clamp(1px, 0.5vw, 6px);
             text-shadow:
-                0 0 8px #ff0000,
-                0 0 20px #ff0000,
-                0 0 45px #ff0000;
+                0 0 8px red,
+                0 0 20px red,
+                0 0 45px red;
         }
 
         #introSub {
-            margin-top: 22px;
-            color: #ff6565;
-            font-size: clamp(11px, 1.8vw, 19px);
-            letter-spacing: 4px;
+            margin-top: 18px;
+            max-width: 90vw;
+            color: var(--soft-red);
+            font-size: clamp(10px, 2vw, 20px);
+            line-height: 1.5;
+            letter-spacing: clamp(1px, 0.3vw, 4px);
+            overflow-wrap: anywhere;
         }
 
         .cursor {
             display: inline-block;
-            width: 11px;
+            width: 9px;
             height: 1em;
-            margin-left: 6px;
-            background: #ff0000;
-            animation:
-                cursorBlink
-                0.5s
-                infinite;
+            margin-left: 5px;
+            background: var(--red);
+            animation: cursorBlink 0.5s infinite;
         }
 
         @keyframes cursorBlink {
@@ -292,43 +209,40 @@
             width: 100%;
             height: 100%;
             display: flex;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
             flex-direction: column;
-            text-align: center;
-            padding: 4vh 3vw 18vh;
+            padding:
+                4dvh
+                4vw
+                18dvh;
             overflow: hidden;
-            transition:
-                transform 1.5s ease,
-                opacity 1s ease;
         }
 
+        /* =====================================
+           RESPONSIVE HACKER IMAGE
+        ===================================== */
+
         #hackerImage {
-            width: min(88vw, 900px);
-            height: min(68vh, 680px);
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
             display: block;
+            width: min(86vw, 850px);
+            height: min(64dvh, 650px);
+            max-width: 94vw;
+            max-height: 70dvh;
+            object-fit: contain;
+            object-position: center;
             margin: 0 auto;
             filter:
-                drop-shadow(0 0 15px #ff0000)
-                drop-shadow(0 0 40px #ff0000)
+                drop-shadow(0 0 12px red)
+                drop-shadow(0 0 32px red)
                 drop-shadow(
-                    0 0 85px
-                    rgba(255, 0, 0, 0.85)
+                    0 0 65px
+                    rgba(255, 0, 0, 0.8)
                 );
             animation:
-                maskAppear
-                2s
-                ease,
-                maskPulse
-                2.2s
-                infinite
-                alternate,
-                maskGlitch
-                7s
-                infinite;
+                maskAppear 2s ease,
+                maskPulse 2.5s infinite alternate,
+                maskGlitch 8s infinite;
         }
 
         @keyframes maskAppear {
@@ -352,7 +266,7 @@
             }
 
             to {
-                transform: scale(1.04);
+                transform: scale(1.035);
             }
 
         }
@@ -366,15 +280,15 @@
             }
 
             91% {
-                margin-left: -12px;
+                margin-left: -8px;
             }
 
             92% {
-                margin-left: 14px;
+                margin-left: 8px;
             }
 
             93% {
-                margin-left: -5px;
+                margin-left: -3px;
             }
 
             94% {
@@ -383,27 +297,29 @@
 
         }
 
+        /* =====================================
+           NAME
+        ===================================== */
+
         #name {
             position: absolute;
-            bottom: 8vh;
             left: 0;
+            right: 0;
+            bottom: 9dvh;
             width: 100%;
-            padding: 0 10px;
+            padding: 0 12px;
             text-align: center;
-            color: #ffffff;
-            font-size: clamp(20px, 4.5vw, 65px);
+            color: white;
+            font-size: clamp(18px, 4.5vw, 64px);
             font-weight: 900;
-            letter-spacing: clamp(2px, 0.7vw, 8px);
             line-height: 1.2;
+            letter-spacing: clamp(1px, 0.6vw, 8px);
+            overflow-wrap: anywhere;
             text-shadow:
-                0 0 7px #ff0000,
-                0 0 20px #ff0000,
-                0 0 45px #ff0000;
-            animation:
-                nameFlash
-                1.3s
-                infinite
-                alternate;
+                0 0 7px red,
+                0 0 20px red,
+                0 0 45px red;
+            animation: nameFlash 1.4s infinite alternate;
         }
 
         @keyframes nameFlash {
@@ -420,17 +336,19 @@
 
         #sceneText {
             position: absolute;
-            left: 50%;
-            bottom: 3vh;
-            transform: translateX(-50%);
-            width: 92%;
+            left: 0;
+            right: 0;
+            bottom: 3dvh;
+            width: 100%;
+            padding: 0 12px;
             text-align: center;
-            color: #ff5151;
-            font-size: clamp(10px, 1.6vw, 16px);
-            letter-spacing: 3px;
+            color: var(--soft-red);
+            font-size: clamp(8px, 1.5vw, 16px);
+            line-height: 1.4;
+            letter-spacing: clamp(0px, 0.25vw, 3px);
+            overflow-wrap: anywhere;
             opacity: 0;
-            transition:
-                opacity 0.8s ease;
+            transition: opacity 0.8s ease;
         }
 
         #sceneText.show {
@@ -438,7 +356,7 @@
         }
 
         /* =====================================
-           MESSAGES
+           MESSAGE
         ===================================== */
 
         #messageLayer {
@@ -448,23 +366,29 @@
             display: flex;
             align-items: flex-end;
             justify-content: center;
-            padding: 0 20px 22vh;
+            padding:
+                0
+                18px
+                22dvh;
             pointer-events: none;
         }
 
         #message {
-            color: #ff1616;
-            font-size: clamp(19px, 3.5vw, 44px);
+            width: 100%;
+            max-width: 1000px;
+            color: var(--red);
+            font-size: clamp(15px, 3.2vw, 42px);
             font-weight: 900;
-            letter-spacing: 3px;
-            line-height: 1.4;
+            line-height: 1.35;
+            letter-spacing: clamp(0px, 0.25vw, 3px);
             text-align: center;
+            overflow-wrap: anywhere;
             text-shadow:
-                0 0 7px #ff0000,
-                0 0 20px #ff0000,
-                0 0 35px #8a0000;
+                0 0 7px red,
+                0 0 20px red,
+                0 0 35px #700000;
             opacity: 0;
-            transform: translateY(25px);
+            transform: translateY(20px);
             transition:
                 opacity 0.7s ease,
                 transform 0.7s ease;
@@ -476,45 +400,45 @@
         }
 
         /* =====================================
-           TERMINAL
-        ===================================== */
-
-        #terminal {
-            position: fixed;
-            left: 16px;
-            bottom: 15px;
-            z-index: 70;
-            width: 42vw;
-            max-width: 500px;
-            max-height: 130px;
-            overflow: hidden;
-            color: rgba(255, 60, 60, 0.62);
-            font-size: 9px;
-            line-height: 1.45;
-            text-align: left;
-        }
-
-        .terminalLine {
-            white-space: nowrap;
-        }
-
-        /* =====================================
            TIMER
         ===================================== */
 
         #timer {
-            position: fixed;
-            right: 18px;
-            top: 18px;
+            position: absolute;
+            top: max(12px, env(safe-area-inset-top));
+            right: max(12px, env(safe-area-inset-right));
             z-index: 70;
             display: none;
-            color: #ff2020;
-            font-size: clamp(15px, 2vw, 24px);
+            color: var(--red);
+            font-size: clamp(11px, 2vw, 23px);
             font-weight: 900;
-            letter-spacing: 3px;
+            letter-spacing: clamp(0px, 0.3vw, 3px);
             text-shadow:
                 0 0 10px red,
                 0 0 20px red;
+        }
+
+        /* =====================================
+           TERMINAL
+        ===================================== */
+
+        #terminal {
+            position: absolute;
+            left: max(8px, env(safe-area-inset-left));
+            bottom: max(8px, env(safe-area-inset-bottom));
+            z-index: 70;
+            width: min(44vw, 500px);
+            max-height: 110px;
+            overflow: hidden;
+            color: rgba(255, 70, 70, 0.65);
+            font-size: clamp(5px, 0.75vw, 9px);
+            line-height: 1.45;
+            text-align: left;
+            pointer-events: none;
+        }
+
+        .terminalLine {
+            white-space: nowrap;
         }
 
         /* =====================================
@@ -528,24 +452,21 @@
             display: none;
             align-items: center;
             justify-content: center;
-            text-align: center;
             padding: 20px;
+            text-align: center;
             background:
                 radial-gradient(
-                    circle,
-                    #620000 0%,
-                    #180000 35%,
-                    #000000 78%
+                    ellipse at center,
+                    #650000 0%,
+                    #180000 40%,
+                    #000000 100%
                 );
         }
 
         #warningContent {
-            width: 94vw;
-            animation:
-                warningShake
-                0.15s
-                infinite
-                alternate;
+            width: 100%;
+            max-width: 1100px;
+            animation: warningShake 0.15s infinite alternate;
         }
 
         @keyframes warningShake {
@@ -562,27 +483,25 @@
 
         #warningSmall {
             color: white;
-            font-size: clamp(14px, 2vw, 23px);
-            letter-spacing: 5px;
-            margin-bottom: 22px;
+            font-size: clamp(11px, 2vw, 24px);
+            line-height: 1.5;
+            letter-spacing: clamp(1px, 0.4vw, 5px);
+            overflow-wrap: anywhere;
         }
 
         #warningBig {
-            color: #ff0000;
-            font-size: clamp(32px, 7vw, 92px);
+            margin-top: 20px;
+            color: var(--red);
+            font-size: clamp(25px, 6vw, 90px);
             font-weight: 900;
-            line-height: 1.15;
-            letter-spacing: 4px;
+            line-height: 1.18;
+            letter-spacing: clamp(0px, 0.3vw, 4px);
+            overflow-wrap: anywhere;
             text-shadow:
-                0 0 8px #ff0000,
-                0 0 20px #ff0000,
-                0 0 50px #ff0000,
-                0 0 85px #720000;
-            animation:
-                dangerPulse
-                0.45s
-                infinite
-                alternate;
+                0 0 8px red,
+                0 0 20px red,
+                0 0 50px red;
+            animation: dangerPulse 0.45s infinite alternate;
         }
 
         @keyframes dangerPulse {
@@ -594,29 +513,30 @@
 
             to {
                 opacity: 1;
-                transform: scale(1.03);
+                transform: scale(1.02);
             }
 
         }
 
         #warningBottom {
-            margin-top: 25px;
-            color: #ff6868;
-            font-size: clamp(11px, 1.8vw, 20px);
-            letter-spacing: 3px;
+            margin-top: 22px;
+            color: #ff7777;
+            font-size: clamp(10px, 1.8vw, 20px);
+            letter-spacing: clamp(1px, 0.3vw, 3px);
         }
 
+        /* =====================================
+           FLASH
+        ===================================== */
+
         #flash {
-            position: fixed;
+            position: absolute;
             inset: 0;
             z-index: 80;
             display: none;
-            background: rgba(255, 0, 0, 0.16);
+            background: rgba(255, 0, 0, 0.18);
             pointer-events: none;
-            animation:
-                flash
-                0.18s
-                infinite;
+            animation: flash 0.18s infinite;
         }
 
         @keyframes flash {
@@ -643,16 +563,19 @@
             display: none;
             align-items: center;
             justify-content: center;
+            padding:
+                20px
+                max(20px, env(safe-area-inset-right))
+                20px
+                max(20px, env(safe-area-inset-left));
             text-align: center;
-            padding: 20px;
             background: #000;
         }
 
         #finalBox {
-            animation:
-                finalAppear
-                1.2s
-                ease;
+            width: 100%;
+            max-width: 1000px;
+            animation: finalAppear 1.2s ease;
         }
 
         @keyframes finalAppear {
@@ -670,9 +593,11 @@
         }
 
         #finalTitle {
-            color: #ff1717;
-            font-size: clamp(40px, 8vw, 100px);
+            color: var(--red);
+            font-size: clamp(28px, 7vw, 100px);
             font-weight: 900;
+            line-height: 1.2;
+            overflow-wrap: anywhere;
             text-shadow:
                 0 0 10px red,
                 0 0 30px red,
@@ -680,1112 +605,40 @@
         }
 
         #finalText {
-            margin-top: 30px;
+            margin-top: 25px;
             color: white;
-            font-size: clamp(17px, 3vw, 32px);
-            line-height: 1.8;
+            font-size: clamp(13px, 2.5vw, 30px);
+            line-height: 1.7;
+            overflow-wrap: anywhere;
         }
 
         #signature {
-            margin-top: 28px;
+            margin-top: 25px;
             color: #ff4444;
-            font-size: clamp(13px, 2vw, 22px);
-            letter-spacing: 4px;
+            font-size: clamp(10px, 1.8vw, 22px);
+            letter-spacing: clamp(1px, 0.3vw, 4px);
+            overflow-wrap: anywhere;
         }
 
         /* =====================================
-           MOBILE
+           SMALL PORTRAIT PHONES
         ===================================== */
 
-        @media (max-width: 700px) {
-
-            #hackerImage {
-                width: 92vw;
-                height: 62vh;
-            }
+        @media screen and (max-width: 480px) {
 
             #maskContainer {
-                padding-bottom: 20vh;
-            }
-
-            #name {
-                bottom: 10vh;
-                font-size: 23px;
-                letter-spacing: 3px;
-            }
-
-            #messageLayer {
-                padding: 0 12px 23vh;
-            }
-
-            #message {
-                font-size: 17px;
-                line-height: 1.4;
-                letter-spacing: 1px;
-            }
-
-            #terminal {
-                left: 8px;
-                bottom: 8px;
-                width: 65vw;
-                max-height: 65px;
-                font-size: 6px;
-            }
-
-            #timer {
-                top: 10px;
-                right: 10px;
-                font-size: 12px;
-            }
-
-        }
-
-        /* =====================================
-           PORTRAIT MODE
-        ===================================== */
-
-        @media screen
-        and (orientation: portrait)
-        and (max-width: 900px) {
-
-            #rotateScreen {
-                display: flex;
-            }
-
-            #screen {
-                display: none;
-            }
-
-        }
-
-        /* =====================================
-           LANDSCAPE PHONE MODE
-        ===================================== */
-
-        @media screen
-        and (orientation: landscape)
-        and (max-width: 900px) {
-
-            #rotateScreen {
-                display: none;
-            }
-
-            #screen {
-                display: block;
-                width: 100vw;
-                height: 100vh;
+                padding:
+                    3dvh
+                    2vw
+                    19dvh;
             }
 
             #hackerImage {
-                width: 70vw;
-                height: 70vh;
-            }
-
-            #maskContainer {
-                padding-bottom: 15vh;
+                width: 94vw;
+                height: 57dvh;
+                max-height: 57dvh;
             }
 
             #name {
-                bottom: 5vh;
-                font-size: 28px;
-                letter-spacing: 4px;
-            }
-
-            #messageLayer {
-                padding-bottom: 17vh;
-            }
-
-            #message {
-                font-size: 18px;
-                letter-spacing: 1px;
-            }
-
-            #terminal {
-                left: 8px;
-                bottom: 6px;
-                width: 38vw;
-                max-height: 70px;
-                font-size: 6px;
-            }
-
-            #timer {
-                top: 8px;
-                right: 8px;
-                font-size: 12px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-
-<body>
-
-
-    <!-- =====================================
-         PHONE WARNING
-    ===================================== -->
-
-    <div id="rotateScreen">
-
-        <div id="rotateBox">
-
-            <div class="rotateIcon">
-                ↻
-            </div>
-
-            <div class="rotateTitle">
-                TURN YOUR PHONE
-            </div>
-
-            <div class="rotateTitle">
-                SIDEWAYS
-            </div>
-
-            <div class="rotateText">
-                LANDSCAPE MODE REQUIRED
-            </div>
-
-            <div class="rotateWarning">
-                ⚠ DO NOT LOOK AWAY ⚠
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================
-         MAIN SCREEN
-    ===================================== -->
-
-    <div id="screen">
-
-        <div id="glow"></div>
-
-        <div id="scanlines"></div>
-
-        <div id="vignette"></div>
-
-
-        <!-- INTRO -->
-
-        <div id="intro">
-
-            <div>
-
-                <div id="introText">
-
-                    <span id="typed"></span>
-
-                    <span class="cursor"></span>
-
-                </div>
-
-                <div id="introSub">
-                    UNKNOWN SIGNAL...
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- EXPERIENCE -->
-
-        <div id="experience">
-
-            <div id="maskContainer">
-
-                <img
-                    id="hackerImage"
-                    src="hacker-mask.png"
-                    alt="Hacker Mask"
-                >
-
-                <div id="name">
-                    HAMID THE HACKER
-                </div>
-
-                <div id="sceneText">
-                    UNKNOWN CONNECTION • VISUAL SIMULATION
-                </div>
-
-            </div>
-
-
-            <div id="messageLayer">
-
-                <div id="message"></div>
-
-            </div>
-
-        </div>
-
-
-        <!-- TERMINAL -->
-
-        <div id="terminal"></div>
-
-
-        <!-- TIMER -->
-
-        <div id="timer">
-
-            TIME:
-            <span id="time">120</span>
-
-        </div>
-
-
-        <!-- WARNING -->
-
-        <div id="warning">
-
-            <div id="warningContent">
-
-                <div id="warningSmall">
-                    ⚠ CRITICAL SECURITY ALERT ⚠
-                </div>
-
-                <div id="warningBig">
-
-                    DON'T UNDERESTIMATE
-                    <br>
-                    THE POWER OF A HACKER
-
-                </div>
-
-                <div id="warningBottom">
-                    MAXIMUM ALERT
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <!-- RED FLASH -->
-
-        <div id="flash"></div>
-
-
-        <!-- FINAL SCREEN -->
-
-        <div id="final">
-
-            <div id="finalBox">
-
-                <div id="finalTitle">
-                    JUST KIDDING 😈
-                </div>
-
-                <div id="finalText">
-
-                    THANK YOU FOR OPENING
-                    <br>
-                    THIS LITTLE SURPRISE.
-                    <br><br>
-
-                    NOTHING WAS ACTUALLY HACKED.
-                    <br><br>
-
-                    BYE...
-                    <br>
-                    GO AND SLEEP 😴
-
-                </div>
-
-                <div id="signature">
-                    — HAMID THE HACKER —
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <script>
-
-        /* =====================================
-           SOUND ENGINE
-        ===================================== */
-
-        let audioContext = null;
-
-        let masterGain = null;
-
-        let soundStarted = false;
-
-
-        function startSound() {
-
-            if (soundStarted) {
-                return;
-            }
-
-            const AudioContext =
-                window.AudioContext ||
-                window.webkitAudioContext;
-
-            if (!AudioContext) {
-                return;
-            }
-
-            audioContext =
-                new AudioContext();
-
-            masterGain =
-                audioContext.createGain();
-
-            masterGain.gain.value =
-                0.16;
-
-            masterGain.connect(
-                audioContext.destination
-            );
-
-            soundStarted = true;
-
-            startupSound();
-
-        }
-
-
-        function playTone(
-            frequency,
-            duration,
-            type = "sine",
-            volume = 0.08
-        ) {
-
-            if (
-                !audioContext ||
-                !masterGain
-            ) {
-                return;
-            }
-
-            const oscillator =
-                audioContext.createOscillator();
-
-            const gain =
-                audioContext.createGain();
-
-            oscillator.type =
-                type;
-
-            oscillator.frequency.value =
-                frequency;
-
-            const now =
-                audioContext.currentTime;
-
-            gain.gain.setValueAtTime(
-                0.0001,
-                now
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                volume,
-                now + 0.02
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.0001,
-                now + duration
-            );
-
-            oscillator.connect(gain);
-
-            gain.connect(masterGain);
-
-            oscillator.start();
-
-            oscillator.stop(
-                now + duration + 0.05
-            );
-
-        }
-
-
-        function startupSound() {
-
-            playTone(
-                55,
-                1.8,
-                "sine",
-                0.14
-            );
-
-            setTimeout(
-                () => {
-
-                    playTone(
-                        82,
-                        1.2,
-                        "sine",
-                        0.10
-                    );
-
-                },
-                700
-            );
-
-            setTimeout(
-                () => {
-
-                    playTone(
-                        110,
-                        0.8,
-                        "sawtooth",
-                        0.05
-                    );
-
-                },
-                1300
-            );
-
-        }
-
-
-        function terminalSound() {
-
-            playTone(
-                720,
-                0.055,
-                "square",
-                0.045
-            );
-
-        }
-
-
-        function messageSound() {
-
-            playTone(
-                180,
-                0.12,
-                "sine",
-                0.07
-            );
-
-            setTimeout(
-                () => {
-
-                    playTone(
-                        260,
-                        0.08,
-                        "sine",
-                        0.045
-                    );
-
-                },
-                100
-            );
-
-        }
-
-
-        function tensionSound() {
-
-            playTone(
-                45,
-                0.7,
-                "sine",
-                0.12
-            );
-
-        }
-
-
-        function warningSound() {
-
-            playTone(
-                700,
-                0.22,
-                "square",
-                0.12
-            );
-
-            setTimeout(
-                () => {
-
-                    playTone(
-                        420,
-                        0.22,
-                        "square",
-                        0.12
-                    );
-
-                },
-                250
-            );
-
-            setTimeout(
-                () => {
-
-                    playTone(
-                        700,
-                        0.22,
-                        "square",
-                        0.12
-                    );
-
-                },
-                500
-            );
-
-        }
-
-
-        function finalSound() {
-
-            playTone(
-                65,
-                1.3,
-                "sine",
-                0.18
-            );
-
-            setTimeout(
-                () => {
-
-                    playTone(
-                        180,
-                        0.5,
-                        "triangle",
-                        0.08
-                    );
-
-                },
-                250
-            );
-
-        }
-
-
-        /* =====================================
-           ACTIVATE SOUND ON TAP
-        ===================================== */
-
-        document.addEventListener(
-            "pointerdown",
-            function() {
-
-                startSound();
-
-            },
-            {
-                once: true
-            }
-        );
-
-
-        /* =====================================
-           ELEMENTS
-        ===================================== */
-
-        const intro =
-            document.getElementById(
-                "intro"
-            );
-
-        const typed =
-            document.getElementById(
-                "typed"
-            );
-
-        const introSub =
-            document.getElementById(
-                "introSub"
-            );
-
-        const experience =
-            document.getElementById(
-                "experience"
-            );
-
-        const message =
-            document.getElementById(
-                "message"
-            );
-
-        const sceneText =
-            document.getElementById(
-                "sceneText"
-            );
-
-        const terminal =
-            document.getElementById(
-                "terminal"
-            );
-
-        const timer =
-            document.getElementById(
-                "timer"
-            );
-
-        const time =
-            document.getElementById(
-                "time"
-            );
-
-        const warning =
-            document.getElementById(
-                "warning"
-            );
-
-        const flash =
-            document.getElementById(
-                "flash"
-            );
-
-        const final =
-            document.getElementById(
-                "final"
-            );
-
-        const maskContainer =
-            document.getElementById(
-                "maskContainer"
-            );
-
-
-        /* =====================================
-           WAIT FUNCTION
-        ===================================== */
-
-        function wait(ms) {
-
-            return new Promise(
-                resolve => {
-
-                    setTimeout(
-                        resolve,
-                        ms
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =====================================
-           TYPING EFFECT
-        ===================================== */
-
-        function typeText(
-            text,
-            speed = 70
-        ) {
-
-            return new Promise(
-                resolve => {
-
-                    typed.textContent =
-                        "";
-
-                    let i = 0;
-
-                    const interval =
-                        setInterval(
-                            () => {
-
-                                typed.textContent +=
-                                    text[i];
-
-                                i++;
-
-                                if (
-                                    i >=
-                                    text.length
-                                ) {
-
-                                    clearInterval(
-                                        interval
-                                    );
-
-                                    resolve();
-
-                                }
-
-                            },
-                            speed
-                        );
-
-                }
-            );
-
-        }
-
-
-        /* =====================================
-           TERMINAL CODE
-        ===================================== */
-
-        function randomCode() {
-
-            const chars =
-                "0123456789ABCDEF";
-
-            let result = "";
-
-            for (
-                let i = 0;
-                i < 8;
-                i++
-            ) {
-
-                result +=
-                    chars[
-                        Math.floor(
-                            Math.random()
-                            *
-                            chars.length
-                        )
-                    ];
-
-            }
-
-            return result;
-
-        }
-
-
-        function terminalLine(text) {
-
-            const line =
-                document.createElement(
-                    "div"
-                );
-
-            line.className =
-                "terminalLine";
-
-            line.textContent =
-                "> " +
-                text +
-                " [" +
-                randomCode() +
-                "]";
-
-            terminal.appendChild(
-                line
-            );
-
-            terminalSound();
-
-            while (
-                terminal.children.length >
-                10
-            ) {
-
-                terminal.removeChild(
-                    terminal.firstChild
-                );
-
-            }
-
-        }
-
-
-        /* =====================================
-           MESSAGE DISPLAY
-        ===================================== */
-
-        async function showMessage(text) {
-
-            message.classList.remove(
-                "show"
-            );
-
-            await wait(300);
-
-            message.textContent =
-                text;
-
-            message.classList.add(
-                "show"
-            );
-
-            messageSound();
-
-            terminalLine(
-                text
-            );
-
-            await wait(2500);
-
-            message.classList.remove(
-                "show"
-            );
-
-            await wait(400);
-
-        }
-
-
-        /* =====================================
-           COUNTDOWN
-        ===================================== */
-
-        function startTimer() {
-
-            let seconds = 120;
-
-            time.textContent =
-                seconds;
-
-            const interval =
-                setInterval(
-                    () => {
-
-                        seconds--;
-
-                        if (
-                            seconds <= 0
-                        ) {
-
-                            seconds = 0;
-
-                            clearInterval(
-                                interval
-                            );
-
-                        }
-
-                        time.textContent =
-                            seconds;
-
-                        if (
-                            seconds === 30 ||
-                            seconds === 10
-                        ) {
-
-                            tensionSound();
-
-                        }
-
-                    },
-                    1000
-                );
-
-        }
-
-
-        /* =====================================
-           MAIN EXPERIENCE
-        ===================================== */
-
-        async function startExperience() {
-
-
-            await wait(5000);
-
-
-            await typeText(
-                "HELLO..."
-            );
-
-            introSub.textContent =
-                "DON'T LOOK AWAY";
-
-            tensionSound();
-
-
-            await wait(2000);
-
-
-            await typeText(
-                "WELCOME TO THE WORLD OF HACKING"
-            );
-
-            introSub.textContent =
-                "CONNECTION ESTABLISHED";
-
-            tensionSound();
-
-
-            await wait(1800);
-
-
-            intro.style.display =
-                "none";
-
-            experience.style.display =
-                "block";
-
-            timer.style.display =
-                "block";
-
-            sceneText.classList.add(
-                "show"
-            );
-
-            startTimer();
-
-
-            terminalLine(
-                "SIGNAL DETECTED"
-            );
-
-            terminalLine(
-                "UNKNOWN SESSION"
-            );
-
-            terminalLine(
-                "HAMID THE HACKER IDENTIFIED"
-            );
-
-            tensionSound();
-
-
-            await wait(4500);
-
-
-            await showMessage(
-                "DEVICE SIGNAL DETECTED"
-            );
-
-            await showMessage(
-                "UNKNOWN ANDROID DEVICE"
-            );
-
-            await showMessage(
-                "ANALYZING SIGNAL..."
-            );
-
-            await showMessage(
-                "SECURITY LAYER FOUND"
-            );
-
-            await showMessage(
-                "ACCESS SEQUENCE STARTING..."
-            );
-
-            await showMessage(
-                "SCANNING..."
-            );
-
-
-            await wait(2200);
-
-
-            await showMessage(
-                "SYSTEM RESPONSE DETECTED"
-            );
-
-            await showMessage(
-                "SECURITY LEVEL: CRITICAL"
-            );
-
-            tensionSound();
-
-
-            await showMessage(
-                "TRACE SIGNAL ACTIVE..."
-            );
-
-
-            await wait(1800);
-
-
-            maskContainer.style.transform =
-                "translateY(-2vh) scale(1.12)";
-
-            tensionSound();
-
-
-            await showMessage(
-                "FINAL SECURITY CHECK..."
-            );
-
-            await showMessage(
-                "WARNING..."
-            );
-
-
-            await wait(2000);
-
-
-            experience.style.display =
-                "none";
-
-            timer.style.display =
-                "none";
-
-            warning.style.display =
-                "flex";
-
-            flash.style.display =
-                "block";
-
-            warningSound();
-
-
-            terminalLine(
-                "CRITICAL SECURITY ALERT"
-            );
-
-
-            await wait(8500);
-
-
-            flash.style.display =
-                "none";
-
-            warning.style.display =
-                "none";
-
-
-            document.getElementById(
-                "screen"
-            ).style.background =
-                "#000000";
-
-
-            await wait(1800);
-
-
-            final.style.display =
-                "flex";
-
-            finalSound();
-
-            terminal.innerHTML =
-                "";
-
-        }
-
-
-        /* =====================================
-           BLOCK RIGHT CLICK
-        ===================================== */
-
-        document.addEventListener(
-            "contextmenu",
-            function(event) {
-
-                event.preventDefault();
-
-            }
-        );
-
-
-        /* =====================================
-           START EXPERIENCE
-        ===================================== */
-
-        startExperience();
-
-    </script>
-
-</body>
-
-    </html>
+                bottom: 10dvh;
+                font-size: clamp(17
