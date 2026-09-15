@@ -1,978 +1,1300 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0"
-    >
+```
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
 
-    <title>HAMID THE HACKER</title>
+<title>HAMID THE HACKER</title>
 
-    <style>
+<style>
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-            font-family: "Courier New", monospace;
-        }
+    html,
+    body {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        font-family: "Courier New", monospace;
+    }
 
-        body {
-            user-select: none;
-        }
+    body {
+        user-select: none;
+    }
 
-        /* =========================================
-           MAIN SCREEN
-        ========================================= */
 
-        #screen {
-            position: relative;
+    /* =========================================
+       PHONE LANDSCAPE WARNING
+    ========================================= */
 
-            width: 100%;
-            height: 100vh;
+    #rotateScreen {
 
-            overflow: hidden;
+        display: none;
 
-            background:
-                radial-gradient(
-                    circle at center,
-                    #180000 0%,
-                    #070000 35%,
-                    #000000 75%
-                );
-        }
+        position: fixed;
 
-        /* Dark vignette */
+        inset: 0;
 
-        #vignette {
-            position: absolute;
+        z-index: 99999;
 
-            inset: 0;
+        width: 100vw;
+        height: 100vh;
 
-            z-index: 50;
+        background:
+            radial-gradient(
+                circle at center,
+                #260000 0%,
+                #080000 45%,
+                #000000 100%
+            );
 
-            pointer-events: none;
+        color: #ff1111;
 
-            background:
-                radial-gradient(
-                    circle,
-                    transparent 30%,
-                    rgba(0, 0, 0, 0.4) 60%,
-                    rgba(0, 0, 0, 0.96) 100%
-                );
-        }
+        align-items: center;
+        justify-content: center;
 
-        /* Scan lines */
+        text-align: center;
+    }
 
-        #scanlines {
-            position: absolute;
+    #rotateBox {
 
-            inset: 0;
+        width: 90vw;
 
-            z-index: 45;
+        padding: 30px 15px;
 
-            pointer-events: none;
+        border-top: 2px solid #ff0000;
+        border-bottom: 2px solid #ff0000;
 
-            background:
-                repeating-linear-gradient(
-                    to bottom,
-                    rgba(255, 0, 0, 0.035) 0px,
-                    rgba(255, 0, 0, 0.035) 1px,
-                    transparent 2px,
-                    transparent 5px
-                );
-        }
+        box-shadow:
+            0 0 20px red,
+            0 0 50px rgba(255, 0, 0, 0.35);
+    }
 
-        /* Red atmospheric glow */
+    .rotateIcon {
 
-        #glow {
-            position: absolute;
+        font-size: 70px;
 
-            width: 100%;
-            height: 100%;
+        color: #ff0000;
 
-            z-index: 1;
+        text-shadow:
+            0 0 10px red,
+            0 0 30px red;
 
-            pointer-events: none;
+        animation:
+            rotatePhone 1.5s infinite alternate;
+    }
 
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(255, 0, 0, 0.15),
-                    transparent 62%
-                );
+    @keyframes rotatePhone {
 
-            animation:
-                glowPulse 2.5s infinite alternate;
-        }
-
-        @keyframes glowPulse {
-
-            from {
-                opacity: 0.25;
-                transform: scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-
-        }
-
-        /* =========================================
-           INTRO
-        ========================================= */
-
-        #intro {
-            position: absolute;
-
-            inset: 0;
-
-            z-index: 20;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-        }
-
-        #introText {
-
-            color: #ff1515;
-
-            font-size:
-                clamp(28px, 5vw, 72px);
-
-            font-weight: 900;
-
-            letter-spacing: 5px;
-
-            text-shadow:
-                0 0 8px #ff0000,
-                0 0 20px #ff0000,
-                0 0 45px #ff0000;
-        }
-
-        #introSub {
-
-            margin-top: 22px;
-
-            color: #ff6565;
-
-            font-size:
-                clamp(11px, 1.8vw, 19px);
-
-            letter-spacing: 4px;
-        }
-
-        .cursor {
-
-            display: inline-block;
-
-            width: 11px;
-            height: 1em;
-
-            margin-left: 6px;
-
-            background: #ff0000;
-
-            animation:
-                cursorBlink 0.5s infinite;
-        }
-
-        @keyframes cursorBlink {
-
-            0%,
-            49% {
-                opacity: 1;
-            }
-
-            50%,
-            100% {
-                opacity: 0;
-            }
-
-        }
-
-        /* =========================================
-           MAIN EXPERIENCE
-        ========================================= */
-
-        #experience {
-
-            position: absolute;
-
-            inset: 0;
-
-            z-index: 10;
-
-            display: none;
-
-            overflow: hidden;
-        }
-
-        /* =========================================
-           HUGE MASK
-        ========================================= */
-
-        #maskContainer {
-
-            position: absolute;
-
-            inset: 0;
-
-            display: flex;
-
-            justify-content: center;
-
-            align-items: center;
-
-            flex-direction: column;
-
-            text-align: center;
-
-            transition:
-                transform 1.5s ease,
-                opacity 1s ease;
-        }
-
-        #hackerImage {
-
-            width: 100vw;
-
-            height: 78vh;
-
-            object-fit: contain;
-
-            filter:
-                drop-shadow(0 0 15px #ff0000)
-                drop-shadow(0 0 40px #ff0000)
-                drop-shadow(0 0 85px rgba(255, 0, 0, 0.85));
-
-            animation:
-                maskAppear 2s ease,
-                maskPulse 2.2s infinite alternate,
-                maskGlitch 7s infinite;
-        }
-
-        @keyframes maskAppear {
-
-            from {
-                opacity: 0;
-
-                transform:
-                    scale(0.45);
-            }
-
-            to {
-                opacity: 1;
-
-                transform:
-                    scale(1);
-            }
-
-        }
-
-        @keyframes maskPulse {
-
-            from {
-                transform:
-                    scale(0.97);
-            }
-
-            to {
-                transform:
-                    scale(1.04);
-            }
-
-        }
-
-        @keyframes maskGlitch {
-
-            0%,
-            90%,
-            100% {
-                margin-left: 0;
-            }
-
-            91% {
-                margin-left: -12px;
-            }
-
-            92% {
-                margin-left: 14px;
-            }
-
-            93% {
-                margin-left: -5px;
-            }
-
-            94% {
-                margin-left: 0;
-            }
-
-        }
-
-        /* =========================================
-           NAME BELOW MASK
-        ========================================= */
-
-        #name {
-
-            position: absolute;
-
-            bottom: 9vh;
-
-            width: 100%;
-
-            text-align: center;
-
-            color: #ffffff;
-
-            font-size:
-                clamp(27px, 6vw, 75px);
-
-            font-weight: 900;
-
-            letter-spacing: 8px;
-
-            text-shadow:
-                0 0 7px #ff0000,
-                0 0 20px #ff0000,
-                0 0 45px #ff0000;
-
-            animation:
-                nameFlash 1.3s infinite alternate;
-        }
-
-        @keyframes nameFlash {
-
-            from {
-                opacity: 0.65;
-            }
-
-            to {
-                opacity: 1;
-            }
-
-        }
-
-        /* =========================================
-           SMALL CINEMATIC TEXT
-        ========================================= */
-
-        #sceneText {
-
-            position: absolute;
-
-            left: 50%;
-
-            bottom: 3vh;
-
+        from {
             transform:
-                translateX(-50%);
-
-            width: 92%;
-
-            text-align: center;
-
-            color: #ff5151;
-
-            font-size:
-                clamp(10px, 1.6vw, 16px);
-
-            letter-spacing: 3px;
-
-            opacity: 0;
-
-            transition:
-                opacity 0.8s ease;
+                rotate(0deg)
+                scale(0.9);
         }
 
-        #sceneText.show {
+        to {
+            transform:
+                rotate(90deg)
+                scale(1.1);
+        }
 
+    }
+
+    .rotateTitle {
+
+        margin-top: 8px;
+
+        color: #ffffff;
+
+        font-size:
+            clamp(25px, 8vw, 55px);
+
+        font-weight: 900;
+
+        letter-spacing: 3px;
+
+        text-shadow:
+            0 0 8px red,
+            0 0 20px red;
+    }
+
+    .rotateText {
+
+        margin-top: 22px;
+
+        color: #ff5555;
+
+        font-size:
+            clamp(12px, 3vw, 20px);
+
+        letter-spacing: 3px;
+    }
+
+    .rotateWarning {
+
+        margin-top: 25px;
+
+        color: #ff0000;
+
+        font-size:
+            clamp(12px, 3vw, 19px);
+
+        font-weight: bold;
+
+        letter-spacing: 2px;
+
+        animation:
+            rotateWarningBlink 0.6s infinite alternate;
+    }
+
+    @keyframes rotateWarningBlink {
+
+        from {
+            opacity: 0.35;
+        }
+
+        to {
             opacity: 1;
         }
 
-        /* =========================================
-           SEQUENTIAL MESSAGE
-        ========================================= */
+    }
 
-        #messageLayer {
 
-            position: absolute;
+    /* =========================================
+       MAIN SCREEN
+    ========================================= */
 
-            inset: 0;
+    #screen {
 
-            z-index: 30;
+        position: relative;
 
-            display: flex;
+        width: 100%;
+        height: 100vh;
 
-            align-items: flex-end;
+        overflow: hidden;
 
-            justify-content: center;
+        background:
+            radial-gradient(
+                circle at center,
+                #180000 0%,
+                #070000 35%,
+                #000000 75%
+            );
+    }
 
-            padding-bottom: 22vh;
 
-            pointer-events: none;
+    /* =========================================
+       DARK VIGNETTE
+    ========================================= */
+
+    #vignette {
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 50;
+
+        pointer-events: none;
+
+        background:
+            radial-gradient(
+                circle,
+                transparent 30%,
+                rgba(0, 0, 0, 0.4) 60%,
+                rgba(0, 0, 0, 0.96) 100%
+            );
+    }
+
+
+    /* =========================================
+       SCAN LINES
+    ========================================= */
+
+    #scanlines {
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 45;
+
+        pointer-events: none;
+
+        background:
+            repeating-linear-gradient(
+                to bottom,
+                rgba(255, 0, 0, 0.035) 0px,
+                rgba(255, 0, 0, 0.035) 1px,
+                transparent 2px,
+                transparent 5px
+            );
+    }
+
+
+    /* =========================================
+       RED ATMOSPHERIC GLOW
+    ========================================= */
+
+    #glow {
+
+        position: absolute;
+
+        width: 100%;
+        height: 100%;
+
+        z-index: 1;
+
+        pointer-events: none;
+
+        background:
+            radial-gradient(
+                circle at center,
+                rgba(255, 0, 0, 0.15),
+                transparent 62%
+            );
+
+        animation:
+            glowPulse 2.5s infinite alternate;
+    }
+
+    @keyframes glowPulse {
+
+        from {
+            opacity: 0.25;
+            transform: scale(0.9);
         }
 
-        #message {
+        to {
+            opacity: 1;
+            transform: scale(1.1);
+        }
 
-            color: #ff1616;
+    }
 
-            font-size:
-                clamp(19px, 3.5vw, 44px);
 
-            font-weight: 900;
+    /* =========================================
+       INTRO
+    ========================================= */
 
-            letter-spacing: 3px;
+    #intro {
 
-            text-align: center;
+        position: absolute;
 
-            text-shadow:
-                0 0 7px #ff0000,
-                0 0 20px #ff0000,
-                0 0 35px #8a0000;
+        inset: 0;
+
+        z-index: 20;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+    }
+
+    #introText {
+
+        color: #ff1515;
+
+        font-size:
+            clamp(28px, 5vw, 72px);
+
+        font-weight: 900;
+
+        letter-spacing: 5px;
+
+        text-shadow:
+            0 0 8px #ff0000,
+            0 0 20px #ff0000,
+            0 0 45px #ff0000;
+    }
+
+    #introSub {
+
+        margin-top: 22px;
+
+        color: #ff6565;
+
+        font-size:
+            clamp(11px, 1.8vw, 19px);
+
+        letter-spacing: 4px;
+    }
+
+    .cursor {
+
+        display: inline-block;
+
+        width: 11px;
+        height: 1em;
+
+        margin-left: 6px;
+
+        background: #ff0000;
+
+        animation:
+            cursorBlink 0.5s infinite;
+    }
+
+    @keyframes cursorBlink {
+
+        0%,
+        49% {
+            opacity: 1;
+        }
+
+        50%,
+        100% {
+            opacity: 0;
+        }
+
+    }
+
+
+    /* =========================================
+       MAIN EXPERIENCE
+    ========================================= */
+
+    #experience {
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 10;
+
+        display: none;
+
+        overflow: hidden;
+    }
+
+
+    /* =========================================
+       HUGE MASK
+    ========================================= */
+
+    #maskContainer {
+
+        position: absolute;
+
+        inset: 0;
+
+        display: flex;
+
+        justify-content: center;
+
+        align-items: center;
+
+        flex-direction: column;
+
+        text-align: center;
+
+        transition:
+            transform 1.5s ease,
+            opacity 1s ease;
+    }
+
+    #hackerImage {
+
+        width: 100vw;
+
+        height: 78vh;
+
+        object-fit: contain;
+
+        filter:
+            drop-shadow(0 0 15px #ff0000)
+            drop-shadow(0 0 40px #ff0000)
+            drop-shadow(
+                0 0 85px
+                rgba(255, 0, 0, 0.85)
+            );
+
+        animation:
+            maskAppear 2s ease,
+            maskPulse 2.2s infinite alternate,
+            maskGlitch 7s infinite;
+    }
+
+    @keyframes maskAppear {
+
+        from {
 
             opacity: 0;
 
             transform:
-                translateY(25px);
-
-            transition:
-                opacity 0.7s ease,
-                transform 0.7s ease;
+                scale(0.45);
         }
 
-        #message.show {
+        to {
 
             opacity: 1;
 
             transform:
-                translateY(0);
+                scale(1);
         }
 
-        /* =========================================
-           RED WARNING
-        ========================================= */
+    }
 
-        #warning {
+    @keyframes maskPulse {
 
-            position: absolute;
+        from {
 
-            inset: 0;
-
-            z-index: 60;
-
-            display: none;
-
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            background:
-                radial-gradient(
-                    circle,
-                    #620000 0%,
-                    #180000 35%,
-                    #000000 78%
-                );
+            transform:
+                scale(0.97);
         }
 
-        #warningContent {
+        to {
 
-            width: 94vw;
-
-            animation:
-                warningShake 0.15s infinite alternate;
+            transform:
+                scale(1.04);
         }
 
-        @keyframes warningShake {
+    }
 
-            from {
-                transform:
-                    translateX(-3px);
-            }
+    @keyframes maskGlitch {
 
-            to {
-                transform:
-                    translateX(3px);
-            }
+        0%,
+        90%,
+        100% {
 
+            margin-left: 0;
         }
 
-        #warningSmall {
+        91% {
 
-            color: white;
-
-            font-size:
-                clamp(14px, 2vw, 23px);
-
-            letter-spacing: 5px;
-
-            margin-bottom: 22px;
+            margin-left: -12px;
         }
 
-        #warningBig {
+        92% {
 
-            color: #ff0000;
-
-            font-size:
-                clamp(32px, 7vw, 92px);
-
-            font-weight: 900;
-
-            line-height: 1.15;
-
-            letter-spacing: 4px;
-
-            text-shadow:
-                0 0 8px #ff0000,
-                0 0 20px #ff0000,
-                0 0 50px #ff0000,
-                0 0 85px #720000;
-
-            animation:
-                dangerPulse 0.45s infinite alternate;
+            margin-left: 14px;
         }
 
-        @keyframes dangerPulse {
+        93% {
 
-            from {
-                opacity: 0.55;
-                transform:
-                    scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform:
-                    scale(1.03);
-            }
-
+            margin-left: -5px;
         }
 
-        #warningBottom {
+        94% {
 
-            margin-top: 25px;
-
-            color: #ff6868;
-
-            font-size:
-                clamp(11px, 1.8vw, 20px);
-
-            letter-spacing: 3px;
+            margin-left: 0;
         }
 
-        /* =========================================
-           RED FLASH
-        ========================================= */
+    }
 
-        #flash {
 
-            position: fixed;
+    /* =========================================
+       NAME BELOW MASK
+    ========================================= */
 
-            inset: 0;
+    #name {
 
-            z-index: 80;
+        position: absolute;
 
-            display: none;
+        bottom: 9vh;
 
-            background:
-                rgba(255, 0, 0, 0.16);
+        width: 100%;
 
-            pointer-events: none;
+        text-align: center;
 
-            animation:
-                flash 0.18s infinite;
+        color: #ffffff;
+
+        font-size:
+            clamp(27px, 6vw, 75px);
+
+        font-weight: 900;
+
+        letter-spacing: 8px;
+
+        text-shadow:
+            0 0 7px #ff0000,
+            0 0 20px #ff0000,
+            0 0 45px #ff0000;
+
+        animation:
+            nameFlash 1.3s infinite alternate;
+    }
+
+    @keyframes nameFlash {
+
+        from {
+            opacity: 0.65;
         }
 
-        @keyframes flash {
-
-            0%,
-            100% {
-                opacity: 0.15;
-            }
-
-            50% {
-                opacity: 0.85;
-            }
-
+        to {
+            opacity: 1;
         }
 
-        /* =========================================
-           TERMINAL TEXT
-        ========================================= */
+    }
 
-        #terminal {
 
-            position: fixed;
+    /* =========================================
+       SMALL CINEMATIC TEXT
+    ========================================= */
 
-            left: 16px;
-            bottom: 15px;
+    #sceneText {
 
-            z-index: 70;
+        position: absolute;
 
-            width: 42vw;
-            max-width: 500px;
+        left: 50%;
 
-            max-height: 130px;
+        bottom: 3vh;
 
-            overflow: hidden;
+        transform:
+            translateX(-50%);
 
-            color: rgba(
+        width: 92%;
+
+        text-align: center;
+
+        color: #ff5151;
+
+        font-size:
+            clamp(10px, 1.6vw, 16px);
+
+        letter-spacing: 3px;
+
+        opacity: 0;
+
+        transition:
+            opacity 0.8s ease;
+    }
+
+    #sceneText.show {
+
+        opacity: 1;
+    }
+
+
+    /* =========================================
+       SEQUENTIAL MESSAGE
+    ========================================= */
+
+    #messageLayer {
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 30;
+
+        display: flex;
+
+        align-items: flex-end;
+
+        justify-content: center;
+
+        padding-bottom: 22vh;
+
+        pointer-events: none;
+    }
+
+    #message {
+
+        color: #ff1616;
+
+        font-size:
+            clamp(19px, 3.5vw, 44px);
+
+        font-weight: 900;
+
+        letter-spacing: 3px;
+
+        text-align: center;
+
+        text-shadow:
+            0 0 7px #ff0000,
+            0 0 20px #ff0000,
+            0 0 35px #8a0000;
+
+        opacity: 0;
+
+        transform:
+            translateY(25px);
+
+        transition:
+            opacity 0.7s ease,
+            transform 0.7s ease;
+    }
+
+    #message.show {
+
+        opacity: 1;
+
+        transform:
+            translateY(0);
+    }
+
+
+    /* =========================================
+       RED WARNING
+    ========================================= */
+
+    #warning {
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 60;
+
+        display: none;
+
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+
+        background:
+            radial-gradient(
+                circle,
+                #620000 0%,
+                #180000 35%,
+                #000000 78%
+            );
+    }
+
+    #warningContent {
+
+        width: 94vw;
+
+        animation:
+            warningShake 0.15s infinite alternate;
+    }
+
+    @keyframes warningShake {
+
+        from {
+
+            transform:
+                translateX(-3px);
+        }
+
+        to {
+
+            transform:
+                translateX(3px);
+        }
+
+    }
+
+    #warningSmall {
+
+        color: white;
+
+        font-size:
+            clamp(14px, 2vw, 23px);
+
+        letter-spacing: 5px;
+
+        margin-bottom: 22px;
+    }
+
+    #warningBig {
+
+        color: #ff0000;
+
+        font-size:
+            clamp(32px, 7vw, 92px);
+
+        font-weight: 900;
+
+        line-height: 1.15;
+
+        letter-spacing: 4px;
+
+        text-shadow:
+            0 0 8px #ff0000,
+            0 0 20px #ff0000,
+            0 0 50px #ff0000,
+            0 0 85px #720000;
+
+        animation:
+            dangerPulse 0.45s infinite alternate;
+    }
+
+    @keyframes dangerPulse {
+
+        from {
+
+            opacity: 0.55;
+
+            transform:
+                scale(0.98);
+        }
+
+        to {
+
+            opacity: 1;
+
+            transform:
+                scale(1.03);
+        }
+
+    }
+
+    #warningBottom {
+
+        margin-top: 25px;
+
+        color: #ff6868;
+
+        font-size:
+            clamp(11px, 1.8vw, 20px);
+
+        letter-spacing: 3px;
+    }
+
+
+    /* =========================================
+       RED FLASH
+    ========================================= */
+
+    #flash {
+
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 80;
+
+        display: none;
+
+        background:
+            rgba(255, 0, 0, 0.16);
+
+        pointer-events: none;
+
+        animation:
+            flash 0.18s infinite;
+    }
+
+    @keyframes flash {
+
+        0%,
+        100% {
+            opacity: 0.15;
+        }
+
+        50% {
+            opacity: 0.85;
+        }
+
+    }
+
+
+    /* =========================================
+       TERMINAL TEXT
+    ========================================= */
+
+    #terminal {
+
+        position: fixed;
+
+        left: 16px;
+        bottom: 15px;
+
+        z-index: 70;
+
+        width: 42vw;
+
+        max-width: 500px;
+
+        max-height: 130px;
+
+        overflow: hidden;
+
+        color:
+            rgba(
                 255,
                 60,
                 60,
                 0.62
             );
 
-            font-size: 9px;
+        font-size: 9px;
 
-            line-height: 1.45;
+        line-height: 1.45;
 
-            text-align: left;
+        text-align: left;
+    }
+
+    .terminalLine {
+
+        white-space: nowrap;
+    }
+
+
+    /* =========================================
+       TIMER
+    ========================================= */
+
+    #timer {
+
+        position: fixed;
+
+        right: 18px;
+        top: 18px;
+
+        z-index: 70;
+
+        display: none;
+
+        color: #ff2020;
+
+        font-size:
+            clamp(15px, 2vw, 24px);
+
+        font-weight: 900;
+
+        letter-spacing: 3px;
+
+        text-shadow:
+            0 0 10px red,
+            0 0 20px red;
+    }
+
+
+    /* =========================================
+       FINAL SCREEN
+    ========================================= */
+
+    #final {
+
+        position: absolute;
+
+        inset: 0;
+
+        z-index: 100;
+
+        display: none;
+
+        align-items: center;
+        justify-content: center;
+
+        text-align: center;
+
+        background: #000;
+    }
+
+    #finalBox {
+
+        animation:
+            finalAppear 1.2s ease;
+    }
+
+    @keyframes finalAppear {
+
+        from {
+
+            opacity: 0;
+
+            transform:
+                scale(0.5);
         }
 
-        .terminalLine {
+        to {
 
-            white-space: nowrap;
+            opacity: 1;
+
+            transform:
+                scale(1);
         }
 
-        /* =========================================
-           TIMER
-        ========================================= */
+    }
 
-        #timer {
+    #finalTitle {
 
-            position: fixed;
+        color: #ff1717;
 
-            right: 18px;
-            top: 18px;
+        font-size:
+            clamp(40px, 8vw, 100px);
 
-            z-index: 70;
+        font-weight: 900;
 
-            display: none;
+        text-shadow:
+            0 0 10px red,
+            0 0 30px red,
+            0 0 60px red;
+    }
 
-            color: #ff2020;
+    #finalText {
 
-            font-size:
-                clamp(15px, 2vw, 24px);
+        margin-top: 30px;
 
-            font-weight: 900;
+        color: white;
 
-            letter-spacing: 3px;
+        font-size:
+            clamp(17px, 3vw, 32px);
 
-            text-shadow:
-                0 0 10px red,
-                0 0 20px red;
+        line-height: 1.8;
+    }
+
+    #signature {
+
+        margin-top: 28px;
+
+        color: #ff4444;
+
+        font-size:
+            clamp(13px, 2vw, 22px);
+
+        letter-spacing: 4px;
+    }
+
+
+    /* =========================================
+       MOBILE
+    ========================================= */
+
+    @media (max-width: 700px) {
+
+        #hackerImage {
+
+            width: 112vw;
+
+            height: 72vh;
         }
 
-        /* =========================================
-           FINAL SCREEN
-        ========================================= */
+        #name {
 
-        #final {
-
-            position: absolute;
-
-            inset: 0;
-
-            z-index: 100;
-
-            display: none;
-
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            background: #000;
-        }
-
-        #finalBox {
-
-            animation:
-                finalAppear 1.2s ease;
-        }
-
-        @keyframes finalAppear {
-
-            from {
-                opacity: 0;
-
-                transform:
-                    scale(0.5);
-            }
-
-            to {
-                opacity: 1;
-
-                transform:
-                    scale(1);
-            }
-
-        }
-
-        #finalTitle {
-
-            color: #ff1717;
-
-            font-size:
-                clamp(40px, 8vw, 100px);
-
-            font-weight: 900;
-
-            text-shadow:
-                0 0 10px red,
-                0 0 30px red,
-                0 0 60px red;
-        }
-
-        #finalText {
-
-            margin-top: 30px;
-
-            color: white;
-
-            font-size:
-                clamp(17px, 3vw, 32px);
-
-            line-height: 1.8;
-        }
-
-        #signature {
-
-            margin-top: 28px;
-
-            color: #ff4444;
-
-            font-size:
-                clamp(13px, 2vw, 22px);
+            bottom: 11vh;
 
             letter-spacing: 4px;
         }
 
-        /* =========================================
-           MOBILE
-        ========================================= */
+        #messageLayer {
 
-        @media (max-width: 700px) {
-
-            #hackerImage {
-
-                width: 112vw;
-
-                height: 72vh;
-            }
-
-            #name {
-
-                bottom: 11vh;
-
-                letter-spacing: 4px;
-            }
-
-            #messageLayer {
-
-                padding-bottom: 24vh;
-            }
-
-            #terminal {
-
-                width: 58vw;
-
-                font-size: 7px;
-            }
-
+            padding-bottom: 24vh;
         }
 
-    </style>
-</head>
+        #terminal {
 
+            width: 58vw;
+
+            font-size: 7px;
+        }
+
+    }
+
+
+    /* =========================================
+       PORTRAIT PHONE MODE
+    ========================================= */
+
+    @media screen
+    and (orientation: portrait)
+    and (max-width: 900px) {
+
+        #rotateScreen {
+
+            display: flex;
+        }
+
+        #screen {
+
+            display: none;
+        }
+
+    }
+
+
+    /* =========================================
+       LANDSCAPE PHONE MODE
+    ========================================= */
+
+    @media screen
+    and (orientation: landscape)
+    and (max-width: 900px) {
+
+        #rotateScreen {
+
+            display: none;
+        }
+
+        #screen {
+
+            display: block;
+        }
+
+        #hackerImage {
+
+            width: 100vw;
+
+            height: 82vh;
+        }
+
+        #name {
+
+            bottom: 7vh;
+
+            font-size:
+                clamp(22px, 5vw, 55px);
+
+            letter-spacing: 5px;
+        }
+
+        #messageLayer {
+
+            padding-bottom: 18vh;
+        }
+
+        #message {
+
+            font-size:
+                clamp(16px, 3vw, 32px);
+        }
+
+        #terminal {
+
+            left: 8px;
+
+            bottom: 8px;
+
+            width: 40vw;
+
+            max-height: 80px;
+
+            font-size: 6px;
+        }
+
+        #timer {
+
+            top: 10px;
+
+            right: 10px;
+
+            font-size: 13px;
+        }
+
+    }
+
+</style>
+```
+
+</head>
 
 <body>
 
+<!-- =====================================
+     PHONE ROTATION SCREEN
+====================================== -->
+
+<div id="rotateScreen">
+
+```
+<div id="rotateBox">
+
+    <div class="rotateIcon">
+        ↻
+    </div>
+
+    <div class="rotateTitle">
+        TURN YOUR PHONE
+    </div>
+
+    <div class="rotateTitle">
+        SIDEWAYS
+    </div>
+
+    <div class="rotateText">
+        LANDSCAPE MODE REQUIRED
+    </div>
+
+    <div class="rotateWarning">
+        ⚠ DO NOT LOOK AWAY ⚠
+    </div>
+
+</div>
+```
+
+</div>
+
+<!-- =====================================
+     MAIN SCREEN
+====================================== -->
+
 <div id="screen">
 
-    <div id="glow"></div>
+```
+<div id="glow"></div>
 
-    <div id="scanlines"></div>
+<div id="scanlines"></div>
 
-    <div id="vignette"></div>
+<div id="vignette"></div>
 
 
-    <!-- =====================================
-         INTRO
-    ====================================== -->
+<!-- =====================================
+     INTRO
+====================================== -->
 
-    <div id="intro">
+<div id="intro">
 
-        <div>
+    <div>
 
-            <div id="introText">
+        <div id="introText">
 
-                <span id="typed"></span>
+            <span id="typed"></span>
 
-                <span class="cursor"></span>
+            <span class="cursor"></span>
 
-            </div>
+        </div>
 
-            <div id="introSub">
-                UNKNOWN SIGNAL...
-            </div>
+        <div id="introSub">
+            UNKNOWN SIGNAL...
+        </div>
 
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     MAIN EXPERIENCE
+====================================== -->
+
+<div id="experience">
+
+
+    <!-- HUGE MASK -->
+
+    <div id="maskContainer">
+
+        <img
+            id="hackerImage"
+            src="hacker-mask.png"
+            alt="Hacker Mask"
+        >
+
+        <div id="name">
+            HAMID THE HACKER
+        </div>
+
+        <div id="sceneText">
+            UNKNOWN CONNECTION • VISUAL SIMULATION
         </div>
 
     </div>
 
 
-    <!-- =====================================
-         MAIN EXPERIENCE
-    ====================================== -->
+    <!-- SEQUENTIAL MESSAGE -->
 
-    <div id="experience">
+    <div id="messageLayer">
 
-
-        <!-- HUGE MASK -->
-
-        <div id="maskContainer">
-
-            <img
-                id="hackerImage"
-                src="hacker-mask.png"
-                alt="Hacker Mask"
-            >
-
-            <div id="name">
-                HAMID THE HACKER
-            </div>
-
-            <div id="sceneText">
-                UNKNOWN CONNECTION • VISUAL SIMULATION
-            </div>
-
-        </div>
-
-
-        <!-- SEQUENTIAL MESSAGE -->
-
-        <div id="messageLayer">
-
-            <div id="message"></div>
-
-        </div>
-
-
-    </div>
-
-
-    <!-- =====================================
-         TERMINAL
-    ====================================== -->
-
-    <div id="terminal"></div>
-
-
-    <!-- =====================================
-         TIMER
-    ====================================== -->
-
-    <div id="timer">
-        TIME: <span id="time">120</span>
-    </div>
-
-
-    <!-- =====================================
-         WARNING
-    ====================================== -->
-
-    <div id="warning">
-
-        <div id="warningContent">
-
-            <div id="warningSmall">
-                ⚠ CRITICAL SECURITY ALERT ⚠
-            </div>
-
-            <div id="warningBig">
-
-                DON'T UNDERESTIMATE
-                <br>
-                THE POWER OF A HACKER
-
-            </div>
-
-            <div id="warningBottom">
-                MAXIMUM ALERT
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================
-         FLASH
-    ====================================== -->
-
-    <div id="flash"></div>
-
-
-    <!-- =====================================
-         FINAL
-    ====================================== -->
-
-    <div id="final">
-
-        <div id="finalBox">
-
-            <div id="finalTitle">
-                JUST KIDDING 😈
-            </div>
-
-            <div id="finalText">
-
-                THANK YOU FOR OPENING
-                <br>
-                THIS LITTLE SURPRISE.
-                <br><br>
-
-                NOTHING WAS ACTUALLY HACKED.
-                <br><br>
-
-                BYE...
-                <br>
-                GO AND SLEEP 😴
-
-            </div>
-
-            <div id="signature">
-                — HAMID THE HACKER —
-            </div>
-
-        </div>
+        <div id="message"></div>
 
     </div>
 
 
 </div>
 
+
+<!-- =====================================
+     TERMINAL
+====================================== -->
+
+<div id="terminal"></div>
+
+
+<!-- =====================================
+     TIMER
+====================================== -->
+
+<div id="timer">
+
+    TIME:
+    <span id="time">120</span>
+
+</div>
+
+
+<!-- =====================================
+     WARNING
+====================================== -->
+
+<div id="warning">
+
+    <div id="warningContent">
+
+        <div id="warningSmall">
+            ⚠ CRITICAL SECURITY ALERT ⚠
+        </div>
+
+        <div id="warningBig">
+
+            DON'T UNDERESTIMATE
+            <br>
+            THE POWER OF A HACKER
+
+        </div>
+
+        <div id="warningBottom">
+            MAXIMUM ALERT
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =====================================
+     FLASH
+====================================== -->
+
+<div id="flash"></div>
+
+
+<!-- =====================================
+     FINAL
+====================================== -->
+
+<div id="final">
+
+    <div id="finalBox">
+
+        <div id="finalTitle">
+            JUST KIDDING 😈
+        </div>
+
+        <div id="finalText">
+
+            THANK YOU FOR OPENING
+            <br>
+            THIS LITTLE SURPRISE.
+            <br><br>
+
+            NOTHING WAS ACTUALLY HACKED.
+            <br><br>
+
+            BYE...
+            <br>
+            GO AND SLEEP 😴
+
+        </div>
+
+        <div id="signature">
+            — HAMID THE HACKER —
+        </div>
+
+    </div>
+
+</div>
+```
+
+</div>
 
 <script>
 
@@ -1222,6 +1544,7 @@
     ========================================= */
 
     async function startExperience() {
+
 
         /* ------------------------------------
            INTRO
