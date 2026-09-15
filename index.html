@@ -1,1 +1,138 @@
+<!DOCTYPE html>
 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>HAMID THE HACKER</title>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #000;
+        color: #00ff66;
+        font-family: "Courier New", monospace;
+    }
+
+    #screen {
+        width: 100%;
+        height: 100vh;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    #message {
+        width: 90%;
+        max-width: 900px;
+        font-size: clamp(20px, 4vw, 48px);
+        font-weight: bold;
+        letter-spacing: 3px;
+        text-shadow:
+            0 0 5px #00ff66,
+            0 0 15px #00ff66,
+            0 0 30px #00ff66;
+    }
+
+    .cursor {
+        display: inline-block;
+        width: 12px;
+        height: 1em;
+        margin-left: 5px;
+        background: #00ff66;
+        vertical-align: middle;
+        animation: blink 0.6s infinite;
+    }
+
+    @keyframes blink {
+        0%, 49% {
+            opacity: 1;
+        }
+
+        50%, 100% {
+            opacity: 0;
+        }
+    }
+</style>
+```
+
+</head>
+
+<body>
+
+<div id="screen">
+    <div id="message">
+        <span id="text"></span><span class="cursor"></span>
+    </div>
+</div>
+
+<script>
+
+    const textElement = document.getElementById("text");
+
+    const messages = [
+        "HELLO...",
+        "WELCOME TO THE WORLD OF HACKING",
+        "INITIALIZING...",
+        "ANDROID DEVICE DETECTED",
+        "CONNECTING TO SYSTEM..."
+    ];
+
+    let messageIndex = 0;
+
+    function typeMessage(message, callback) {
+
+        textElement.textContent = "";
+
+        let character = 0;
+
+        const typing = setInterval(() => {
+
+            textElement.textContent += message[character];
+
+            character++;
+
+            if (character >= message.length) {
+
+                clearInterval(typing);
+
+                setTimeout(callback, 1200);
+            }
+
+        }, 60);
+    }
+
+    function startSequence() {
+
+        if (messageIndex >= messages.length) {
+            return;
+        }
+
+        typeMessage(messages[messageIndex], () => {
+
+            messageIndex++;
+
+            startSequence();
+
+        });
+    }
+
+    setTimeout(startSequence, 1500);
+
+</script>
+
+</body>
+</html>
