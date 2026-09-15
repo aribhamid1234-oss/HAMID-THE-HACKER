@@ -5,18 +5,12 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     >
-
-    <meta name="theme-color" content="#050000">
 
     <title>HAMID THE HACKER</title>
 
     <style>
-        /* =====================================================
-           BASIC RESET
-        ===================================================== */
-
         * {
             margin: 0;
             padding: 0;
@@ -27,8 +21,8 @@
         body {
             width: 100%;
             min-height: 100%;
-            background: #050000;
-            color: #ff1a1a;
+            background: #000;
+            color: #fff;
             font-family: "Courier New", monospace;
             overflow-x: hidden;
         }
@@ -41,272 +35,201 @@
             font-family: inherit;
         }
 
-        /* =====================================================
-           MAIN SCREEN
-        ===================================================== */
-
         #screen {
             position: relative;
             width: 100%;
             min-height: 100svh;
             min-height: 100dvh;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            padding:
-                max(18px, env(safe-area-inset-top))
-                max(14px, env(safe-area-inset-right))
-                max(18px, env(safe-area-inset-bottom))
-                max(14px, env(safe-area-inset-left));
-
-            overflow: hidden;
             background:
                 radial-gradient(
                     circle at center,
-                    #250000 0%,
-                    #0d0000 42%,
-                    #020000 100%
+                    rgba(100, 0, 0, 0.35),
+                    rgba(0, 0, 0, 0.98) 75%
                 );
+            overflow-x: hidden;
+            overflow-y: auto;
+            padding:
+                max(16px, env(safe-area-inset-top))
+                max(12px, env(safe-area-inset-right))
+                max(16px, env(safe-area-inset-bottom))
+                max(12px, env(safe-area-inset-left));
+        }
+
+        #scanlines {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 50;
+            background: repeating-linear-gradient(
+                to bottom,
+                rgba(255, 255, 255, 0.025) 0px,
+                rgba(255, 255, 255, 0.025) 1px,
+                transparent 2px,
+                transparent 4px
+            );
+        }
+
+        #vignette {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 49;
+            box-shadow: inset 0 0 100px #000;
         }
 
         #glow {
-            position: absolute;
+            position: fixed;
             inset: 0;
             pointer-events: none;
-
-            background:
-                radial-gradient(
-                    ellipse at center,
-                    rgba(255, 0, 0, 0.18),
-                    transparent 65%
-                );
-
+            z-index: 1;
+            background: radial-gradient(
+                circle,
+                rgba(255, 0, 0, 0.1),
+                transparent 65%
+            );
             animation: pulseGlow 3s infinite alternate;
         }
 
         @keyframes pulseGlow {
             from {
-                opacity: 0.35;
+                opacity: 0.3;
             }
 
             to {
-                opacity: 0.9;
+                opacity: 1;
             }
         }
 
-        #scanlines {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-            opacity: 0.18;
-
-            background: repeating-linear-gradient(
-                to bottom,
-                transparent 0px,
-                transparent 3px,
-                rgba(255, 0, 0, 0.12) 4px
-            );
-        }
-
-        #vignette {
-            position: absolute;
-            inset: 0;
-            pointer-events: none;
-
-            box-shadow:
-                inset 0 0 100px #000,
-                inset 0 0 220px #000;
-        }
-
-        /* =====================================================
-           CONTENT WRAPPER
-        ===================================================== */
-
-        .content {
+        .page {
             position: relative;
             z-index: 5;
-
             width: 100%;
-            max-width: 950px;
-
-            min-height: 0;
-
+            max-width: 1000px;
+            min-height: calc(100svh - 32px);
+            min-height: calc(100dvh - 32px);
+            margin: auto;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-
+            align-items: center;
             text-align: center;
         }
 
-        /* =====================================================
-           START BUTTON
-        ===================================================== */
-
-        #startBox {
-            width: 100%;
-            padding: 12px;
+        .hidden {
+            display: none !important;
         }
 
-        #startTitle {
-            font-size: clamp(22px, 6vw, 48px);
-            font-weight: bold;
+        .red {
+            color: #ff2020;
+        }
+
+        .green {
+            color: #00ff66;
+        }
+
+        .white {
+            color: #fff;
+        }
+
+        #intro {
+            width: 100%;
+            padding: 20px 8px;
+        }
+
+        #intro h1 {
+            color: #ff2020;
+            font-size: clamp(22px, 6vw, 58px);
+            line-height: 1.2;
             letter-spacing: 2px;
-            line-height: 1.25;
-            text-shadow: 0 0 18px red;
+            text-shadow:
+                0 0 8px red,
+                0 0 25px red;
             overflow-wrap: anywhere;
         }
 
-        #startSub {
+        #typed {
+            margin-top: 22px;
+            min-height: 34px;
+            color: #00ff66;
+            font-size: clamp(14px, 4vw, 28px);
+            line-height: 1.5;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        #introSub {
             margin-top: 16px;
-            color: #ff7777;
-            font-size: clamp(12px, 3.5vw, 19px);
+            color: #aaa;
+            font-size: clamp(11px, 3vw, 17px);
             line-height: 1.6;
             overflow-wrap: anywhere;
         }
 
         #startButton {
             margin-top: 28px;
-
-            width: min(100%, 330px);
-            min-height: 54px;
-
-            padding: 14px 20px;
-
-            color: #fff;
-            background: #650000;
-            border: 2px solid #ff1a1a;
+            padding: 14px 22px;
+            max-width: 100%;
+            border: 2px solid #ff2020;
             border-radius: 8px;
-
-            font-size: clamp(14px, 4vw, 20px);
+            color: #fff;
+            background: #180000;
+            box-shadow:
+                0 0 10px rgba(255, 0, 0, 0.5),
+                inset 0 0 12px rgba(255, 0, 0, 0.2);
+            font-size: clamp(12px, 3.5vw, 18px);
             font-weight: bold;
             letter-spacing: 1px;
-
             cursor: pointer;
-
-            box-shadow:
-                0 0 12px rgba(255, 0, 0, 0.5),
-                inset 0 0 12px rgba(255, 0, 0, 0.2);
-
-            transition:
-                background 0.2s,
-                transform 0.2s;
         }
 
         #startButton:active {
             transform: scale(0.96);
-            background: #a00000;
         }
 
-        /* =====================================================
-           INTRO
-        ===================================================== */
-
-        #intro {
-            display: none;
-            width: 100%;
-        }
-
-        #typed {
-            width: 100%;
-            padding: 10px;
-
-            font-size: clamp(17px, 5vw, 42px);
-            font-weight: bold;
-            line-height: 1.4;
-
-            color: #ff2020;
-            text-shadow: 0 0 16px red;
-
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        #introSub {
+        #soundStatus {
             margin-top: 14px;
-            padding: 0 10px;
-
-            font-size: clamp(11px, 3.5vw, 19px);
-            line-height: 1.6;
-
-            color: #ff8a8a;
+            color: #777;
+            font-size: 11px;
+            line-height: 1.5;
             overflow-wrap: anywhere;
         }
-
-        /* =====================================================
-           EXPERIENCE AREA
-        ===================================================== */
 
         #experience {
-            display: none;
             width: 100%;
-            min-height: 0;
+            padding: 12px 4px 25px;
         }
 
         #name {
             width: 100%;
-            padding: 0 8px;
-
-            font-size: clamp(22px, 7vw, 62px);
+            color: #ff2020;
+            font-size: clamp(18px, 5vw, 42px);
             font-weight: bold;
-            line-height: 1.2;
-
-            color: #ff1010;
-            text-shadow:
-                0 0 8px red,
-                0 0 22px red;
-
+            line-height: 1.3;
+            letter-spacing: 1px;
+            text-shadow: 0 0 15px red;
             overflow-wrap: anywhere;
             word-break: break-word;
         }
-
-        #sceneText {
-            width: 100%;
-            margin-top: 12px;
-            padding: 0 8px;
-
-            font-size: clamp(11px, 3.4vw, 19px);
-            line-height: 1.6;
-
-            color: #ffb0b0;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        /* =====================================================
-           HACKER IMAGE
-        ===================================================== */
 
         #maskContainer {
             width: 100%;
-
             display: flex;
-            align-items: center;
             justify-content: center;
-
-            margin: 16px 0;
-
-            min-height: 0;
+            align-items: center;
+            margin: 18px auto 12px;
         }
 
         #hackerImage {
             display: block;
-
-            width: min(78vw, 420px);
-            max-width: 100%;
-
+            width: min(82vw, 440px);
             height: auto;
-            max-height: 31svh;
-            max-height: 31dvh;
-
+            max-width: 100%;
+            max-height: 38svh;
+            max-height: 38dvh;
             object-fit: contain;
-
             filter:
                 drop-shadow(0 0 12px red)
                 drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
-
             animation: maskPulse 2.5s infinite alternate;
         }
 
@@ -314,333 +237,294 @@
             from {
                 transform: scale(0.98);
                 filter:
-                    drop-shadow(0 0 8px red)
-                    drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+                    drop-shadow(0 0 10px red)
+                    drop-shadow(0 0 20px rgba(255, 0, 0, 0.35));
             }
 
             to {
                 transform: scale(1.02);
                 filter:
                     drop-shadow(0 0 18px red)
-                    drop-shadow(0 0 42px rgba(255, 0, 0, 0.8));
+                    drop-shadow(0 0 38px rgba(255, 0, 0, 0.75));
             }
         }
 
-        /* =====================================================
-           MESSAGE AREA
-        ===================================================== */
+        #sceneText {
+            width: 100%;
+            margin: 8px auto 15px;
+            color: #ff3030;
+            font-size: clamp(13px, 3.7vw, 23px);
+            line-height: 1.5;
+            font-weight: bold;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        #terminal {
+            width: 100%;
+            max-width: 850px;
+            margin: 10px auto 18px;
+            padding: 14px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: rgba(0, 0, 0, 0.78);
+            box-shadow:
+                0 0 15px rgba(255, 0, 0, 0.18),
+                inset 0 0 18px rgba(255, 0, 0, 0.06);
+            text-align: left;
+            color: #00ff66;
+            font-size: clamp(10px, 2.9vw, 16px);
+            line-height: 1.65;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        .terminalLine {
+            width: 100%;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            white-space: normal;
+        }
+
+        .terminalLine::before {
+            content: "> ";
+            color: #ff2020;
+        }
 
         #messageLayer {
             width: 100%;
-            min-height: 0;
-            padding: 0 8px;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 4px;
         }
 
         #message {
             width: 100%;
-
-            font-size: clamp(15px, 4.8vw, 32px);
-            font-weight: bold;
+            color: #fff;
+            font-size: clamp(15px, 4.8vw, 34px);
             line-height: 1.45;
-
-            color: #ff3030;
+            font-weight: bold;
+            text-align: center;
+            overflow-wrap: anywhere;
+            word-break: break-word;
             text-shadow: 0 0 12px red;
-
-            overflow-wrap: anywhere;
-            word-break: break-word;
         }
-
-        /* =====================================================
-           TERMINAL
-        ===================================================== */
-
-        #terminal {
-            width: 100%;
-            max-width: 760px;
-
-            margin: 16px auto 0;
-            padding: 12px;
-
-            text-align: left;
-
-            background: rgba(0, 0, 0, 0.72);
-            border: 1px solid #780000;
-            border-radius: 6px;
-
-            color: #ff5757;
-
-            font-size: clamp(10px, 2.9vw, 15px);
-            line-height: 1.55;
-
-            overflow-wrap: anywhere;
-            word-break: break-word;
-
-            max-height: 23svh;
-            max-height: 23dvh;
-
-            overflow-y: auto;
-            overflow-x: hidden;
-
-            box-shadow:
-                0 0 14px rgba(255, 0, 0, 0.18),
-                inset 0 0 18px rgba(255, 0, 0, 0.08);
-        }
-
-        .terminalLine {
-            margin-bottom: 5px;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        .terminalLine:last-child {
-            margin-bottom: 0;
-        }
-
-        /* =====================================================
-           COUNTDOWN
-        ===================================================== */
 
         #timer {
-            width: 100%;
-            margin-top: 14px;
-
-            font-size: clamp(13px, 4vw, 24px);
-            line-height: 1.5;
-
-            color: #ff7777;
+            margin-top: 8px;
+            color: #ff2020;
+            font-size: clamp(20px, 7vw, 48px);
+            font-weight: bold;
+            line-height: 1.2;
             overflow-wrap: anywhere;
         }
 
         #time {
             color: #fff;
-            font-weight: bold;
         }
 
-        /* =====================================================
-           WARNING
-        ===================================================== */
-
         #warning {
-            display: none;
             width: 100%;
-            padding: 10px;
+            padding: 25px 6px;
+            text-align: center;
         }
 
         #warningContent {
             width: 100%;
-
             border: 2px solid red;
             border-radius: 8px;
-
-            padding: clamp(14px, 4vw, 30px);
-
+            padding: clamp(16px, 5vw, 35px);
             background:
-                radial-gradient(
-                    circle,
-                    rgba(100, 0, 0, 0.55),
-                    rgba(0, 0, 0, 0.85)
+                linear-gradient(
+                    rgba(90, 0, 0, 0.3),
+                    rgba(0, 0, 0, 0.95)
                 );
-
             box-shadow:
-                0 0 20px red,
-                inset 0 0 25px rgba(255, 0, 0, 0.2);
-
-            animation: warningPulse 0.8s infinite alternate;
-        }
-
-        @keyframes warningPulse {
-            from {
-                border-color: #700000;
-                box-shadow: 0 0 10px #700000;
-            }
-
-            to {
-                border-color: #ff0000;
-                box-shadow: 0 0 30px #ff0000;
-            }
+                0 0 18px red,
+                inset 0 0 20px rgba(255, 0, 0, 0.15);
         }
 
         #warningSmall {
-            font-size: clamp(11px, 3.5vw, 20px);
-            line-height: 1.5;
-            color: #ffaaaa;
+            color: #ff6060;
+            font-size: clamp(11px, 3vw, 18px);
+            line-height: 1.6;
             overflow-wrap: anywhere;
         }
 
         #warningBig {
-            margin-top: 12px;
-
-            font-size: clamp(20px, 7vw, 54px);
+            margin-top: 18px;
+            color: red;
+            font-size: clamp(23px, 8vw, 65px);
+            line-height: 1.15;
             font-weight: bold;
-            line-height: 1.25;
-
-            color: #ff1010;
-            text-shadow: 0 0 20px red;
-
+            text-shadow: 0 0 15px red;
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
         #warningBottom {
-            margin-top: 14px;
-
-            font-size: clamp(11px, 3.4vw, 19px);
-            line-height: 1.5;
-
-            color: #ffbaba;
+            margin-top: 20px;
+            color: #fff;
+            font-size: clamp(11px, 3.2vw, 19px);
+            line-height: 1.6;
             overflow-wrap: anywhere;
         }
 
-        /* =====================================================
-           FLASH
-        ===================================================== */
-
         #flash {
-            display: none;
-
             position: fixed;
             inset: 0;
-            z-index: 20;
-
+            z-index: 100;
             background: red;
+            opacity: 0;
             pointer-events: none;
         }
 
-        /* =====================================================
-           FINAL SCREEN
-        ===================================================== */
-
         #final {
-            display: none;
             width: 100%;
-            padding: 10px;
+            padding: 20px 6px;
         }
 
         #finalBox {
             width: 100%;
-
-            border: 2px solid #ff1a1a;
-            border-radius: 10px;
-
-            padding: clamp(18px, 5vw, 40px);
-
+            border: 2px solid #00ff66;
+            border-radius: 8px;
+            padding: clamp(18px, 6vw, 40px);
             background:
                 radial-gradient(
                     circle,
-                    rgba(70, 0, 0, 0.7),
-                    rgba(0, 0, 0, 0.9)
+                    rgba(0, 100, 40, 0.2),
+                    rgba(0, 0, 0, 0.95)
                 );
-
             box-shadow:
-                0 0 25px red,
-                inset 0 0 25px rgba(255, 0, 0, 0.2);
+                0 0 20px rgba(0, 255, 100, 0.5),
+                inset 0 0 20px rgba(0, 255, 100, 0.1);
         }
 
         #finalTitle {
-            font-size: clamp(25px, 8vw, 68px);
+            color: #00ff66;
+            font-size: clamp(24px, 8vw, 70px);
+            line-height: 1.2;
             font-weight: bold;
-            line-height: 1.25;
-
-            color: #ff2020;
-            text-shadow: 0 0 22px red;
-
+            text-shadow: 0 0 15px #00ff66;
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
         #finalText {
-            margin-top: 18px;
-
+            margin-top: 20px;
+            color: #fff;
             font-size: clamp(13px, 4vw, 25px);
             line-height: 1.6;
-
-            color: #ffaaaa;
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
         #signature {
-            margin-top: 20px;
-
-            font-size: clamp(14px, 4.5vw, 28px);
-            font-weight: bold;
+            margin-top: 24px;
+            color: #ff2020;
+            font-size: clamp(12px, 3.5vw, 22px);
             line-height: 1.5;
-
-            color: #fff;
+            font-weight: bold;
             overflow-wrap: anywhere;
         }
 
-        /* =====================================================
-           MOBILE PORTRAIT
-        ===================================================== */
+        .shake {
+            animation: shake 0.12s infinite;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            25% {
+                transform: translate(-2px, 1px);
+            }
+
+            50% {
+                transform: translate(2px, -1px);
+            }
+
+            75% {
+                transform: translate(-1px, -2px);
+            }
+
+            100% {
+                transform: translate(1px, 2px);
+            }
+        }
 
         @media (max-width: 480px) {
             #screen {
-                align-items: center;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .page {
+                min-height: calc(100svh - 20px);
+                min-height: calc(100dvh - 20px);
+            }
+
+            #intro {
+                padding-top: 15px;
+                padding-bottom: 15px;
             }
 
             #hackerImage {
-                width: min(70vw, 300px);
-                max-height: 25svh;
-                max-height: 25dvh;
+                width: min(78vw, 330px);
+                max-height: 31svh;
+                max-height: 31dvh;
             }
 
             #terminal {
-                max-height: 20svh;
-                max-height: 20dvh;
-                padding: 9px;
+                padding: 11px;
+                font-size: 11px;
+                line-height: 1.55;
+            }
+
+            #messageLayer {
+                min-height: 105px;
+            }
+
+            #message {
+                font-size: 18px;
+            }
+
+            #warningContent {
+                padding: 18px 12px;
+            }
+        }
+
+        @media (max-height: 600px) and (orientation: landscape) {
+            .page {
+                justify-content: flex-start;
+            }
+
+            #experience {
+                padding-top: 5px;
+            }
+
+            #hackerImage {
+                width: min(38vw, 280px);
+                max-height: 42svh;
+                max-height: 42dvh;
             }
 
             #maskContainer {
-                margin: 10px 0;
+                margin: 8px auto;
             }
 
-            #sceneText {
+            #terminal {
                 margin-top: 8px;
+                margin-bottom: 8px;
             }
 
-            #timer {
-                margin-top: 9px;
-            }
-        }
-
-        /* =====================================================
-           SMALL LANDSCAPE PHONE
-        ===================================================== */
-
-        @media (orientation: landscape) and (max-height: 600px) {
-            #screen {
-                padding-top: 10px;
-                padding-bottom: 10px;
-            }
-
-            #hackerImage {
-                width: min(30vw, 250px);
-                max-height: 25svh;
-                max-height: 25dvh;
-            }
-
-            #maskContainer {
-                margin: 7px 0;
-            }
-
-            #terminal {
-                max-height: 17svh;
-                max-height: 17dvh;
-            }
-
-            #sceneText {
-                margin-top: 5px;
-            }
-
-            #timer {
-                margin-top: 5px;
+            #messageLayer {
+                min-height: 75px;
             }
         }
-
-        /* =====================================================
-           REDUCED MOTION
-        ===================================================== */
 
         @media (prefers-reduced-motion: reduce) {
             *,
@@ -648,7 +532,6 @@
             *::after {
                 animation-duration: 0.01ms !important;
                 animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
             }
         }
     </style>
@@ -662,50 +545,34 @@
     <div id="scanlines"></div>
     <div id="vignette"></div>
 
-    <main class="content">
+    <main class="page">
 
-        <!-- START SCREEN -->
-
-        <section id="startBox">
-
-            <div id="startTitle">
-                HAMID THE HACKER
-            </div>
-
-            <div id="startSub">
-                A cinematic hacker simulation experience
-                <br>
-                Tap below to initialize sound
-            </div>
-
-            <button id="startButton">
-                START EXPERIENCE
-            </button>
-
-        </section>
-
-        <!-- INTRO SCREEN -->
-
+        <!-- INTRO -->
         <section id="intro">
+
+            <h1>HAMID THE HACKER</h1>
 
             <div id="typed"></div>
 
             <div id="introSub">
-                INITIALIZING SECURE CONNECTION...
+                A cinematic hacker simulation experience
+            </div>
+
+            <button id="startButton">
+                ▶ START EXPERIENCE
+            </button>
+
+            <div id="soundStatus">
+                Sound is disabled until you tap START EXPERIENCE.
             </div>
 
         </section>
 
         <!-- MAIN EXPERIENCE -->
-
-        <section id="experience">
+        <section id="experience" class="hidden">
 
             <div id="name">
                 HAMID THE HACKER
-            </div>
-
-            <div id="sceneText">
-                SECURE SYSTEM INTERFACE INITIALIZED
             </div>
 
             <div id="maskContainer">
@@ -716,22 +583,25 @@
                 >
             </div>
 
-            <div id="messageLayer">
-                <div id="message"></div>
+            <div id="sceneText">
+                CONNECTION ESTABLISHED...
             </div>
 
             <div id="terminal"></div>
 
+            <div id="messageLayer">
+                <div id="message"></div>
+            </div>
+
             <div id="timer">
-                SYSTEM RESPONSE IN:
+                SYSTEM COUNTDOWN:
                 <span id="time">10</span>
             </div>
 
         </section>
 
-        <!-- WARNING SCREEN -->
-
-        <section id="warning">
+        <!-- WARNING -->
+        <section id="warning" class="hidden">
 
             <div id="warningContent">
 
@@ -740,20 +610,21 @@
                 </div>
 
                 <div id="warningBig">
-                    SYSTEM UNDER SIMULATION
+                    SYSTEM COMPROMISED
                 </div>
 
                 <div id="warningBottom">
-                    Stay calm. This is only a visual prank.
+                    DO NOT CLOSE THIS SCREEN
+                    <br>
+                    FINAL SECURITY CHECK IN PROGRESS...
                 </div>
 
             </div>
 
         </section>
 
-        <!-- FINAL SCREEN -->
-
-        <section id="final">
+        <!-- FINAL -->
+        <section id="final" class="hidden">
 
             <div id="finalBox">
 
@@ -764,13 +635,9 @@
                 <div id="finalText">
                     NOTHING WAS ACTUALLY HACKED.
                     <br><br>
-                    No files were copied.
+                    This was only a visual prank.
                     <br>
-                    No messages were sent.
-                    <br>
-                    No device was accessed.
-                    <br>
-                    No personal data was collected.
+                    Your phone and data are safe.
                 </div>
 
                 <div id="signature">
@@ -788,46 +655,36 @@
 <div id="flash"></div>
 
 <script>
-    /* =====================================================
-       ELEMENTS
-    ===================================================== */
-
-    const startBox = document.getElementById("startBox");
-    const startButton = document.getElementById("startButton");
-
     const intro = document.getElementById("intro");
     const typed = document.getElementById("typed");
-    const introSub = document.getElementById("introSub");
+    const startButton = document.getElementById("startButton");
+    const soundStatus = document.getElementById("soundStatus");
 
     const experience = document.getElementById("experience");
-    const message = document.getElementById("message");
+    const sceneText = document.getElementById("sceneText");
     const terminal = document.getElementById("terminal");
+    const message = document.getElementById("message");
     const time = document.getElementById("time");
 
     const warning = document.getElementById("warning");
+    const finalScreen = document.getElementById("final");
+
     const flash = document.getElementById("flash");
 
-    const final = document.getElementById("final");
-
-    /* =====================================================
-       AUDIO
-    ===================================================== */
-
     let audioContext = null;
-    let audioStarted = false;
+    let soundEnabled = false;
+    let started = false;
 
-    function initializeAudio() {
-        if (audioStarted) {
-            return;
-        }
-
+    function initializeSound() {
         try {
             const AudioContext =
                 window.AudioContext ||
                 window.webkitAudioContext;
 
             if (!AudioContext) {
-                return;
+                soundStatus.textContent =
+                    "Audio is not supported on this browser.";
+                return false;
             }
 
             audioContext = new AudioContext();
@@ -836,23 +693,27 @@
                 audioContext.resume();
             }
 
-            audioStarted = true;
+            soundEnabled = true;
 
-            playTone(180, 0.12, "sine", 0.05);
-            playTone(260, 0.15, "sine", 0.04);
+            soundStatus.textContent =
+                "Sound initialized successfully.";
+
+            return true;
 
         } catch (error) {
-            console.log("Audio could not initialize:", error);
+            soundStatus.textContent =
+                "Sound could not be initialized.";
+            return false;
         }
     }
 
     function playTone(
-        frequency,
-        duration = 0.2,
-        type = "sine",
-        volume = 0.08
+        frequency = 440,
+        duration = 0.12,
+        type = "square",
+        volume = 0.04
     ) {
-        if (!audioContext) {
+        if (!soundEnabled || !audioContext) {
             return;
         }
 
@@ -885,72 +746,71 @@
             );
 
         } catch (error) {
-            console.log("Sound error:", error);
+            console.log("Audio error:", error);
         }
     }
 
     function startupSound() {
-        playTone(220, 0.15, "sine", 0.06);
+        playTone(220, 0.15, "sawtooth", 0.05);
 
         setTimeout(() => {
-            playTone(330, 0.15, "sine", 0.06);
-        }, 150);
+            playTone(330, 0.15, "sawtooth", 0.05);
+        }, 160);
 
         setTimeout(() => {
-            playTone(440, 0.2, "sine", 0.06);
-        }, 300);
+            playTone(440, 0.25, "sawtooth", 0.05);
+        }, 320);
     }
 
     function terminalSound() {
-        playTone(100, 0.04, "square", 0.025);
+        playTone(700, 0.035, "square", 0.025);
     }
 
     function messageSound() {
-        playTone(260, 0.12, "sine", 0.05);
+        playTone(180, 0.12, "sawtooth", 0.04);
 
         setTimeout(() => {
-            playTone(390, 0.1, "sine", 0.04);
-        }, 90);
+            playTone(90, 0.18, "sawtooth", 0.035);
+        }, 130);
     }
 
     function warningSound() {
-        playTone(90, 0.35, "sawtooth", 0.08);
+        playTone(100, 0.2, "sawtooth", 0.07);
 
         setTimeout(() => {
-            playTone(70, 0.35, "sawtooth", 0.08);
-        }, 400);
+            playTone(70, 0.2, "sawtooth", 0.07);
+        }, 250);
 
         setTimeout(() => {
-            playTone(90, 0.35, "sawtooth", 0.08);
-        }, 800);
+            playTone(100, 0.2, "sawtooth", 0.07);
+        }, 500);
     }
 
     function finalSound() {
-        playTone(330, 0.15, "sine", 0.05);
+        playTone(330, 0.15, "sine", 0.04);
 
         setTimeout(() => {
-            playTone(440, 0.15, "sine", 0.05);
-        }, 150);
+            playTone(440, 0.15, "sine", 0.04);
+        }, 180);
 
         setTimeout(() => {
-            playTone(660, 0.3, "sine", 0.06);
-        }, 300);
+            playTone(660, 0.3, "sine", 0.04);
+        }, 360);
     }
 
-    /* =====================================================
-       TEXT TYPING
-    ===================================================== */
-
     function typeText(element, text, speed = 45) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             element.textContent = "";
 
             let index = 0;
 
             const interval = setInterval(() => {
                 element.textContent += text[index];
-
                 index++;
+
+                if (soundEnabled) {
+                    playTone(500, 0.025, "square", 0.015);
+                }
 
                 if (index >= text.length) {
                     clearInterval(interval);
@@ -960,198 +820,182 @@
         });
     }
 
-    /* =====================================================
-       TERMINAL LINES
-    ===================================================== */
-
-    const terminalLines = [
-        "[SYSTEM] Boot sequence started...",
-        "[SYSTEM] Checking secure interface...",
-        "[SYSTEM] Establishing encrypted simulation...",
-        "[NETWORK] Connection signal detected...",
-        "[NETWORK] Checking device response...",
-        "[SECURITY] Security layer identified...",
-        "[SECURITY] Running visual diagnostic...",
-        "[SYSTEM] Simulation mode active...",
-        "[STATUS] No real device access performed..."
-    ];
-
-    async function showTerminalLines() {
-        terminal.innerHTML = "";
-
-        for (const line of terminalLines) {
-            const lineElement = document.createElement("div");
-
-            lineElement.className = "terminalLine";
-            lineElement.textContent = line;
-
-            terminal.appendChild(lineElement);
-
-            terminal.scrollTop = terminal.scrollHeight;
-
-            terminalSound();
-
-            await wait(420);
-        }
-    }
-
-    /* =====================================================
-       MESSAGE SEQUENCE
-    ===================================================== */
-
-    const messages = [
-        "DEVICE SIGNAL DETECTED",
-        "UNKNOWN ANDROID DEVICE",
-        "ANALYZING SIGNAL...",
-        "SECURITY LAYER FOUND",
-        "ACCESS SEQUENCE SIMULATION STARTING...",
-        "SCANNING VISUAL INTERFACE...",
-        "SYSTEM RESPONSE DETECTED",
-        "SECURITY LEVEL: CRITICAL",
-        "TRACE SIGNAL ACTIVE...",
-        "FINAL SECURITY CHECK..."
-    ];
-
-    async function showMessages() {
-        for (const currentMessage of messages) {
-            message.textContent = currentMessage;
-
-            messageSound();
-
-            await wait(1000);
-        }
-    }
-
-    /* =====================================================
-       COUNTDOWN
-    ===================================================== */
-
-    async function countdown() {
-        for (let number = 10; number >= 0; number--) {
-            time.textContent = number;
-
-            if (number <= 3) {
-                playTone(120, 0.12, "square", 0.05);
-            }
-
-            await wait(700);
-        }
-    }
-
-    /* =====================================================
-       WARNING AND FINAL
-    ===================================================== */
-
-    async function showWarning() {
-        experience.style.display = "none";
-        warning.style.display = "block";
-
-        warningSound();
-
-        await wait(2500);
-
-        flash.style.display = "block";
-
-        setTimeout(() => {
-            flash.style.display = "none";
-        }, 150);
-
-        warning.style.display = "none";
-        final.style.display = "block";
-
-        finalSound();
-    }
-
-    /* =====================================================
-       MAIN EXPERIENCE
-    ===================================================== */
-
-    async function startExperience() {
-        initializeAudio();
-        startupSound();
-
-        startBox.style.display = "none";
-        intro.style.display = "block";
-
-        await typeText(
-            typed,
-            "HELLO...",
-            100
-        );
-
-        await wait(700);
-
-        await typeText(
-            typed,
-            "DON'T LOOK AWAY",
-            65
-        );
-
-        await wait(900);
-
-        await typeText(
-            typed,
-            "WELCOME TO THE WORLD OF HACKING",
-            45
-        );
-
-        introSub.textContent =
-            "CONNECTION ESTABLISHED...";
-
-        await wait(1400);
-
-        intro.style.display = "none";
-        experience.style.display = "block";
-
-        await showTerminalLines();
-        await showMessages();
-        await countdown();
-        await showWarning();
-    }
-
-    /* =====================================================
-       UTILITY
-    ===================================================== */
-
     function wait(milliseconds) {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
             setTimeout(resolve, milliseconds);
         });
     }
 
-    /* =====================================================
-       START BUTTON
-    ===================================================== */
+    function addTerminalLine(text) {
+        const line = document.createElement("div");
+        line.className = "terminalLine";
+        line.textContent = text;
 
-    startButton.addEventListener("click", () => {
-        startExperience();
+        terminal.appendChild(line);
+
+        terminal.scrollTop = terminal.scrollHeight;
+
+        terminalSound();
+    }
+
+    async function showMessage(text, duration = 1300) {
+        message.textContent = text;
+        message.classList.remove("shake");
+
+        void message.offsetWidth;
+
+        message.classList.add("shake");
+
+        messageSound();
+
+        await wait(duration);
+
+        message.classList.remove("shake");
+    }
+
+    async function runExperience() {
+        intro.classList.add("hidden");
+        experience.classList.remove("hidden");
+
+        startupSound();
+
+        await wait(700);
+
+        sceneText.textContent = "CONNECTION ESTABLISHED...";
+        await showMessage("DEVICE SIGNAL DETECTED", 1100);
+
+        addTerminalLine("Initializing secure terminal...");
+        await wait(300);
+
+        addTerminalLine("Connecting to remote interface...");
+        await wait(300);
+
+        addTerminalLine("Checking system response...");
+        await wait(300);
+
+        addTerminalLine("Scanning available signals...");
+        await wait(400);
+
+        await showMessage("UNKNOWN ANDROID DEVICE", 1200);
+
+        addTerminalLine("Access layer detected...");
+        await wait(300);
+
+        addTerminalLine("Security protocol loading...");
+        await wait(300);
+
+        addTerminalLine("Analyzing device response...");
+        await wait(400);
+
+        await showMessage("ANALYZING SIGNAL...", 1200);
+
+        addTerminalLine("Searching for visible system information...");
+        await wait(350);
+
+        addTerminalLine("Checking connection status...");
+        await wait(350);
+
+        addTerminalLine("Checking device name...");
+        await wait(350);
+
+        addTerminalLine("Checking battery status...");
+        await wait(350);
+
+        await showMessage("SECURITY LAYER FOUND", 1200);
+
+        addTerminalLine("Preparing simulated access sequence...");
+        await wait(350);
+
+        addTerminalLine("COPYING FAKE SYSTEM LOGS...");
+        await wait(350);
+
+        addTerminalLine("SENDING SIMULATED DATA...");
+        await wait(350);
+
+        addTerminalLine("ACCESSING DEMO INTERFACE...");
+        await wait(500);
+
+        await showMessage("ACCESS SEQUENCE STARTING...", 1300);
+
+        addTerminalLine("Scanning visual interface...");
+        await wait(300);
+
+        addTerminalLine("Scanning system response...");
+        await wait(300);
+
+        addTerminalLine("Scanning network signal...");
+        await wait(300);
+
+        await showMessage("SYSTEM RESPONSE DETECTED", 1200);
+
+        addTerminalLine("Security level: CRITICAL");
+        await wait(350);
+
+        addTerminalLine("Trace signal: ACTIVE");
+        await wait(350);
+
+        addTerminalLine("Final security check...");
+        await wait(500);
+
+        await showMessage("FINAL SECURITY CHECK...", 1300);
+
+        experience.classList.add("hidden");
+        warning.classList.remove("hidden");
+
+        warningSound();
+
+        await wait(1200);
+
+        flash.style.opacity = "0.8";
+
+        setTimeout(() => {
+            flash.style.opacity = "0";
+        }, 120);
+
+        await wait(1200);
+
+        warning.classList.add("hidden");
+        finalScreen.classList.remove("hidden");
+
+        finalSound();
+    }
+
+    startButton.addEventListener("click", async () => {
+        if (started) {
+            return;
+        }
+
+        started = true;
+        startButton.disabled = true;
+        startButton.textContent = "INITIALIZING...";
+
+        initializeSound();
+
+        await wait(400);
+
+        await typeText(
+            typed,
+            "WELCOME TO THE WORLD OF HACKING",
+            55
+        );
+
+        await wait(1000);
+
+        await typeText(
+            typed,
+            "DON'T LOOK AWAY...",
+            65
+        );
+
+        await wait(1200);
+
+        runExperience();
     });
 
-    /*
-       Backup audio initialization:
-       If the user taps anywhere before pressing the button,
-       the browser is allowed to initialize the audio context.
-    */
-
-    document.addEventListener(
-        "pointerdown",
-        () => {
-            initializeAudio();
-        },
-        {
-            once: true,
-            passive: true
-        }
-    );
-
-    /* =====================================================
-       DISABLE RIGHT CLICK
-    ===================================================== */
-
-    document.addEventListener("contextmenu", (event) => {
+    document.addEventListener("contextmenu", event => {
         event.preventDefault();
     });
 </script>
 
 </body>
-                    </html>
+    </html>
