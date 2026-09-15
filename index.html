@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -20,114 +19,222 @@
             height: 100%;
             overflow: hidden;
             background: #000;
-            color: #00ff66;
             font-family: "Courier New", monospace;
         }
 
         body {
+            color: #ff2020;
             user-select: none;
         }
+
+        /* ==============================
+           MAIN SCREEN
+        ============================== */
 
         #screen {
             position: relative;
             width: 100%;
             height: 100vh;
-            min-height: 500px;
+            overflow: hidden;
+
             background:
                 radial-gradient(
-                    circle at center,
-                    #071b0d 0%,
-                    #020703 35%,
-                    #000000 75%
+                    ellipse at center,
+                    #240000 0%,
+                    #100000 30%,
+                    #040000 65%,
+                    #000000 100%
                 );
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            overflow: hidden;
         }
 
-        /* Scan lines */
+        /* Red scan lines */
         #screen::before {
             content: "";
             position: absolute;
             inset: 0;
             pointer-events: none;
+            z-index: 50;
+
             background: repeating-linear-gradient(
                 to bottom,
-                rgba(0, 255, 80, 0.025) 0px,
-                rgba(0, 255, 80, 0.025) 1px,
+                rgba(255, 0, 0, 0.06) 0px,
+                rgba(255, 0, 0, 0.06) 1px,
                 transparent 2px,
                 transparent 5px
             );
-            z-index: 20;
         }
 
-        /* Green glow */
+        /* Red cinematic glow */
         #screen::after {
             content: "";
             position: absolute;
-            width: 80%;
-            height: 80%;
-            background: radial-gradient(
-                circle,
-                rgba(0, 255, 80, 0.08),
-                transparent 65%
-            );
-            animation: pulse 3s infinite;
+            width: 90%;
+            height: 90%;
+            left: 5%;
+            top: 5%;
+            pointer-events: none;
+            z-index: 1;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255, 0, 0, 0.12),
+                    transparent 68%
+                );
+
+            animation: dangerPulse 2s infinite alternate;
+        }
+
+        @keyframes dangerPulse {
+            0% {
+                opacity: 0.35;
+                transform: scale(0.92);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1.08);
+            }
+        }
+
+        /* ==============================
+           CORNER HUD
+        ============================== */
+
+        .corner {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            z-index: 20;
             pointer-events: none;
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                opacity: 0.4;
-                transform: scale(0.9);
+        .corner.top-left {
+            left: 18px;
+            top: 18px;
+            border-left: 2px solid #ff0000;
+            border-top: 2px solid #ff0000;
+        }
+
+        .corner.top-right {
+            right: 18px;
+            top: 18px;
+            border-right: 2px solid #ff0000;
+            border-top: 2px solid #ff0000;
+        }
+
+        .corner.bottom-left {
+            left: 18px;
+            bottom: 18px;
+            border-left: 2px solid #ff0000;
+            border-bottom: 2px solid #ff0000;
+        }
+
+        .corner.bottom-right {
+            right: 18px;
+            bottom: 18px;
+            border-right: 2px solid #ff0000;
+            border-bottom: 2px solid #ff0000;
+        }
+
+        /* ==============================
+           TOP WARNING BAR
+        ============================== */
+
+        #topWarning {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 25;
+
+            display: none;
+
+            padding: 8px 15px;
+
+            text-align: center;
+
+            background: rgba(70, 0, 0, 0.90);
+            border-bottom: 1px solid #ff0000;
+
+            color: #ff3030;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 3px;
+
+            box-shadow:
+                0 0 15px #ff0000;
+        }
+
+        .blink {
+            animation: blinkText 0.6s infinite alternate;
+        }
+
+        @keyframes blinkText {
+            from {
+                opacity: 0.35;
             }
 
-            50% {
+            to {
                 opacity: 1;
-                transform: scale(1.1);
             }
         }
+
+        /* ==============================
+           MAIN CONTENT
+        ============================== */
 
         #content {
             position: relative;
             z-index: 10;
-            width: 94%;
-            max-width: 1100px;
-        }
 
-        /* =====================================================
-           INTRO
-        ===================================================== */
+            width: 100%;
+            height: 100%;
 
-        #terminal {
-            min-height: 100px;
             display: flex;
             justify-content: center;
             align-items: center;
+
+            padding: 35px 20px 20px;
+            text-align: center;
+        }
+
+        /* ==============================
+           INTRO
+        ============================== */
+
+        #intro {
+            display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
 
         #message {
-            font-size: clamp(22px, 4vw, 52px);
-            font-weight: bold;
-            line-height: 1.35;
-            letter-spacing: 3px;
-            color: #00ff66;
+            min-height: 65px;
+
+            color: #ff3030;
+
+            font-size: clamp(25px, 4.5vw, 58px);
+            font-weight: 900;
+
+            letter-spacing: 4px;
+
             text-shadow:
-                0 0 5px #00ff66,
-                0 0 15px #00ff66,
-                0 0 30px #00ff66;
+                0 0 5px #ff0000,
+                0 0 15px #ff0000,
+                0 0 30px #ff0000,
+                0 0 50px #7a0000;
         }
 
-        #subMessage {
-            margin-top: 18px;
-            min-height: 28px;
-            font-size: clamp(13px, 2vw, 21px);
-            color: #7dffae;
-            letter-spacing: 2px;
-            text-shadow: 0 0 10px #00ff66;
+        #introSub {
+            margin-top: 20px;
+
+            color: #ff7070;
+
+            font-size: clamp(13px, 2vw, 20px);
+
+            letter-spacing: 3px;
         }
 
         .cursor {
@@ -135,230 +242,436 @@
             width: 12px;
             height: 1em;
             margin-left: 5px;
-            background: #00ff66;
+
+            background: #ff0000;
+
             vertical-align: middle;
-            animation: blink 0.55s infinite;
+
+            animation: cursorBlink 0.5s infinite;
         }
 
-        @keyframes blink {
-            0%, 49% {
+        @keyframes cursorBlink {
+            0%,
+            49% {
                 opacity: 1;
             }
 
-            50%, 100% {
+            50%,
+            100% {
                 opacity: 0;
             }
         }
 
-        /* =====================================================
-           PERMANENT HACKER MASK
-        ===================================================== */
+        /* ==============================
+           HACKER PANEL
+        ============================== */
 
-        #hackerArea {
+        #hackerPanel {
             display: none;
-            flex-direction: column;
+
+            width: min(1100px, 96vw);
+            min-height: 85vh;
+
+            position: relative;
+
+            padding: 25px;
+
+            border: 2px solid #8b0000;
+
+            background:
+                linear-gradient(
+                    rgba(30, 0, 0, 0.82),
+                    rgba(5, 0, 0, 0.90)
+                );
+
+            box-shadow:
+                0 0 15px #ff0000,
+                0 0 40px rgba(255, 0, 0, 0.4),
+                inset 0 0 30px rgba(255, 0, 0, 0.08);
+        }
+
+        /* Decorative inner frame */
+        #hackerPanel::before {
+            content: "";
+            position: absolute;
+            inset: 9px;
+
+            border: 1px solid rgba(255, 0, 0, 0.35);
+
+            pointer-events: none;
+        }
+
+        /* ==============================
+           PANEL HEADER
+        ============================== */
+
+        #panelHeader {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-        }
 
-        #hackerImage {
-            width: min(300px, 42vw);
-            max-height: 38vh;
-            object-fit: contain;
+            margin-bottom: 15px;
 
-            filter:
-                drop-shadow(0 0 10px #00ff66)
-                drop-shadow(0 0 25px #00ff66)
-                drop-shadow(0 0 45px rgba(0, 255, 80, 0.7));
+            padding-bottom: 10px;
 
-            animation: hackerGlow 2s infinite alternate;
-        }
+            border-bottom: 1px solid #710000;
 
-        @keyframes hackerGlow {
-            from {
-                transform: scale(0.98);
-                filter:
-                    drop-shadow(0 0 8px #00ff66)
-                    drop-shadow(0 0 20px #00ff66);
-            }
-
-            to {
-                transform: scale(1.03);
-                filter:
-                    drop-shadow(0 0 15px #00ff66)
-                    drop-shadow(0 0 40px #00ff66);
-            }
-        }
-
-        #hackerName {
-            margin-top: 15px;
-            font-size: clamp(25px, 5vw, 60px);
-            font-weight: bold;
-            color: #ffffff;
-            letter-spacing: 5px;
-
-            text-shadow:
-                0 0 5px #00ff66,
-                0 0 15px #00ff66,
-                0 0 35px #00ff66;
-
-            animation: nameGlow 1.5s infinite alternate;
-        }
-
-        @keyframes nameGlow {
-            from {
-                text-shadow:
-                    0 0 5px #00ff66,
-                    0 0 15px #00ff66;
-            }
-
-            to {
-                text-shadow:
-                    0 0 10px #00ff66,
-                    0 0 30px #00ff66,
-                    0 0 50px #00ff66;
-            }
-        }
-
-        #hackerStatus {
-            margin-top: 10px;
-            color: #7dffae;
-            font-size: clamp(12px, 2vw, 18px);
+            color: #ff4040;
+            font-size: 12px;
             letter-spacing: 2px;
         }
 
-        /* =====================================================
-           HACKING OPERATION AREA
-        ===================================================== */
+        #statusLight {
+            display: inline-block;
+
+            width: 9px;
+            height: 9px;
+
+            margin-right: 7px;
+
+            background: #ff0000;
+
+            border-radius: 50%;
+
+            box-shadow: 0 0 12px #ff0000;
+
+            animation: statusBlink 0.45s infinite alternate;
+        }
+
+        @keyframes statusBlink {
+            from {
+                opacity: 0.3;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* ==============================
+           BIG MASK
+        ============================== */
+
+        #maskArea {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #hackerImage {
+            width: min(520px, 72vw);
+            height: min(520px, 52vh);
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 10px #ff0000)
+                drop-shadow(0 0 30px #ff0000)
+                drop-shadow(0 0 65px rgba(255, 0, 0, 0.8));
+
+            animation:
+                maskPulse 1.8s infinite alternate,
+                glitchMask 5s infinite;
+        }
+
+        @keyframes maskPulse {
+            from {
+                transform: scale(0.98);
+                filter:
+                    drop-shadow(0 0 10px #ff0000)
+                    drop-shadow(0 0 25px #ff0000);
+            }
+
+            to {
+                transform: scale(1.04);
+                filter:
+                    drop-shadow(0 0 18px #ff0000)
+                    drop-shadow(0 0 50px #ff0000)
+                    drop-shadow(0 0 75px rgba(255, 0, 0, 0.8));
+            }
+        }
+
+        @keyframes glitchMask {
+            0%,
+            92%,
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            93% {
+                transform: translate(-4px, 2px) scale(1.01);
+            }
+
+            94% {
+                transform: translate(5px, -2px) scale(1.01);
+            }
+
+            95% {
+                transform: translate(-2px, 1px) scale(1);
+            }
+        }
+
+        /* ==============================
+           NAME
+        ============================== */
+
+        #hackerName {
+            margin-top: 5px;
+
+            color: #ffffff;
+
+            font-size: clamp(28px, 5vw, 64px);
+            font-weight: 900;
+
+            letter-spacing: 7px;
+
+            text-shadow:
+                0 0 5px #ff0000,
+                0 0 15px #ff0000,
+                0 0 30px #ff0000,
+                0 0 55px #8b0000;
+
+            animation: nameDanger 1.2s infinite alternate;
+        }
+
+        @keyframes nameDanger {
+            from {
+                opacity: 0.75;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        #systemStatus {
+            margin-top: 8px;
+
+            color: #ff6060;
+
+            font-size: clamp(11px, 1.8vw, 16px);
+
+            letter-spacing: 3px;
+        }
+
+        /* ==============================
+           OPERATION MESSAGE
+        ============================== */
 
         #operationArea {
+            position: relative;
+            z-index: 3;
+
             display: none;
-            margin-top: 25px;
+
+            margin-top: 15px;
         }
 
         #operationMessage {
-            min-height: 55px;
-            color: #00ff66;
-            font-size: clamp(18px, 3vw, 35px);
+            min-height: 38px;
+
+            color: #ff2020;
+
+            font-size: clamp(17px, 2.8vw, 31px);
             font-weight: bold;
+
+            letter-spacing: 2px;
+
             text-shadow:
-                0 0 5px #00ff66,
-                0 0 15px #00ff66;
+                0 0 8px #ff0000,
+                0 0 20px #ff0000;
         }
 
-        /* =====================================================
+        /* ==============================
            PROGRESS
-        ===================================================== */
+        ============================== */
 
         #progressArea {
             display: none;
-            margin-top: 20px;
+
+            margin-top: 13px;
         }
 
         #progressBar {
-            width: min(650px, 85vw);
-            height: 18px;
-            border: 1px solid #00ff66;
-            box-shadow:
-                0 0 8px #00ff66,
-                inset 0 0 8px rgba(0, 255, 80, 0.3);
+            width: min(700px, 82vw);
+            height: 17px;
+
+            margin: auto;
 
             padding: 3px;
-            margin: auto;
+
+            border: 1px solid #ff2020;
+
+            box-shadow:
+                0 0 8px #ff0000,
+                inset 0 0 8px rgba(255, 0, 0, 0.4);
         }
 
         #progressFill {
             width: 0%;
             height: 100%;
-            background: #00ff66;
-            box-shadow: 0 0 15px #00ff66;
-            transition: width 0.3s linear;
+
+            background: #ff1010;
+
+            box-shadow: 0 0 15px #ff0000;
+
+            transition: width 0.2s linear;
         }
 
         #progressText {
-            margin-top: 12px;
-            font-size: 15px;
-            color: #7dffae;
+            margin-top: 8px;
+
+            color: #ff7070;
+
+            font-size: 13px;
+
+            letter-spacing: 2px;
         }
 
-        /* =====================================================
-           COUNTDOWN
-        ===================================================== */
+        /* ==============================
+           SIDE ALERTS
+        ============================== */
 
-        #countdown {
-            position: fixed;
-            right: 20px;
-            top: 20px;
-            z-index: 30;
+        .sideBox {
+            position: absolute;
+            z-index: 4;
 
-            display: none;
+            width: 175px;
 
-            border: 1px solid #00ff66;
-            padding: 8px 14px;
+            padding: 12px;
 
-            color: #00ff66;
-            font-size: 18px;
+            border: 1px solid #6d0000;
 
-            background: rgba(0, 0, 0, 0.75);
+            background: rgba(45, 0, 0, 0.72);
+
+            color: #ff5050;
+
+            font-size: 10px;
+
+            line-height: 1.6;
+
+            text-align: left;
 
             box-shadow:
-                0 0 12px rgba(0, 255, 80, 0.4);
+                0 0 12px rgba(255, 0, 0, 0.25);
         }
 
-        /* =====================================================
+        #leftBox {
+            left: 20px;
+            top: 145px;
+        }
+
+        #rightBox {
+            right: 20px;
+            top: 145px;
+        }
+
+        .dangerText {
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        /* ==============================
            TERMINAL
-        ===================================================== */
+        ============================== */
 
         #terminalLines {
             position: fixed;
-            left: 20px;
-            bottom: 20px;
-            z-index: 25;
 
-            width: min(450px, 75vw);
-            max-height: 160px;
+            left: 20px;
+            bottom: 18px;
+
+            z-index: 30;
+
+            width: min(430px, 60vw);
+
+            max-height: 125px;
 
             overflow: hidden;
 
             text-align: left;
 
-            font-size: 11px;
-            line-height: 1.5;
+            color: rgba(255, 45, 45, 0.65);
 
-            color: rgba(0, 255, 100, 0.55);
+            font-size: 10px;
+
+            line-height: 1.45;
         }
 
         .terminalLine {
             white-space: nowrap;
         }
 
-        /* =====================================================
-           RED WARNING
-        ===================================================== */
+        /* ==============================
+           COUNTDOWN
+        ============================== */
+
+        #countdown {
+            position: fixed;
+
+            right: 28px;
+            bottom: 25px;
+
+            z-index: 35;
+
+            display: none;
+
+            padding: 10px 16px;
+
+            border: 1px solid #ff0000;
+
+            background: rgba(50, 0, 0, 0.82);
+
+            color: #ff3030;
+
+            font-size: 20px;
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            box-shadow:
+                0 0 15px #ff0000;
+        }
+
+        /* ==============================
+           BIG WARNING
+        ============================== */
 
         #warning {
             display: none;
 
+            position: relative;
+
+            padding: 25px;
+
             color: #ff0000;
 
-            font-size: clamp(25px, 5vw, 60px);
+            font-size: clamp(28px, 6vw, 76px);
 
-            font-weight: bold;
+            font-weight: 900;
 
-            line-height: 1.3;
+            line-height: 1.25;
 
-            letter-spacing: 3px;
+            letter-spacing: 4px;
+
+            text-align: center;
 
             text-shadow:
                 0 0 5px #ff0000,
                 0 0 15px #ff0000,
                 0 0 30px #ff0000,
-                0 0 50px #ff0000;
+                0 0 60px #800000;
 
-            animation: warningFlash 0.55s infinite alternate;
+            animation: warningAttack 0.35s infinite alternate;
         }
 
-        @keyframes warningFlash {
+        @keyframes warningAttack {
             from {
                 opacity: 0.55;
                 transform: scale(0.98);
@@ -366,89 +679,154 @@
 
             to {
                 opacity: 1;
-                transform: scale(1.02);
+                transform: scale(1.03);
             }
         }
 
-        /* =====================================================
-           FINAL
-        ===================================================== */
-
-        #finalMessage {
-            display: none;
-        }
-
-        #finalMessage h1 {
-            color: #00ff66;
-
-            font-size: clamp(28px, 5vw, 65px);
-
-            text-shadow:
-                0 0 10px #00ff66,
-                0 0 25px #00ff66,
-                0 0 45px #00ff66;
-
-            margin-bottom: 25px;
-        }
-
-        #finalMessage p {
-            color: white;
-
-            font-size: clamp(18px, 3vw, 30px);
-
-            line-height: 1.7;
-        }
-
-        #finalMessage .small {
-            color: #00ff66;
-
+        #warningSmall {
             margin-top: 25px;
 
-            font-size: clamp(15px, 2vw, 22px);
+            color: #ffffff;
+
+            font-size: clamp(13px, 2vw, 20px);
+
+            letter-spacing: 3px;
         }
 
-        /* =====================================================
-           RED SCREEN FLASH
-        ===================================================== */
+        /* ==============================
+           RED FLASH
+        ============================== */
 
         .redFlash {
-            animation: redFlash 0.25s 5;
+            animation: redFlash 0.22s infinite;
         }
 
         @keyframes redFlash {
-            0%, 100% {
-                background-color: #000;
+            0%,
+            100% {
+                background:
+                    radial-gradient(
+                        ellipse at center,
+                        #260000,
+                        #000000 75%
+                    );
             }
 
             50% {
-                background-color: #300000;
+                background:
+                    radial-gradient(
+                        ellipse at center,
+                        #7b0000,
+                        #180000 65%,
+                        #000000 100%
+                    );
             }
         }
 
-        /* =====================================================
+        /* ==============================
+           FINAL REVEAL
+        ============================== */
+
+        #finalMessage {
+            display: none;
+
+            position: relative;
+            z-index: 10;
+
+            padding: 40px;
+
+            border: 2px solid #ff0000;
+
+            background: rgba(20, 0, 0, 0.88);
+
+            box-shadow:
+                0 0 20px #ff0000,
+                0 0 60px rgba(255, 0, 0, 0.45);
+
+            animation: finalAppear 1s ease;
+        }
+
+        @keyframes finalAppear {
+            from {
+                opacity: 0;
+                transform: scale(0.7);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #finalMessage h1 {
+            color: #ff2020;
+
+            font-size: clamp(32px, 6vw, 78px);
+
+            text-shadow:
+                0 0 10px #ff0000,
+                0 0 25px #ff0000,
+                0 0 50px #ff0000;
+        }
+
+        #finalMessage p {
+            margin-top: 25px;
+
+            color: #ffffff;
+
+            font-size: clamp(17px, 3vw, 30px);
+
+            line-height: 1.8;
+        }
+
+        #finalMessage .small {
+            margin-top: 25px;
+
+            color: #ff4040;
+
+            font-size: clamp(14px, 2vw, 21px);
+
+            letter-spacing: 2px;
+        }
+
+        /* ==============================
            MOBILE
-        ===================================================== */
+        ============================== */
 
-        @media (max-width: 600px) {
+        @media (max-width: 700px) {
 
-            #terminalLines {
-                left: 10px;
-                bottom: 10px;
-                font-size: 9px;
-            }
-
-            #countdown {
-                right: 10px;
-                top: 10px;
-                font-size: 14px;
-            }
-
-            #hackerName {
-                letter-spacing: 2px;
+            #hackerPanel {
+                min-height: 90vh;
+                padding: 15px;
             }
 
             #hackerImage {
-                width: min(250px, 60vw);
+                width: min(430px, 88vw);
+                height: min(430px, 45vh);
+            }
+
+            #hackerName {
+                letter-spacing: 3px;
+            }
+
+            .sideBox {
+                display: none;
+            }
+
+            #terminalLines {
+                width: 55vw;
+                font-size: 8px;
+            }
+
+            #countdown {
+                right: 12px;
+                bottom: 15px;
+                font-size: 14px;
+            }
+
+            .corner {
+                width: 45px;
+                height: 45px;
             }
         }
     </style>
@@ -458,88 +836,178 @@
 
 <div id="screen">
 
+    <!-- Corner HUD -->
+    <div class="corner top-left"></div>
+    <div class="corner top-right"></div>
+    <div class="corner bottom-left"></div>
+    <div class="corner bottom-right"></div>
+
+    <!-- Top alert -->
+    <div id="topWarning">
+        <span class="blink">
+            ⚠ WARNING — VISUAL SYSTEM ACCESS SIMULATION — ⚠
+        </span>
+    </div>
+
     <div id="content">
 
-        <!-- =================================================
+        <!-- ==========================
              INTRO
-        ================================================== -->
+        =========================== -->
 
-        <div id="terminal">
+        <div id="intro">
 
             <div id="message">
                 <span id="text"></span>
                 <span class="cursor"></span>
             </div>
 
-            <div id="introSubMessage"></div>
-
-        </div>
-
-
-        <!-- =================================================
-             PERMANENT HACKER MASK
-        ================================================== -->
-
-        <div id="hackerArea">
-
-            <img
-                id="hackerImage"
-                src="hacker-mask.png"
-                alt="Hacker Mask"
-            >
-
-            <div id="hackerName">
-                HAMID THE HACKER
-            </div>
-
-            <div id="hackerStatus">
-                SYSTEM ACCESS SIMULATION
+            <div id="introSub">
+                INITIALIZING...
             </div>
 
         </div>
 
 
-        <!-- =================================================
-             OPERATION
-        ================================================== -->
+        <!-- ==========================
+             HACKER PANEL
+        =========================== -->
 
-        <div id="operationArea">
+        <div id="hackerPanel">
 
-            <div id="operationMessage"></div>
+            <div id="panelHeader">
 
-            <div id="progressArea">
-
-                <div id="progressBar">
-
-                    <div id="progressFill"></div>
-
+                <div>
+                    <span id="statusLight"></span>
+                    LIVE SYSTEM SIMULATION
                 </div>
 
-                <div id="progressText">
-                    PROCESSING...
+                <div>
+                    STATUS: <span class="dangerText">ACTIVE</span>
                 </div>
 
             </div>
 
+
+            <!-- Left alert -->
+            <div id="leftBox" class="sideBox">
+
+                <div class="dangerText">
+                    [ SECURITY ]
+                </div>
+
+                ----------------<br>
+
+                THREAT LEVEL:
+                <span class="dangerText">HIGH</span>
+                <br>
+
+                FIREWALL:
+                <span class="dangerText">BYPASS</span>
+                <br>
+
+                LOCK:
+                <span class="dangerText">OPEN</span>
+                <br>
+
+                TRACE:
+                <span class="dangerText">RUNNING</span>
+
+            </div>
+
+
+            <!-- Right alert -->
+            <div id="rightBox" class="sideBox">
+
+                <div class="dangerText">
+                    [ TARGET ]
+                </div>
+
+                ----------------<br>
+
+                DEVICE:
+                ANDROID
+                <br>
+
+                SIGNAL:
+                <span class="dangerText">FOUND</span>
+                <br>
+
+                SESSION:
+                <span class="dangerText">ACTIVE</span>
+                <br>
+
+                ACCESS:
+                <span class="dangerText">SIMULATION</span>
+
+            </div>
+
+
+            <!-- MASK -->
+            <div id="maskArea">
+
+                <img
+                    id="hackerImage"
+                    src="hacker-mask.png"
+                    alt="Hacker Mask"
+                >
+
+                <div id="hackerName">
+                    HAMID THE HACKER
+                </div>
+
+                <div id="systemStatus">
+                    █ SYSTEM ACCESS SIMULATION █
+                </div>
+
+            </div>
+
+
+            <!-- OPERATIONS -->
+            <div id="operationArea">
+
+                <div id="operationMessage"></div>
+
+                <div id="progressArea">
+
+                    <div id="progressBar">
+
+                        <div id="progressFill"></div>
+
+                    </div>
+
+                    <div id="progressText">
+                        PROCESSING...
+                    </div>
+
+                </div>
+
+            </div>
+
         </div>
 
 
-        <!-- =================================================
+        <!-- ==========================
              WARNING
-        ================================================== -->
+        =========================== -->
 
         <div id="warning">
 
             DON'T UNDERESTIMATE
             <br>
+
             THE POWER OF A HACKER
+
+            <div id="warningSmall">
+                ⚠ SYSTEM SECURITY COMPROMISED ⚠
+            </div>
 
         </div>
 
 
-        <!-- =================================================
-             FINAL
-        ================================================== -->
+        <!-- ==========================
+             FINAL MESSAGE
+        =========================== -->
 
         <div id="finalMessage">
 
@@ -548,13 +1016,18 @@
             </h1>
 
             <p>
+
                 THANK YOU FOR OPENING
                 <br>
+
                 THIS LITTLE SURPRISE.
                 <br><br>
+
                 BYE...
                 <br>
+
                 GO AND SLEEP 😴
+
             </p>
 
             <div class="small">
@@ -566,24 +1039,16 @@
     </div>
 
 
-    <!-- =====================================================
-         COUNTDOWN
-    ====================================================== -->
-
+    <!-- Countdown -->
     <div id="countdown">
 
         TIME:
-        <span id="timeLeft">
-            60
-        </span>
+        <span id="timeLeft">60</span>
 
     </div>
 
 
-    <!-- =====================================================
-         TERMINAL LINES
-    ====================================================== -->
-
+    <!-- Fake terminal -->
     <div id="terminalLines"></div>
 
 </div>
@@ -598,18 +1063,17 @@
     =========================================================
     */
 
+    const intro =
+        document.getElementById("intro");
 
     const messageElement =
         document.getElementById("text");
 
-    const introSubMessage =
-        document.getElementById("introSubMessage");
+    const introSub =
+        document.getElementById("introSub");
 
-    const terminal =
-        document.getElementById("terminal");
-
-    const hackerArea =
-        document.getElementById("hackerArea");
+    const hackerPanel =
+        document.getElementById("hackerPanel");
 
     const operationArea =
         document.getElementById("operationArea");
@@ -632,6 +1096,9 @@
     const finalMessage =
         document.getElementById("finalMessage");
 
+    const topWarning =
+        document.getElementById("topWarning");
+
     const countdown =
         document.getElementById("countdown");
 
@@ -645,11 +1112,9 @@
         document.getElementById("screen");
 
 
-    /*
-    =========================================================
-    Disable common webpage interactions
-    =========================================================
-    */
+    /* =====================================================
+       VISUAL ONLY INTERACTION RESTRICTIONS
+       ===================================================== */
 
     document.addEventListener(
         "contextmenu",
@@ -658,14 +1123,12 @@
         }
     );
 
-
     document.addEventListener(
         "selectstart",
         function(event) {
             event.preventDefault();
         }
     );
-
 
     document.addEventListener(
         "dragstart",
@@ -675,18 +1138,16 @@
     );
 
 
-    /*
-    =========================================================
-    RANDOM TERMINAL DATA
-    =========================================================
-    */
+    /* =====================================================
+       RANDOM TERMINAL CODE
+       ===================================================== */
 
     function randomHex(length) {
 
-        const characters =
+        const chars =
             "0123456789ABCDEF";
 
-        let result = "";
+        let output = "";
 
         for (
             let i = 0;
@@ -694,16 +1155,16 @@
             i++
         ) {
 
-            result += characters[
+            output += chars[
                 Math.floor(
                     Math.random() *
-                    characters.length
+                    chars.length
                 )
             ];
 
         }
 
-        return result;
+        return output;
     }
 
 
@@ -726,7 +1187,7 @@
 
 
         while (
-            terminalLines.children.length > 8
+            terminalLines.children.length > 9
         ) {
 
             terminalLines.removeChild(
@@ -734,15 +1195,12 @@
             );
 
         }
-
     }
 
 
-    /*
-    =========================================================
-    TYPING EFFECT
-    =========================================================
-    */
+    /* =====================================================
+       TYPEWRITER
+       ===================================================== */
 
     function typeMessage(
         message,
@@ -750,86 +1208,84 @@
     ) {
 
         return new Promise(
-            (resolve) => {
+            function(resolve) {
 
                 messageElement.textContent =
                     "";
 
-                let position = 0;
+                let index = 0;
 
 
-                const interval =
-                    setInterval(() => {
+                const timer =
+                    setInterval(
+                        function() {
 
-                        messageElement.textContent +=
-                            message[position];
+                            messageElement.textContent +=
+                                message[index];
 
-                        position++;
+                            index++;
 
 
-                        if (
-                            position >=
-                            message.length
-                        ) {
+                            if (
+                                index >=
+                                message.length
+                            ) {
 
-                            clearInterval(
-                                interval
-                            );
+                                clearInterval(
+                                    timer
+                                );
 
-                            resolve();
+                                resolve();
 
-                        }
+                            }
 
-                    }, speed);
+                        },
+                        speed
+                    );
 
             }
         );
     }
 
 
-    /*
-    =========================================================
-    WAIT
-    =========================================================
-    */
+    /* =====================================================
+       WAIT
+       ===================================================== */
 
-    function wait(milliseconds) {
+    function wait(ms) {
 
         return new Promise(
-            (resolve) => {
+            function(resolve) {
 
                 setTimeout(
                     resolve,
-                    milliseconds
+                    ms
                 );
 
             }
         );
-
     }
 
 
-    /*
-    =========================================================
-    OPERATION MESSAGE
-    =========================================================
-    */
+    /* =====================================================
+       OPERATION
+       ===================================================== */
 
     async function showOperation(message) {
 
         operationMessage.textContent =
             message;
 
-        await wait(1000);
+        addTerminalLine(message);
+
+        await wait(850);
 
     }
 
 
-    /*
-    =========================================================
-    PROGRESS
-    =========================================================
-    */
+    /* =====================================================
+       PROGRESS
+       ===================================================== */
 
     async function runProgress(
         message,
@@ -839,11 +1295,11 @@
         progressArea.style.display =
             "block";
 
-        progressText.textContent =
-            message;
-
         progressFill.style.width =
             "0%";
+
+        progressText.textContent =
+            message + " 0%";
 
 
         const start =
@@ -859,7 +1315,7 @@
                 Date.now() - start;
 
 
-            const percentage =
+            const percent =
                 Math.min(
                     100,
                     Math.floor(
@@ -871,31 +1327,31 @@
 
 
             progressFill.style.width =
-                percentage + "%";
+                percent + "%";
 
 
             progressText.textContent =
                 message +
                 " " +
-                percentage +
+                percent +
                 "%";
 
 
             if (
-                Math.random() > 0.55
+                Math.random() > 0.45
             ) {
 
                 addTerminalLine(
                     message +
                     " " +
-                    percentage +
+                    percent +
                     "%"
                 );
 
             }
 
 
-            await wait(250);
+            await wait(180);
 
         }
 
@@ -903,29 +1359,23 @@
         progressFill.style.width =
             "100%";
 
-
         progressText.textContent =
-            message +
-            " 100%";
+            message + " 100%";
 
-
-        await wait(500);
+        await wait(450);
 
     }
 
 
-    /*
-    =========================================================
-    MAIN SEQUENCE
-    =========================================================
-    */
+    /* =====================================================
+       MAIN PRANK
+       ===================================================== */
 
     async function startPrank() {
 
-
         /*
         -----------------------------------------
-        0 - 3 SECONDS
+        0-3 seconds
         -----------------------------------------
         */
 
@@ -942,6 +1392,8 @@
             "HELLO..."
         );
 
+        introSub.textContent =
+            "SIGNAL DETECTED";
 
         await wait(1000);
 
@@ -956,41 +1408,47 @@
             "WELCOME TO THE WORLD OF HACKING"
         );
 
+        introSub.textContent =
+            "PREPARE YOURSELF...";
 
         addTerminalLine(
             "VISUAL SIMULATION STARTED"
         );
 
-
-        await wait(1200);
+        await wait(1400);
 
 
         /*
         -----------------------------------------
-        SHOW MASK PERMANENTLY
+        SHOW PERMANENT MASK
         -----------------------------------------
         */
 
-        terminal.style.display =
+        intro.style.display =
             "none";
 
+        hackerPanel.style.display =
+            "block";
 
-        hackerArea.style.display =
-            "flex";
+        topWarning.style.display =
+            "block";
 
+        countdown.style.display =
+            "block";
 
         addTerminalLine(
             "HAMID THE HACKER IDENTIFIED"
         );
 
-
-        await wait(2500);
+        addTerminalLine(
+            "VISUAL SECURITY LAYER ONLINE"
+        );
 
 
         /*
         -----------------------------------------
-        OPERATION AREA
-        Mask STAYS visible
+        FAKE OPERATIONS
+        MASK STAYS VISIBLE
         -----------------------------------------
         */
 
@@ -1003,21 +1461,10 @@
         );
 
 
-        addTerminalLine(
-            "DEVICE SIMULATION DETECTED"
-        );
-
-
         await showOperation(
             "INITIALIZING SYSTEM ACCESS..."
         );
 
-
-        /*
-        -----------------------------------------
-        SCANNING
-        -----------------------------------------
-        */
 
         await runProgress(
             "SCANNING DEVICE",
@@ -1025,33 +1472,16 @@
         );
 
 
-        /*
-        -----------------------------------------
-        COPYING
-        -----------------------------------------
-        */
-
         await showOperation(
             "COPYING DATA..."
         );
 
 
-        addTerminalLine(
-            "SIMULATED DATA OPERATION"
-        );
-
-
         await runProgress(
-            "PROCESSING",
-            2500
+            "DATA PROCESSING",
+            2800
         );
 
-
-        /*
-        -----------------------------------------
-        ENCRYPTING
-        -----------------------------------------
-        */
 
         await showOperation(
             "ENCRYPTING DATA..."
@@ -1060,37 +1490,20 @@
 
         await runProgress(
             "ENCRYPTION",
-            2500
+            2800
         );
 
-
-        /*
-        -----------------------------------------
-        SENDING
-        -----------------------------------------
-        */
 
         await showOperation(
             "SENDING DATA..."
         );
 
 
-        addTerminalLine(
-            "SIMULATED TRANSMISSION"
-        );
-
-
         await runProgress(
             "TRANSMISSION",
-            2500
+            2800
         );
 
-
-        /*
-        -----------------------------------------
-        SYSTEM CONTROL
-        -----------------------------------------
-        */
 
         await showOperation(
             "IMPLEMENTING SYSTEM CONTROL..."
@@ -1099,39 +1512,41 @@
 
         await runProgress(
             "SYSTEM CONTROL",
-            2000
+            2200
         );
 
 
         /*
         -----------------------------------------
-        RED WARNING
+        WARNING
         -----------------------------------------
         */
+
+        topWarning.style.display =
+            "none";
+
+        hackerPanel.style.display =
+            "none";
 
         operationArea.style.display =
             "none";
 
-
-        hackerArea.style.display =
-            "none";
-
-
         warning.style.display =
             "block";
-
 
         screen.classList.add(
             "redFlash"
         );
 
-
-        await wait(4000);
-
-
-        screen.classList.remove(
-            "redFlash"
+        addTerminalLine(
+            "CRITICAL WARNING"
         );
+
+        addTerminalLine(
+            "SYSTEM SECURITY ALERT"
+        );
+
+        await wait(4500);
 
 
         /*
@@ -1140,77 +1555,79 @@
         -----------------------------------------
         */
 
+        screen.classList.remove(
+            "redFlash"
+        );
+
         warning.style.display =
             "none";
-
 
         finalMessage.style.display =
             "block";
 
-
         await wait(5000);
 
+
+        /*
+        -----------------------------------------
+        STOP
+        -----------------------------------------
+        */
 
         countdown.style.display =
             "none";
 
+        terminalLines.innerHTML =
+            "";
+
     }
 
 
-    /*
-    =========================================================
-    COUNTDOWN
-    =========================================================
-    */
+    /* =====================================================
+       COUNTDOWN
+       ===================================================== */
 
     function startCountdown() {
 
-        countdown.style.display =
-            "block";
-
-
         let seconds = 60;
-
 
         timeLeft.textContent =
             seconds;
 
 
         const timer =
-            setInterval(() => {
+            setInterval(
+                function() {
 
-                seconds--;
+                    seconds--;
 
 
-                if (
-                    seconds < 0
-                ) {
+                    if (
+                        seconds <= 0
+                    ) {
 
-                    clearInterval(
-                        timer
-                    );
+                        seconds = 0;
+
+                        clearInterval(
+                            timer
+                        );
+
+                    }
+
 
                     timeLeft.textContent =
-                        "0";
+                        seconds;
 
-                    return;
-
-                }
-
-
-                timeLeft.textContent =
-                    seconds;
-
-            }, 1000);
+                },
+                1000
+            );
 
     }
 
 
-    /*
-    =========================================================
-    START
-    =========================================================
-    */
+    /* =====================================================
+       START
+       ===================================================== */
 
     startCountdown();
 
@@ -1220,4 +1637,3 @@
 
 </body>
 </html>
-```
