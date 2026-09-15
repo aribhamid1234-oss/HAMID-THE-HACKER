@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -10,21 +8,14 @@
         content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
-    <meta
-        name="theme-color"
-        content="#000000"
-    >
+    <meta name="theme-color" content="#050000">
 
     <title>HAMID THE HACKER</title>
 
     <style>
-
-        :root {
-            --red: #ff1010;
-            --dark-red: #650000;
-            --soft-red: #ff5555;
-            --black: #000000;
-        }
+        /* =====================================================
+           BASIC RESET
+        ===================================================== */
 
         * {
             margin: 0;
@@ -36,609 +27,1131 @@
         body {
             width: 100%;
             min-height: 100%;
-            background: #000;
+            background: #050000;
+            color: #ff1a1a;
+            font-family: "Courier New", monospace;
+            overflow-x: hidden;
         }
 
         body {
-            overflow: hidden;
-            font-family: "Courier New", monospace;
-            user-select: none;
+            min-height: 100svh;
         }
 
-        /* =====================================
-           MAIN FULL SCREEN CONTAINER
-        ===================================== */
+        button {
+            font-family: inherit;
+        }
+
+        /* =====================================================
+           MAIN SCREEN
+        ===================================================== */
 
         #screen {
             position: relative;
             width: 100%;
-            height: 100dvh;
             min-height: 100svh;
+            min-height: 100dvh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding:
+                max(18px, env(safe-area-inset-top))
+                max(14px, env(safe-area-inset-right))
+                max(18px, env(safe-area-inset-bottom))
+                max(14px, env(safe-area-inset-left));
+
             overflow: hidden;
             background:
                 radial-gradient(
-                    ellipse at center,
-                    #260000 0%,
-                    #0b0000 42%,
-                    #000000 100%
+                    circle at center,
+                    #250000 0%,
+                    #0d0000 42%,
+                    #020000 100%
                 );
         }
-
-        /* =====================================
-           BACKGROUND EFFECTS
-        ===================================== */
 
         #glow {
             position: absolute;
             inset: 0;
-            z-index: 1;
             pointer-events: none;
+
             background:
                 radial-gradient(
                     ellipse at center,
-                    rgba(255, 0, 0, 0.22),
+                    rgba(255, 0, 0, 0.18),
                     transparent 65%
                 );
-            animation: glowPulse 3s infinite alternate;
+
+            animation: pulseGlow 3s infinite alternate;
         }
 
-        @keyframes glowPulse {
-
+        @keyframes pulseGlow {
             from {
-                opacity: 0.25;
-                transform: scale(0.95);
+                opacity: 0.35;
             }
 
             to {
-                opacity: 1;
-                transform: scale(1.08);
+                opacity: 0.9;
             }
-
         }
 
         #scanlines {
             position: absolute;
             inset: 0;
-            z-index: 45;
             pointer-events: none;
-            background:
-                repeating-linear-gradient(
-                    to bottom,
-                    rgba(255, 0, 0, 0.035) 0px,
-                    rgba(255, 0, 0, 0.035) 1px,
-                    transparent 2px,
-                    transparent 5px
-                );
+            opacity: 0.18;
+
+            background: repeating-linear-gradient(
+                to bottom,
+                transparent 0px,
+                transparent 3px,
+                rgba(255, 0, 0, 0.12) 4px
+            );
         }
 
         #vignette {
             position: absolute;
             inset: 0;
-            z-index: 50;
             pointer-events: none;
-            background:
-                radial-gradient(
-                    ellipse at center,
-                    transparent 25%,
-                    rgba(0, 0, 0, 0.35) 60%,
-                    rgba(0, 0, 0, 0.96) 100%
-                );
+
+            box-shadow:
+                inset 0 0 100px #000,
+                inset 0 0 220px #000;
         }
 
-        /* =====================================
-           INTRO
-        ===================================== */
+        /* =====================================================
+           CONTENT WRAPPER
+        ===================================================== */
 
-        #intro {
-            position: absolute;
-            inset: 0;
-            z-index: 20;
+        .content {
+            position: relative;
+            z-index: 5;
+
+            width: 100%;
+            max-width: 950px;
+
+            min-height: 0;
+
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
+
             text-align: center;
-            padding:
-                env(safe-area-inset-top)
-                20px
-                env(safe-area-inset-bottom)
-                20px;
         }
 
-        #introText {
-            max-width: 95vw;
-            color: var(--red);
-            font-size: clamp(24px, 5vw, 72px);
-            font-weight: 900;
-            line-height: 1.2;
+        /* =====================================================
+           START BUTTON
+        ===================================================== */
+
+        #startBox {
+            width: 100%;
+            padding: 12px;
+        }
+
+        #startTitle {
+            font-size: clamp(22px, 6vw, 48px);
+            font-weight: bold;
+            letter-spacing: 2px;
+            line-height: 1.25;
+            text-shadow: 0 0 18px red;
             overflow-wrap: anywhere;
-            letter-spacing: clamp(1px, 0.5vw, 6px);
-            text-shadow:
-                0 0 8px red,
-                0 0 20px red,
-                0 0 45px red;
+        }
+
+        #startSub {
+            margin-top: 16px;
+            color: #ff7777;
+            font-size: clamp(12px, 3.5vw, 19px);
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        #startButton {
+            margin-top: 28px;
+
+            width: min(100%, 330px);
+            min-height: 54px;
+
+            padding: 14px 20px;
+
+            color: #fff;
+            background: #650000;
+            border: 2px solid #ff1a1a;
+            border-radius: 8px;
+
+            font-size: clamp(14px, 4vw, 20px);
+            font-weight: bold;
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 12px rgba(255, 0, 0, 0.5),
+                inset 0 0 12px rgba(255, 0, 0, 0.2);
+
+            transition:
+                background 0.2s,
+                transform 0.2s;
+        }
+
+        #startButton:active {
+            transform: scale(0.96);
+            background: #a00000;
+        }
+
+        /* =====================================================
+           INTRO
+        ===================================================== */
+
+        #intro {
+            display: none;
+            width: 100%;
+        }
+
+        #typed {
+            width: 100%;
+            padding: 10px;
+
+            font-size: clamp(17px, 5vw, 42px);
+            font-weight: bold;
+            line-height: 1.4;
+
+            color: #ff2020;
+            text-shadow: 0 0 16px red;
+
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         #introSub {
-            margin-top: 18px;
-            max-width: 90vw;
-            color: var(--soft-red);
-            font-size: clamp(10px, 2vw, 20px);
-            line-height: 1.5;
-            letter-spacing: clamp(1px, 0.3vw, 4px);
+            margin-top: 14px;
+            padding: 0 10px;
+
+            font-size: clamp(11px, 3.5vw, 19px);
+            line-height: 1.6;
+
+            color: #ff8a8a;
             overflow-wrap: anywhere;
         }
 
-        .cursor {
-            display: inline-block;
-            width: 9px;
-            height: 1em;
-            margin-left: 5px;
-            background: var(--red);
-            animation: cursorBlink 0.5s infinite;
-        }
-
-        @keyframes cursorBlink {
-
-            0%,
-            49% {
-                opacity: 1;
-            }
-
-            50%,
-            100% {
-                opacity: 0;
-            }
-
-        }
-
-        /* =====================================
-           EXPERIENCE
-        ===================================== */
+        /* =====================================================
+           EXPERIENCE AREA
+        ===================================================== */
 
         #experience {
-            position: absolute;
-            inset: 0;
-            z-index: 10;
             display: none;
-            overflow: hidden;
-        }
-
-        #maskContainer {
-            position: absolute;
-            inset: 0;
             width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding:
-                4dvh
-                4vw
-                18dvh;
-            overflow: hidden;
+            min-height: 0;
         }
-
-        /* =====================================
-           RESPONSIVE HACKER IMAGE
-        ===================================== */
-
-        #hackerImage {
-            display: block;
-            width: min(86vw, 850px);
-            height: min(64dvh, 650px);
-            max-width: 94vw;
-            max-height: 70dvh;
-            object-fit: contain;
-            object-position: center;
-            margin: 0 auto;
-            filter:
-                drop-shadow(0 0 12px red)
-                drop-shadow(0 0 32px red)
-                drop-shadow(
-                    0 0 65px
-                    rgba(255, 0, 0, 0.8)
-                );
-            animation:
-                maskAppear 2s ease,
-                maskPulse 2.5s infinite alternate,
-                maskGlitch 8s infinite;
-        }
-
-        @keyframes maskAppear {
-
-            from {
-                opacity: 0;
-                transform: scale(0.45);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-        }
-
-        @keyframes maskPulse {
-
-            from {
-                transform: scale(0.97);
-            }
-
-            to {
-                transform: scale(1.035);
-            }
-
-        }
-
-        @keyframes maskGlitch {
-
-            0%,
-            90%,
-            100% {
-                margin-left: 0;
-            }
-
-            91% {
-                margin-left: -8px;
-            }
-
-            92% {
-                margin-left: 8px;
-            }
-
-            93% {
-                margin-left: -3px;
-            }
-
-            94% {
-                margin-left: 0;
-            }
-
-        }
-
-        /* =====================================
-           NAME
-        ===================================== */
 
         #name {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 9dvh;
             width: 100%;
-            padding: 0 12px;
-            text-align: center;
-            color: white;
-            font-size: clamp(18px, 4.5vw, 64px);
-            font-weight: 900;
+            padding: 0 8px;
+
+            font-size: clamp(22px, 7vw, 62px);
+            font-weight: bold;
             line-height: 1.2;
-            letter-spacing: clamp(1px, 0.6vw, 8px);
-            overflow-wrap: anywhere;
+
+            color: #ff1010;
             text-shadow:
-                0 0 7px red,
-                0 0 20px red,
-                0 0 45px red;
-            animation: nameFlash 1.4s infinite alternate;
-        }
+                0 0 8px red,
+                0 0 22px red;
 
-        @keyframes nameFlash {
-
-            from {
-                opacity: 0.65;
-            }
-
-            to {
-                opacity: 1;
-            }
-
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         #sceneText {
-            position: absolute;
-            left: 0;
-            right: 0;
-            bottom: 3dvh;
             width: 100%;
-            padding: 0 12px;
-            text-align: center;
-            color: var(--soft-red);
-            font-size: clamp(8px, 1.5vw, 16px);
-            line-height: 1.4;
-            letter-spacing: clamp(0px, 0.25vw, 3px);
+            margin-top: 12px;
+            padding: 0 8px;
+
+            font-size: clamp(11px, 3.4vw, 19px);
+            line-height: 1.6;
+
+            color: #ffb0b0;
             overflow-wrap: anywhere;
-            opacity: 0;
-            transition: opacity 0.8s ease;
+            word-break: break-word;
         }
 
-        #sceneText.show {
-            opacity: 1;
+        /* =====================================================
+           HACKER IMAGE
+        ===================================================== */
+
+        #maskContainer {
+            width: 100%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            margin: 16px 0;
+
+            min-height: 0;
         }
 
-        /* =====================================
-           MESSAGE
-        ===================================== */
+        #hackerImage {
+            display: block;
+
+            width: min(78vw, 420px);
+            max-width: 100%;
+
+            height: auto;
+            max-height: 31svh;
+            max-height: 31dvh;
+
+            object-fit: contain;
+
+            filter:
+                drop-shadow(0 0 12px red)
+                drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
+
+            animation: maskPulse 2.5s infinite alternate;
+        }
+
+        @keyframes maskPulse {
+            from {
+                transform: scale(0.98);
+                filter:
+                    drop-shadow(0 0 8px red)
+                    drop-shadow(0 0 20px rgba(255, 0, 0, 0.4));
+            }
+
+            to {
+                transform: scale(1.02);
+                filter:
+                    drop-shadow(0 0 18px red)
+                    drop-shadow(0 0 42px rgba(255, 0, 0, 0.8));
+            }
+        }
+
+        /* =====================================================
+           MESSAGE AREA
+        ===================================================== */
 
         #messageLayer {
-            position: absolute;
-            inset: 0;
-            z-index: 30;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding:
-                0
-                18px
-                22dvh;
-            pointer-events: none;
+            width: 100%;
+            min-height: 0;
+            padding: 0 8px;
         }
 
         #message {
             width: 100%;
-            max-width: 1000px;
-            color: var(--red);
-            font-size: clamp(15px, 3.2vw, 42px);
-            font-weight: 900;
-            line-height: 1.35;
-            letter-spacing: clamp(0px, 0.25vw, 3px);
-            text-align: center;
+
+            font-size: clamp(15px, 4.8vw, 32px);
+            font-weight: bold;
+            line-height: 1.45;
+
+            color: #ff3030;
+            text-shadow: 0 0 12px red;
+
             overflow-wrap: anywhere;
-            text-shadow:
-                0 0 7px red,
-                0 0 20px red,
-                0 0 35px #700000;
-            opacity: 0;
-            transform: translateY(20px);
-            transition:
-                opacity 0.7s ease,
-                transform 0.7s ease;
+            word-break: break-word;
         }
 
-        #message.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        /* =====================================
-           TIMER
-        ===================================== */
-
-        #timer {
-            position: absolute;
-            top: max(12px, env(safe-area-inset-top));
-            right: max(12px, env(safe-area-inset-right));
-            z-index: 70;
-            display: none;
-            color: var(--red);
-            font-size: clamp(11px, 2vw, 23px);
-            font-weight: 900;
-            letter-spacing: clamp(0px, 0.3vw, 3px);
-            text-shadow:
-                0 0 10px red,
-                0 0 20px red;
-        }
-
-        /* =====================================
+        /* =====================================================
            TERMINAL
-        ===================================== */
+        ===================================================== */
 
         #terminal {
-            position: absolute;
-            left: max(8px, env(safe-area-inset-left));
-            bottom: max(8px, env(safe-area-inset-bottom));
-            z-index: 70;
-            width: min(44vw, 500px);
-            max-height: 110px;
-            overflow: hidden;
-            color: rgba(255, 70, 70, 0.65);
-            font-size: clamp(5px, 0.75vw, 9px);
-            line-height: 1.45;
+            width: 100%;
+            max-width: 760px;
+
+            margin: 16px auto 0;
+            padding: 12px;
+
             text-align: left;
-            pointer-events: none;
+
+            background: rgba(0, 0, 0, 0.72);
+            border: 1px solid #780000;
+            border-radius: 6px;
+
+            color: #ff5757;
+
+            font-size: clamp(10px, 2.9vw, 15px);
+            line-height: 1.55;
+
+            overflow-wrap: anywhere;
+            word-break: break-word;
+
+            max-height: 23svh;
+            max-height: 23dvh;
+
+            overflow-y: auto;
+            overflow-x: hidden;
+
+            box-shadow:
+                0 0 14px rgba(255, 0, 0, 0.18),
+                inset 0 0 18px rgba(255, 0, 0, 0.08);
         }
 
         .terminalLine {
-            white-space: nowrap;
+            margin-bottom: 5px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
-        /* =====================================
+        .terminalLine:last-child {
+            margin-bottom: 0;
+        }
+
+        /* =====================================================
+           COUNTDOWN
+        ===================================================== */
+
+        #timer {
+            width: 100%;
+            margin-top: 14px;
+
+            font-size: clamp(13px, 4vw, 24px);
+            line-height: 1.5;
+
+            color: #ff7777;
+            overflow-wrap: anywhere;
+        }
+
+        #time {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        /* =====================================================
            WARNING
-        ===================================== */
+        ===================================================== */
 
         #warning {
-            position: absolute;
-            inset: 0;
-            z-index: 60;
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            text-align: center;
-            background:
-                radial-gradient(
-                    ellipse at center,
-                    #650000 0%,
-                    #180000 40%,
-                    #000000 100%
-                );
+            width: 100%;
+            padding: 10px;
         }
 
         #warningContent {
             width: 100%;
-            max-width: 1100px;
-            animation: warningShake 0.15s infinite alternate;
+
+            border: 2px solid red;
+            border-radius: 8px;
+
+            padding: clamp(14px, 4vw, 30px);
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(100, 0, 0, 0.55),
+                    rgba(0, 0, 0, 0.85)
+                );
+
+            box-shadow:
+                0 0 20px red,
+                inset 0 0 25px rgba(255, 0, 0, 0.2);
+
+            animation: warningPulse 0.8s infinite alternate;
         }
 
-        @keyframes warningShake {
-
+        @keyframes warningPulse {
             from {
-                transform: translateX(-3px);
+                border-color: #700000;
+                box-shadow: 0 0 10px #700000;
             }
 
             to {
-                transform: translateX(3px);
+                border-color: #ff0000;
+                box-shadow: 0 0 30px #ff0000;
             }
-
         }
 
         #warningSmall {
-            color: white;
-            font-size: clamp(11px, 2vw, 24px);
+            font-size: clamp(11px, 3.5vw, 20px);
             line-height: 1.5;
-            letter-spacing: clamp(1px, 0.4vw, 5px);
+            color: #ffaaaa;
             overflow-wrap: anywhere;
         }
 
         #warningBig {
-            margin-top: 20px;
-            color: var(--red);
-            font-size: clamp(25px, 6vw, 90px);
-            font-weight: 900;
-            line-height: 1.18;
-            letter-spacing: clamp(0px, 0.3vw, 4px);
+            margin-top: 12px;
+
+            font-size: clamp(20px, 7vw, 54px);
+            font-weight: bold;
+            line-height: 1.25;
+
+            color: #ff1010;
+            text-shadow: 0 0 20px red;
+
             overflow-wrap: anywhere;
-            text-shadow:
-                0 0 8px red,
-                0 0 20px red,
-                0 0 50px red;
-            animation: dangerPulse 0.45s infinite alternate;
-        }
-
-        @keyframes dangerPulse {
-
-            from {
-                opacity: 0.55;
-                transform: scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform: scale(1.02);
-            }
-
+            word-break: break-word;
         }
 
         #warningBottom {
-            margin-top: 22px;
-            color: #ff7777;
-            font-size: clamp(10px, 1.8vw, 20px);
-            letter-spacing: clamp(1px, 0.3vw, 3px);
+            margin-top: 14px;
+
+            font-size: clamp(11px, 3.4vw, 19px);
+            line-height: 1.5;
+
+            color: #ffbaba;
+            overflow-wrap: anywhere;
         }
 
-        /* =====================================
+        /* =====================================================
            FLASH
-        ===================================== */
+        ===================================================== */
 
         #flash {
-            position: absolute;
-            inset: 0;
-            z-index: 80;
             display: none;
-            background: rgba(255, 0, 0, 0.18);
+
+            position: fixed;
+            inset: 0;
+            z-index: 20;
+
+            background: red;
             pointer-events: none;
-            animation: flash 0.18s infinite;
         }
 
-        @keyframes flash {
-
-            0%,
-            100% {
-                opacity: 0.15;
-            }
-
-            50% {
-                opacity: 0.85;
-            }
-
-        }
-
-        /* =====================================
+        /* =====================================================
            FINAL SCREEN
-        ===================================== */
+        ===================================================== */
 
         #final {
-            position: absolute;
-            inset: 0;
-            z-index: 100;
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding:
-                20px
-                max(20px, env(safe-area-inset-right))
-                20px
-                max(20px, env(safe-area-inset-left));
-            text-align: center;
-            background: #000;
+            width: 100%;
+            padding: 10px;
         }
 
         #finalBox {
             width: 100%;
-            max-width: 1000px;
-            animation: finalAppear 1.2s ease;
-        }
 
-        @keyframes finalAppear {
+            border: 2px solid #ff1a1a;
+            border-radius: 10px;
 
-            from {
-                opacity: 0;
-                transform: scale(0.5);
-            }
+            padding: clamp(18px, 5vw, 40px);
 
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(70, 0, 0, 0.7),
+                    rgba(0, 0, 0, 0.9)
+                );
 
+            box-shadow:
+                0 0 25px red,
+                inset 0 0 25px rgba(255, 0, 0, 0.2);
         }
 
         #finalTitle {
-            color: var(--red);
-            font-size: clamp(28px, 7vw, 100px);
-            font-weight: 900;
-            line-height: 1.2;
+            font-size: clamp(25px, 8vw, 68px);
+            font-weight: bold;
+            line-height: 1.25;
+
+            color: #ff2020;
+            text-shadow: 0 0 22px red;
+
             overflow-wrap: anywhere;
-            text-shadow:
-                0 0 10px red,
-                0 0 30px red,
-                0 0 60px red;
+            word-break: break-word;
         }
 
         #finalText {
-            margin-top: 25px;
-            color: white;
-            font-size: clamp(13px, 2.5vw, 30px);
-            line-height: 1.7;
+            margin-top: 18px;
+
+            font-size: clamp(13px, 4vw, 25px);
+            line-height: 1.6;
+
+            color: #ffaaaa;
             overflow-wrap: anywhere;
+            word-break: break-word;
         }
 
         #signature {
-            margin-top: 25px;
-            color: #ff4444;
-            font-size: clamp(10px, 1.8vw, 22px);
-            letter-spacing: clamp(1px, 0.3vw, 4px);
+            margin-top: 20px;
+
+            font-size: clamp(14px, 4.5vw, 28px);
+            font-weight: bold;
+            line-height: 1.5;
+
+            color: #fff;
             overflow-wrap: anywhere;
         }
 
-        /* =====================================
-           SMALL PORTRAIT PHONES
-        ===================================== */
+        /* =====================================================
+           MOBILE PORTRAIT
+        ===================================================== */
 
-        @media screen and (max-width: 480px) {
-
-            #maskContainer {
-                padding:
-                    3dvh
-                    2vw
-                    19dvh;
+        @media (max-width: 480px) {
+            #screen {
+                align-items: center;
             }
 
             #hackerImage {
-                width: 94vw;
-                height: 57dvh;
-                max-height: 57dvh;
+                width: min(70vw, 300px);
+                max-height: 25svh;
+                max-height: 25dvh;
             }
 
-            #name {
-                bottom: 10dvh;
-                font-size: clamp(17
+            #terminal {
+                max-height: 20svh;
+                max-height: 20dvh;
+                padding: 9px;
+            }
+
+            #maskContainer {
+                margin: 10px 0;
+            }
+
+            #sceneText {
+                margin-top: 8px;
+            }
+
+            #timer {
+                margin-top: 9px;
+            }
+        }
+
+        /* =====================================================
+           SMALL LANDSCAPE PHONE
+        ===================================================== */
+
+        @media (orientation: landscape) and (max-height: 600px) {
+            #screen {
+                padding-top: 10px;
+                padding-bottom: 10px;
+            }
+
+            #hackerImage {
+                width: min(30vw, 250px);
+                max-height: 25svh;
+                max-height: 25dvh;
+            }
+
+            #maskContainer {
+                margin: 7px 0;
+            }
+
+            #terminal {
+                max-height: 17svh;
+                max-height: 17dvh;
+            }
+
+            #sceneText {
+                margin-top: 5px;
+            }
+
+            #timer {
+                margin-top: 5px;
+            }
+        }
+
+        /* =====================================================
+           REDUCED MOTION
+        ===================================================== */
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="screen">
+
+    <div id="glow"></div>
+    <div id="scanlines"></div>
+    <div id="vignette"></div>
+
+    <main class="content">
+
+        <!-- START SCREEN -->
+
+        <section id="startBox">
+
+            <div id="startTitle">
+                HAMID THE HACKER
+            </div>
+
+            <div id="startSub">
+                A cinematic hacker simulation experience
+                <br>
+                Tap below to initialize sound
+            </div>
+
+            <button id="startButton">
+                START EXPERIENCE
+            </button>
+
+        </section>
+
+        <!-- INTRO SCREEN -->
+
+        <section id="intro">
+
+            <div id="typed"></div>
+
+            <div id="introSub">
+                INITIALIZING SECURE CONNECTION...
+            </div>
+
+        </section>
+
+        <!-- MAIN EXPERIENCE -->
+
+        <section id="experience">
+
+            <div id="name">
+                HAMID THE HACKER
+            </div>
+
+            <div id="sceneText">
+                SECURE SYSTEM INTERFACE INITIALIZED
+            </div>
+
+            <div id="maskContainer">
+                <img
+                    id="hackerImage"
+                    src="hacker-mask.png"
+                    alt="Hacker mask"
+                >
+            </div>
+
+            <div id="messageLayer">
+                <div id="message"></div>
+            </div>
+
+            <div id="terminal"></div>
+
+            <div id="timer">
+                SYSTEM RESPONSE IN:
+                <span id="time">10</span>
+            </div>
+
+        </section>
+
+        <!-- WARNING SCREEN -->
+
+        <section id="warning">
+
+            <div id="warningContent">
+
+                <div id="warningSmall">
+                    ⚠ SECURITY ALERT ⚠
+                </div>
+
+                <div id="warningBig">
+                    SYSTEM UNDER SIMULATION
+                </div>
+
+                <div id="warningBottom">
+                    Stay calm. This is only a visual prank.
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- FINAL SCREEN -->
+
+        <section id="final">
+
+            <div id="finalBox">
+
+                <div id="finalTitle">
+                    JUST KIDDING 😈
+                </div>
+
+                <div id="finalText">
+                    NOTHING WAS ACTUALLY HACKED.
+                    <br><br>
+                    No files were copied.
+                    <br>
+                    No messages were sent.
+                    <br>
+                    No device was accessed.
+                    <br>
+                    No personal data was collected.
+                </div>
+
+                <div id="signature">
+                    — HAMID THE HACKER
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<div id="flash"></div>
+
+<script>
+    /* =====================================================
+       ELEMENTS
+    ===================================================== */
+
+    const startBox = document.getElementById("startBox");
+    const startButton = document.getElementById("startButton");
+
+    const intro = document.getElementById("intro");
+    const typed = document.getElementById("typed");
+    const introSub = document.getElementById("introSub");
+
+    const experience = document.getElementById("experience");
+    const message = document.getElementById("message");
+    const terminal = document.getElementById("terminal");
+    const time = document.getElementById("time");
+
+    const warning = document.getElementById("warning");
+    const flash = document.getElementById("flash");
+
+    const final = document.getElementById("final");
+
+    /* =====================================================
+       AUDIO
+    ===================================================== */
+
+    let audioContext = null;
+    let audioStarted = false;
+
+    function initializeAudio() {
+        if (audioStarted) {
+            return;
+        }
+
+        try {
+            const AudioContext =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            if (!AudioContext) {
+                return;
+            }
+
+            audioContext = new AudioContext();
+
+            if (audioContext.state === "suspended") {
+                audioContext.resume();
+            }
+
+            audioStarted = true;
+
+            playTone(180, 0.12, "sine", 0.05);
+            playTone(260, 0.15, "sine", 0.04);
+
+        } catch (error) {
+            console.log("Audio could not initialize:", error);
+        }
+    }
+
+    function playTone(
+        frequency,
+        duration = 0.2,
+        type = "sine",
+        volume = 0.08
+    ) {
+        if (!audioContext) {
+            return;
+        }
+
+        try {
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            oscillator.type = type;
+            oscillator.frequency.setValueAtTime(
+                frequency,
+                audioContext.currentTime
+            );
+
+            gain.gain.setValueAtTime(
+                volume,
+                audioContext.currentTime
+            );
+
+            gain.gain.exponentialRampToValueAtTime(
+                0.001,
+                audioContext.currentTime + duration
+            );
+
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+
+            oscillator.start();
+            oscillator.stop(
+                audioContext.currentTime + duration
+            );
+
+        } catch (error) {
+            console.log("Sound error:", error);
+        }
+    }
+
+    function startupSound() {
+        playTone(220, 0.15, "sine", 0.06);
+
+        setTimeout(() => {
+            playTone(330, 0.15, "sine", 0.06);
+        }, 150);
+
+        setTimeout(() => {
+            playTone(440, 0.2, "sine", 0.06);
+        }, 300);
+    }
+
+    function terminalSound() {
+        playTone(100, 0.04, "square", 0.025);
+    }
+
+    function messageSound() {
+        playTone(260, 0.12, "sine", 0.05);
+
+        setTimeout(() => {
+            playTone(390, 0.1, "sine", 0.04);
+        }, 90);
+    }
+
+    function warningSound() {
+        playTone(90, 0.35, "sawtooth", 0.08);
+
+        setTimeout(() => {
+            playTone(70, 0.35, "sawtooth", 0.08);
+        }, 400);
+
+        setTimeout(() => {
+            playTone(90, 0.35, "sawtooth", 0.08);
+        }, 800);
+    }
+
+    function finalSound() {
+        playTone(330, 0.15, "sine", 0.05);
+
+        setTimeout(() => {
+            playTone(440, 0.15, "sine", 0.05);
+        }, 150);
+
+        setTimeout(() => {
+            playTone(660, 0.3, "sine", 0.06);
+        }, 300);
+    }
+
+    /* =====================================================
+       TEXT TYPING
+    ===================================================== */
+
+    function typeText(element, text, speed = 45) {
+        return new Promise((resolve) => {
+            element.textContent = "";
+
+            let index = 0;
+
+            const interval = setInterval(() => {
+                element.textContent += text[index];
+
+                index++;
+
+                if (index >= text.length) {
+                    clearInterval(interval);
+                    resolve();
+                }
+            }, speed);
+        });
+    }
+
+    /* =====================================================
+       TERMINAL LINES
+    ===================================================== */
+
+    const terminalLines = [
+        "[SYSTEM] Boot sequence started...",
+        "[SYSTEM] Checking secure interface...",
+        "[SYSTEM] Establishing encrypted simulation...",
+        "[NETWORK] Connection signal detected...",
+        "[NETWORK] Checking device response...",
+        "[SECURITY] Security layer identified...",
+        "[SECURITY] Running visual diagnostic...",
+        "[SYSTEM] Simulation mode active...",
+        "[STATUS] No real device access performed..."
+    ];
+
+    async function showTerminalLines() {
+        terminal.innerHTML = "";
+
+        for (const line of terminalLines) {
+            const lineElement = document.createElement("div");
+
+            lineElement.className = "terminalLine";
+            lineElement.textContent = line;
+
+            terminal.appendChild(lineElement);
+
+            terminal.scrollTop = terminal.scrollHeight;
+
+            terminalSound();
+
+            await wait(420);
+        }
+    }
+
+    /* =====================================================
+       MESSAGE SEQUENCE
+    ===================================================== */
+
+    const messages = [
+        "DEVICE SIGNAL DETECTED",
+        "UNKNOWN ANDROID DEVICE",
+        "ANALYZING SIGNAL...",
+        "SECURITY LAYER FOUND",
+        "ACCESS SEQUENCE SIMULATION STARTING...",
+        "SCANNING VISUAL INTERFACE...",
+        "SYSTEM RESPONSE DETECTED",
+        "SECURITY LEVEL: CRITICAL",
+        "TRACE SIGNAL ACTIVE...",
+        "FINAL SECURITY CHECK..."
+    ];
+
+    async function showMessages() {
+        for (const currentMessage of messages) {
+            message.textContent = currentMessage;
+
+            messageSound();
+
+            await wait(1000);
+        }
+    }
+
+    /* =====================================================
+       COUNTDOWN
+    ===================================================== */
+
+    async function countdown() {
+        for (let number = 10; number >= 0; number--) {
+            time.textContent = number;
+
+            if (number <= 3) {
+                playTone(120, 0.12, "square", 0.05);
+            }
+
+            await wait(700);
+        }
+    }
+
+    /* =====================================================
+       WARNING AND FINAL
+    ===================================================== */
+
+    async function showWarning() {
+        experience.style.display = "none";
+        warning.style.display = "block";
+
+        warningSound();
+
+        await wait(2500);
+
+        flash.style.display = "block";
+
+        setTimeout(() => {
+            flash.style.display = "none";
+        }, 150);
+
+        warning.style.display = "none";
+        final.style.display = "block";
+
+        finalSound();
+    }
+
+    /* =====================================================
+       MAIN EXPERIENCE
+    ===================================================== */
+
+    async function startExperience() {
+        initializeAudio();
+        startupSound();
+
+        startBox.style.display = "none";
+        intro.style.display = "block";
+
+        await typeText(
+            typed,
+            "HELLO...",
+            100
+        );
+
+        await wait(700);
+
+        await typeText(
+            typed,
+            "DON'T LOOK AWAY",
+            65
+        );
+
+        await wait(900);
+
+        await typeText(
+            typed,
+            "WELCOME TO THE WORLD OF HACKING",
+            45
+        );
+
+        introSub.textContent =
+            "CONNECTION ESTABLISHED...";
+
+        await wait(1400);
+
+        intro.style.display = "none";
+        experience.style.display = "block";
+
+        await showTerminalLines();
+        await showMessages();
+        await countdown();
+        await showWarning();
+    }
+
+    /* =====================================================
+       UTILITY
+    ===================================================== */
+
+    function wait(milliseconds) {
+        return new Promise((resolve) => {
+            setTimeout(resolve, milliseconds);
+        });
+    }
+
+    /* =====================================================
+       START BUTTON
+    ===================================================== */
+
+    startButton.addEventListener("click", () => {
+        startExperience();
+    });
+
+    /*
+       Backup audio initialization:
+       If the user taps anywhere before pressing the button,
+       the browser is allowed to initialize the audio context.
+    */
+
+    document.addEventListener(
+        "pointerdown",
+        () => {
+            initializeAudio();
+        },
+        {
+            once: true,
+            passive: true
+        }
+    );
+
+    /* =====================================================
+       DISABLE RIGHT CLICK
+    ===================================================== */
+
+    document.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+    });
+</script>
+
+</body>
+                    </html>
