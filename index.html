@@ -1,1580 +1,967 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
-    >
-
-    <title>HAMID THE HACKER</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html,
-        body {
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            background: #000;
-            color: #fff;
-            font-family: "Courier New", monospace;
-        }
-
-        body {
-            min-height: 100svh;
-        }
-
-        button {
-            font-family: inherit;
-        }
-
-        #app {
-            position: fixed;
-            inset: 0;
-            width: 100%;
-            height: 100svh;
-            height: 100dvh;
-            overflow: hidden;
-            background:
-                radial-gradient(
-                    circle at center,
-                    rgba(90, 0, 0, 0.32),
-                    #000 72%
-                );
-        }
-
-        #backgroundGrid {
-            position: absolute;
-            inset: 0;
-            opacity: 0.16;
-            background-image:
-                linear-gradient(
-                    rgba(255, 0, 0, 0.14) 1px,
-                    transparent 1px
-                ),
-                linear-gradient(
-                    90deg,
-                    rgba(255, 0, 0, 0.14) 1px,
-                    transparent 1px
-                );
-            background-size: 32px 32px;
-            animation: gridMove 12s linear infinite;
-        }
-
-        @keyframes gridMove {
-            from {
-                background-position: 0 0, 0 0;
-            }
-
-            to {
-                background-position: 32px 32px, 32px 32px;
-            }
-        }
-
-        #scanlines {
-            position: absolute;
-            inset: 0;
-            z-index: 80;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                to bottom,
-                rgba(255,255,255,0.025) 0px,
-                rgba(255,255,255,0.025) 1px,
-                transparent 2px,
-                transparent 4px
-            );
-        }
-
-        #vignette {
-            position: absolute;
-            inset: 0;
-            z-index: 81;
-            pointer-events: none;
-            box-shadow:
-                inset 0 0 90px #000,
-                inset 0 0 180px rgba(255,0,0,0.18);
-        }
-
-        #stage {
-            position: relative;
-            z-index: 10;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding:
-                max(10px, env(safe-area-inset-top))
-                max(10px, env(safe-area-inset-right))
-                max(10px, env(safe-area-inset-bottom))
-                max(10px, env(safe-area-inset-left));
-        }
-
-        .screen {
-            width: 100%;
-            max-width: 950px;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .red {
-            color: #ff1717;
-        }
-
-        .green {
-            color: #00ff66;
-        }
-
-        /* INTRO */
-
-        #introTitle {
-            color: #ff1717;
-            font-size: clamp(25px, 8vw, 70px);
-            line-height: 1.1;
-            letter-spacing: 2px;
-            text-shadow:
-                0 0 10px red,
-                0 0 30px red;
-            overflow-wrap: anywhere;
-        }
-
-        #introText {
-            min-height: 30px;
-            margin-top: 20px;
-            color: #00ff66;
-            font-size: clamp(13px, 4vw, 25px);
-            line-height: 1.5;
-            overflow-wrap: anywhere;
-        }
-
-        #introInfo {
-            margin-top: 14px;
-            color: #777;
-            font-size: clamp(10px, 2.8vw, 15px);
-            line-height: 1.6;
-        }
-
-        #startButton {
-            margin-top: 28px;
-            padding: 15px 22px;
-            max-width: 90vw;
-            color: white;
-            background: #160000;
-            border: 2px solid red;
-            border-radius: 8px;
-            font-size: clamp(12px, 3.5vw, 18px);
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow:
-                0 0 12px rgba(255,0,0,0.5),
-                inset 0 0 15px rgba(255,0,0,0.18);
-        }
-
-        #startButton:active {
-            transform: scale(0.96);
-        }
-
-        #soundStatus {
-            margin-top: 12px;
-            color: #666;
-            font-size: 10px;
-        }
-
-        /* HACKING SCREEN */
-
-        #hackScreen {
-            justify-content: space-between;
-            padding: 3px 0;
-        }
-
-        #header {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            border-bottom: 1px solid #400000;
-            padding: 5px 3px;
-            color: #ff3030;
-            font-size: clamp(8px, 2.5vw, 13px);
-            text-align: left;
-        }
-
-        #header span {
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        #hackerImage {
-            display: block;
-            width: min(44vw, 270px);
-            max-width: 65vw;
-            max-height: 18dvh;
-            object-fit: contain;
-            filter:
-                drop-shadow(0 0 12px red)
-                drop-shadow(0 0 28px rgba(255,0,0,0.6));
-            animation: maskPulse 2s infinite alternate;
-        }
-
-        @keyframes maskPulse {
-            from {
-                transform: scale(0.98);
-            }
-
-            to {
-                transform: scale(1.03);
-            }
-        }
-
-        #status {
-            width: 100%;
-            margin-top: 4px;
-            color: #ff2222;
-            font-size: clamp(11px, 3.5vw, 22px);
-            line-height: 1.4;
-            font-weight: bold;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-            text-shadow: 0 0 10px red;
-        }
-
-        #stageNumber {
-            margin-top: 2px;
-            color: #aaa;
-            font-size: clamp(8px, 2.4vw, 13px);
-        }
-
-        /* PROGRESS */
-
-        .progressBox {
-            width: 100%;
-            margin-top: 5px;
-            padding: 7px;
-            background: rgba(0,0,0,0.78);
-            border: 1px solid #3b0000;
-            border-radius: 5px;
-        }
-
-        .progressTop {
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            color: #ddd;
-            font-size: clamp(8px, 2.5vw, 13px);
-            line-height: 1.4;
-            text-align: left;
-        }
-
-        #progressName {
-            color: #ff3030;
-            overflow-wrap: anywhere;
-        }
-
-        #progressPercent {
-            white-space: nowrap;
-        }
-
-        .progressTrack {
-            width: 100%;
-            height: 11px;
-            margin-top: 5px;
-            background: #160000;
-            border: 1px solid #510000;
-            overflow: hidden;
-        }
-
-        #progressBar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(
-                90deg,
-                #620000,
-                red,
-                #ff7777
-            );
-            box-shadow: 0 0 12px red;
-            transition: width 0.12s linear;
-        }
-
-        /* TERMINAL */
-
-        #terminalBox {
-            width: 100%;
-            height: 20dvh;
-            min-height: 95px;
-            margin-top: 5px;
-            padding: 8px;
-            background: rgba(0,0,0,0.9);
-            border: 1px solid #333;
-            border-radius: 5px;
-            overflow: hidden;
-            text-align: left;
-        }
-
-        #terminal {
-            width: 100%;
-            height: 100%;
-            color: #00ff66;
-            font-size: clamp(8px, 2.5vw, 13px);
-            line-height: 1.5;
-            overflow: hidden;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        .terminalLine {
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        .terminalLine::before {
-            content: "> ";
-            color: red;
-        }
-
-        /* DATA PANEL */
-
-        #dataPanel {
-            width: 100%;
-            padding: 7px;
-            margin-top: 5px;
-            border: 1px solid #420000;
-            background: rgba(35,0,0,0.4);
-            text-align: left;
-        }
-
-        #dataHeader {
-            color: #ff3030;
-            font-size: clamp(8px, 2.4vw, 13px);
-            line-height: 1.4;
-        }
-
-        #currentFile {
-            margin-top: 3px;
-            color: white;
-            font-size: clamp(8px, 2.6vw, 14px);
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-            word-break: break-all;
-        }
-
-        #dataStatus {
-            margin-top: 2px;
-            color: #ff7070;
-            font-size: clamp(8px, 2.3vw, 12px);
-            line-height: 1.4;
-            overflow-wrap: anywhere;
-        }
-
-        #bottomBar {
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            gap: 8px;
-            padding: 4px 3px;
-            border-top: 1px solid #350000;
-            color: #777;
-            font-size: clamp(8px, 2.3vw, 12px);
-            text-align: left;
-        }
-
-        #bottomBar span {
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        /* WARNING */
-
-        #warningPanel {
-            width: 100%;
-            padding: clamp(15px, 5vw, 35px);
-            border: 2px solid red;
-            border-radius: 8px;
-            background:
-                radial-gradient(
-                    circle,
-                    rgba(100,0,0,0.4),
-                    rgba(0,0,0,0.96)
-                );
-            box-shadow:
-                0 0 25px red,
-                inset 0 0 25px rgba(255,0,0,0.15);
-            animation: warningPulse 0.65s infinite alternate;
-        }
-
-        @keyframes warningPulse {
-            from {
-                box-shadow: 0 0 12px red;
-            }
-
-            to {
-                box-shadow: 0 0 40px red;
-            }
-        }
-
-        #warningSmall {
-            color: #ff6666;
-            font-size: clamp(10px, 3vw, 17px);
-            line-height: 1.5;
-        }
-
-        #warningTitle {
-            margin-top: 15px;
-            color: red;
-            font-size: clamp(24px, 8vw, 65px);
-            line-height: 1.15;
-            font-weight: bold;
-            text-shadow: 0 0 18px red;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        #warningText {
-            margin-top: 16px;
-            color: white;
-            font-size: clamp(10px, 3vw, 17px);
-            line-height: 1.65;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        #warningCountdown {
-            margin-top: 18px;
-            color: red;
-            font-size: clamp(25px, 8vw, 55px);
-            font-weight: bold;
-        }
-
-        /* FINAL */
-
-        #finalPanel {
-            width: 100%;
-            padding: clamp(18px, 6vw, 40px);
-            border: 2px solid #00ff66;
-            border-radius: 8px;
-            background: rgba(0,50,20,0.2);
-            box-shadow:
-                0 0 25px rgba(0,255,100,0.5),
-                inset 0 0 20px rgba(0,255,100,0.1);
-        }
-
-        #finalTitle {
-            color: #00ff66;
-            font-size: clamp(28px, 9vw, 75px);
-            line-height: 1.15;
-            font-weight: bold;
-            text-shadow: 0 0 15px #00ff66;
-            overflow-wrap: anywhere;
-        }
-
-        #finalText {
-            margin-top: 18px;
-            color: white;
-            font-size: clamp(12px, 3.7vw, 23px);
-            line-height: 1.65;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        #signature {
-            margin-top: 20px;
-            color: red;
-            font-size: clamp(11px, 3vw, 18px);
-        }
-
-        #flash {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: red;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .shake {
-            animation: shake 0.1s infinite;
-        }
-
-        @keyframes shake {
-            0% {
-                transform: translate(0,0);
-            }
-
-            25% {
-                transform: translate(-2px,1px);
-            }
-
-            50% {
-                transform: translate(2px,-1px);
-            }
-
-            75% {
-                transform: translate(-1px,-2px);
-            }
-
-            100% {
-                transform: translate(1px,2px);
-            }
-        }
-
-        @media (max-width: 480px) {
-            #hackerImage {
-                width: min(40vw, 220px);
-                max-height: 16dvh;
-            }
-
-            #terminalBox {
-                height: 18dvh;
-                min-height: 85px;
-            }
-
-            #progressBar {
-                height: 9px;
-            }
-        }
-
-        @media (orientation: landscape) and (max-height: 600px) {
-            #hackerImage {
-                width: min(25vw, 190px);
-                max-height: 16dvh;
-            }
-
-            #terminalBox {
-                height: 17dvh;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>HAMID THE HACKER</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    background: #020202;
+    color: #ff2020;
+    font-family: "Courier New", monospace;
+    overflow-x: hidden;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+button {
+    font-family: inherit;
+}
+
+.screen {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.screen.active {
+    display: flex;
+}
+
+.screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        linear-gradient(rgba(255, 0, 0, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 0, 0, 0.035) 1px, transparent 1px);
+    background-size: 28px 28px;
+    z-index: 0;
+}
+
+.screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        repeating-linear-gradient(
+            0deg,
+            rgba(255, 0, 0, 0.025) 0px,
+            rgba(255, 0, 0, 0.025) 1px,
+            transparent 1px,
+            transparent 4px
+        );
+    z-index: 3;
+}
+
+.content {
+    width: 100%;
+    max-width: 1100px;
+    min-width: 0;
+    margin: auto;
+    padding: clamp(14px, 3vw, 40px);
+    position: relative;
+    z-index: 2;
+}
+
+/* INTRO */
+
+#intro {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.intro-box {
+    width: 100%;
+    max-width: 850px;
+    min-width: 0;
+}
+
+.logo-text {
+    font-size: clamp(12px, 2vw, 20px);
+    letter-spacing: clamp(3px, 1vw, 8px);
+    color: #777;
+    margin-bottom: 25px;
+}
+
+.main-title {
+    font-size: clamp(34px, 9vw, 100px);
+    line-height: 1;
+    font-weight: 900;
+    letter-spacing: clamp(2px, 1vw, 12px);
+    text-shadow:
+        0 0 8px #ff0000,
+        0 0 25px #ff0000,
+        0 0 55px #700000;
+    overflow-wrap: anywhere;
+}
+
+.subtitle {
+    margin-top: 25px;
+    color: #ff6868;
+    font-size: clamp(12px, 2.5vw, 20px);
+    line-height: 1.6;
+}
+
+.start-button {
+    margin-top: 35px;
+    padding: 16px 32px;
+    max-width: 100%;
+    border: 2px solid #ff2020;
+    background: #180000;
+    color: #ff3030;
+    font-size: clamp(13px, 2.5vw, 20px);
+    letter-spacing: 3px;
+    cursor: pointer;
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+    transition: 0.2s;
+}
+
+.start-button:hover,
+.start-button:focus {
+    background: #ff2020;
+    color: #000;
+    box-shadow: 0 0 35px #ff0000;
+}
+
+/* HACK SCREEN */
+
+#hack {
+    align-items: center;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #5d0000;
+    padding-bottom: 12px;
+    margin-bottom: 18px;
+    color: #ff5555;
+    font-size: clamp(10px, 2vw, 15px);
+}
+
+.header span {
+    overflow-wrap: anywhere;
+}
+
+.hack-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.5fr);
+    gap: clamp(15px, 3vw, 35px);
+    align-items: center;
+}
+
+.mask-area {
+    min-width: 0;
+    text-align: center;
+}
+
+.mask-area img {
+    display: block;
+    width: min(100%, 430px);
+    max-height: 48vh;
+    object-fit: contain;
+    margin: 0 auto;
+    filter:
+        drop-shadow(0 0 12px #ff0000)
+        drop-shadow(0 0 35px #650000);
+    animation: maskPulse 2s infinite alternate;
+}
+
+@keyframes maskPulse {
+    from {
+        filter:
+            drop-shadow(0 0 8px #ff0000)
+            drop-shadow(0 0 20px #400000);
+    }
+
+    to {
+        filter:
+            drop-shadow(0 0 18px #ff0000)
+            drop-shadow(0 0 55px #900000);
+    }
+}
+
+.mask-caption {
+    margin-top: 12px;
+    font-size: clamp(11px, 2vw, 17px);
+    letter-spacing: 3px;
+    overflow-wrap: anywhere;
+}
+
+.panel {
+    min-width: 0;
+    border: 1px solid #5c0000;
+    background: rgba(18, 0, 0, 0.8);
+    padding: clamp(12px, 2vw, 22px);
+    box-shadow: inset 0 0 35px rgba(255, 0, 0, 0.04);
+}
+
+.panel-title {
+    color: #ff7777;
+    font-size: clamp(11px, 2vw, 15px);
+    margin-bottom: 12px;
+    overflow-wrap: anywhere;
+}
+
+.progress-track {
+    width: 100%;
+    height: 17px;
+    border: 1px solid #650000;
+    background: #100000;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #650000, #ff0000);
+    box-shadow: 0 0 18px #ff0000;
+    transition: width 0.15s linear;
+}
+
+.progress-info {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: clamp(11px, 2vw, 15px);
+}
+
+.terminal {
+    margin-top: 18px;
+    width: 100%;
+    min-height: 180px;
+    max-height: 260px;
+    overflow: hidden;
+    border: 1px solid #3f0000;
+    background: #030303;
+    padding: 12px;
+    color: #e44;
+    font-size: clamp(10px, 1.8vw, 14px);
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.terminal-line {
+    min-height: 1.4em;
+}
+
+.data-box {
+    margin-top: 15px;
+    border: 1px solid #3f0000;
+    padding: 12px;
+    background: #070000;
+    font-size: clamp(10px, 1.8vw, 14px);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.data-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.data-row strong {
+    color: #ff2222;
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.bottom-status {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    border-top: 1px solid #4b0000;
+    padding-top: 12px;
+    color: #777;
+    font-size: clamp(9px, 1.8vw, 13px);
+}
+
+/* WARNING */
+
+#warning {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background:
+        radial-gradient(circle, #390000 0%, #100000 45%, #020202 100%);
+    animation: warningFlash 1.2s infinite alternate;
+}
+
+@keyframes warningFlash {
+    from {
+        box-shadow: inset 0 0 80px rgba(255, 0, 0, 0.15);
+    }
+
+    to {
+        box-shadow: inset 0 0 180px rgba(255, 0, 0, 0.55);
+    }
+}
+
+.warning-box {
+    width: 100%;
+    max-width: 950px;
+    min-width: 0;
+    border: 2px solid #ff0000;
+    padding: clamp(18px, 5vw, 55px);
+    background: rgba(20, 0, 0, 0.92);
+    box-shadow:
+        0 0 25px #ff0000,
+        inset 0 0 50px rgba(255, 0, 0, 0.2);
+}
+
+.warning-icon {
+    font-size: clamp(45px, 12vw, 110px);
+    margin-bottom: 15px;
+    animation: shake 0.2s infinite;
+}
+
+@keyframes shake {
+    0% { transform: translateX(-2px); }
+    50% { transform: translateX(2px); }
+    100% { transform: translateX(-2px); }
+}
+
+.warning-title {
+    font-size: clamp(25px, 7vw, 78px);
+    line-height: 1.05;
+    font-weight: 900;
+    color: #ff1111;
+    text-shadow:
+        0 0 10px #ff0000,
+        0 0 35px #ff0000;
+    overflow-wrap: anywhere;
+}
+
+.warning-message {
+    margin-top: 22px;
+    color: #ffaaaa;
+    font-size: clamp(13px, 3vw, 25px);
+    line-height: 1.6;
+    overflow-wrap: anywhere;
+}
+
+.voice-message {
+    margin-top: 24px;
+    color: #ffffff;
+    font-size: clamp(16px, 4vw, 34px);
+    font-weight: 900;
+    line-height: 1.4;
+    text-shadow: 0 0 12px #ff0000;
+    overflow-wrap: anywhere;
+}
+
+.countdown {
+    margin-top: 25px;
+    font-size: clamp(40px, 12vw, 110px);
+    font-weight: 900;
+    color: #ff0000;
+    text-shadow: 0 0 30px #ff0000;
+}
+
+/* FINAL */
+
+#final {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.final-box {
+    width: 100%;
+    max-width: 850px;
+    padding: clamp(15px, 4vw, 40px);
+}
+
+.final-title {
+    font-size: clamp(34px, 9vw, 95px);
+    font-weight: 900;
+    line-height: 1.1;
+    color: #ff2222;
+    text-shadow: 0 0 30px #ff0000;
+    overflow-wrap: anywhere;
+}
+
+.final-text {
+    margin-top: 22px;
+    color: #ddd;
+    font-size: clamp(14px, 3vw, 25px);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+.safe-note {
+    margin-top: 25px;
+    color: #777;
+    font-size: clamp(10px, 2vw, 15px);
+    line-height: 1.6;
+}
+
+/* SMALL DEVICES */
+
+@media (max-width: 700px) {
+    .content {
+        padding: 14px;
+    }
+
+    .hack-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 15px;
+    }
+
+    .mask-area img {
+        width: min(68vw, 260px);
+        max-height: 28vh;
+    }
+
+    .terminal {
+        min-height: 145px;
+        max-height: 190px;
+    }
+
+    .header {
+        margin-bottom: 12px;
+    }
+
+    .panel {
+        padding: 12px;
+    }
+}
+
+@media (max-width: 380px) {
+    .content {
+        padding: 10px;
+    }
+
+    .mask-area img {
+        width: min(60vw, 210px);
+    }
+
+    .start-button {
+        width: 100%;
+        padding: 14px 12px;
+    }
+
+    .terminal {
+        font-size: 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<div id="app">
+<!-- INTRO -->
+<section id="intro" class="screen active">
+    <div class="content">
+        <div class="intro-box">
+            <div class="logo-text">SECURE TERMINAL // PRIVATE ACCESS</div>
 
-    <div id="backgroundGrid"></div>
-    <div id="scanlines"></div>
-    <div id="vignette"></div>
+            <h1 class="main-title">HAMID THE HACKER</h1>
 
-    <main id="stage">
+            <p class="subtitle">
+                A cinematic hacker simulation is ready.<br>
+                Turn up your volume before continuing.
+            </p>
 
-        <!-- INTRO -->
-
-        <section id="intro" class="screen">
-
-            <div id="introTitle">
-                HAMID THE HACKER
-            </div>
-
-            <div id="introText"></div>
-
-            <div id="introInfo">
-                CINEMATIC SECURITY SIMULATION
-            </div>
-
-            <button id="startButton">
-                ▶ START EXPERIENCE
+            <button class="start-button" id="startButton">
+                ENTER THE SYSTEM
             </button>
+        </div>
+    </div>
+</section>
 
-            <div id="soundStatus">
-                Tap START to initialize sound.
+<!-- HACKING SEQUENCE -->
+<section id="hack" class="screen">
+    <div class="content">
+
+        <div class="header">
+            <span>REMOTE TERMINAL: HAMID-01</span>
+            <span id="connectionStatus">CONNECTION INITIALIZING...</span>
+        </div>
+
+        <div class="hack-grid">
+
+            <div class="mask-area">
+                <img src="hacker-mask.png" alt="Hacker mask">
+
+                <div class="mask-caption">
+                    UNKNOWN OPERATOR DETECTED
+                </div>
             </div>
 
-        </section>
+            <div class="panel">
 
-        <!-- HACKING SCENE -->
-
-        <section id="hackScreen" class="screen hidden">
-
-            <div id="header">
-                <span>REMOTE TERMINAL</span>
-                <span id="connection">CONNECTION: ACTIVE</span>
-            </div>
-
-            <img
-                id="hackerImage"
-                src="hacker-mask.png"
-                alt="Hacker mask"
-            >
-
-            <div id="status">
-                BOOTING REMOTE SYSTEM...
-            </div>
-
-            <div id="stageNumber">
-                STAGE 01 / SYSTEM INITIALIZATION
-            </div>
-
-            <div class="progressBox">
-
-                <div class="progressTop">
-                    <span id="progressName">
-                        SYSTEM BOOT
-                    </span>
-
-                    <span id="progressPercent">
-                        0%
-                    </span>
+                <div class="panel-title" id="stageTitle">
+                    INITIALIZING SYSTEM...
                 </div>
 
-                <div class="progressTrack">
-                    <div id="progressBar"></div>
+                <div class="progress-track">
+                    <div class="progress-bar" id="progressBar"></div>
                 </div>
 
-            </div>
-
-            <div id="terminalBox">
-                <div id="terminal"></div>
-            </div>
-
-            <div id="dataPanel">
-
-                <div id="dataHeader">
-                    DATA ACTIVITY MONITOR
+                <div class="progress-info">
+                    <span id="progressText">0%</span>
+                    <span id="stageNumber">STAGE 01</span>
                 </div>
 
-                <div id="currentFile">
-                    Waiting for system response...
-                </div>
+                <div class="terminal" id="terminal"></div>
 
-                <div id="dataStatus">
-                    TRANSFER STATUS: STANDBY
+                <div class="data-box">
+                    <div class="data-row">
+                        <span>ACTIVE PROCESS</span>
+                        <strong id="activeProcess">BOOT_SEQUENCE</strong>
+                    </div>
+
+                    <div class="data-row">
+                        <span>SIMULATED FILE</span>
+                        <strong id="currentFile">waiting...</strong>
+                    </div>
+
+                    <div class="data-row">
+                        <span>STATUS</span>
+                        <strong id="fileStatus">STANDBY</strong>
+                    </div>
                 </div>
 
             </div>
+        </div>
 
-            <div id="bottomBar">
-                <span id="signal">
-                    SIGNAL: SEARCHING
-                </span>
+        <div class="bottom-status">
+            <span>ENCRYPTION: ACTIVE</span>
+            <span>TRACE: HIDDEN</span>
+            <span>POWER: 100%</span>
+        </div>
 
-                <span id="security">
-                    SECURITY: UNKNOWN
-                </span>
+    </div>
+</section>
+
+<!-- WARNING -->
+<section id="warning" class="screen">
+    <div class="content">
+        <div class="warning-box">
+
+            <div class="warning-icon">☠</div>
+
+            <h1 class="warning-title">
+                YOUR DEVICE<br>
+                HAS BEEN HACKED
+            </h1>
+
+            <p class="warning-message">
+                UNAUTHORIZED ACCESS DETECTED<br>
+                SYSTEM CONTROL OVERRIDDEN
+            </p>
+
+            <div class="voice-message">
+                “DO NOT UNDERESTIMATE<br>
+                THE POWER OF A HACKER.”
             </div>
 
-        </section>
+            <div class="countdown" id="countdown">10</div>
 
-        <!-- WARNING -->
+        </div>
+    </div>
+</section>
 
-        <section id="warningScreen" class="screen hidden">
+<!-- FINAL REVEAL -->
+<section id="final" class="screen">
+    <div class="content">
+        <div class="final-box">
 
-            <div id="warningPanel">
+            <h1 class="final-title">
+                JUST KIDDING 😈
+            </h1>
 
-                <div id="warningSmall">
-                    ⚠ CRITICAL SYSTEM WARNING ⚠
-                </div>
+            <p class="final-text">
+                NOTHING WAS ACTUALLY HACKED.
+            </p>
 
-                <div id="warningTitle">
-                    SYSTEM COMPROMISED
-                </div>
+            <p class="safe-note">
+                This was only a visual prank simulation.<br>
+                No files, messages, accounts, passwords, or device data were accessed.
+            </p>
 
-                <div id="warningText">
-                    UNAUTHORIZED ACCESS DETECTED
-                    <br>
-                    DATA CHANNEL IS ACTIVE
-                    <br>
-                    SECURITY RESPONSE FAILED
-                    <br>
-                    FINAL SYSTEM LOCKDOWN STARTING
-                </div>
-
-                <div id="warningCountdown">
-                    10
-                </div>
-
-            </div>
-
-        </section>
-
-        <!-- FINAL REVEAL -->
-
-        <section id="finalScreen" class="screen hidden">
-
-            <div id="finalPanel">
-
-                <div id="finalTitle">
-                    JUST KIDDING 😈
-                </div>
-
-                <div id="finalText">
-                    NOTHING WAS ACTUALLY HACKED.
-                    <br><br>
-                    No files were copied.
-                    <br>
-                    No data was transferred.
-                    <br>
-                    No device information was accessed.
-                    <br>
-                    This was only a visual prank.
-                </div>
-
-                <div id="signature">
-                    — HAMID THE HACKER
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-</div>
-
-<div id="flash"></div>
+        </div>
+    </div>
+</section>
 
 <script>
+const intro = document.getElementById("intro");
+const hack = document.getElementById("hack");
+const warning = document.getElementById("warning");
+const finalScreen = document.getElementById("final");
 
-    const intro =
-        document.getElementById("intro");
+const startButton = document.getElementById("startButton");
+const terminal = document.getElementById("terminal");
+const progressBar = document.getElementById("progressBar");
+const progressText = document.getElementById("progressText");
+const stageTitle = document.getElementById("stageTitle");
+const stageNumber = document.getElementById("stageNumber");
+const connectionStatus = document.getElementById("connectionStatus");
+const activeProcess = document.getElementById("activeProcess");
+const currentFile = document.getElementById("currentFile");
+const fileStatus = document.getElementById("fileStatus");
+const countdown = document.getElementById("countdown");
 
-    const introText =
-        document.getElementById("introText");
+let audioContext = null;
+let soundEnabled = false;
 
-    const startButton =
-        document.getElementById("startButton");
+function showScreen(screen) {
+    [intro, hack, warning, finalScreen].forEach(item => {
+        item.classList.remove("active");
+    });
 
-    const soundStatus =
-        document.getElementById("soundStatus");
+    screen.classList.add("active");
+}
 
-    const hackScreen =
-        document.getElementById("hackScreen");
+function initializeSound() {
+    try {
+        const AudioContextClass =
+            window.AudioContext || window.webkitAudioContext;
 
-    const statusText =
-        document.getElementById("status");
+        if (!AudioContextClass) return;
 
-    const stageNumber =
-        document.getElementById("stageNumber");
+        audioContext = new AudioContextClass();
+        audioContext.resume();
+        soundEnabled = true;
+    } catch (error) {
+        soundEnabled = false;
+    }
+}
 
-    const connection =
-        document.getElementById("connection");
+function beep(frequency = 440, duration = 0.08, volume = 0.04) {
+    if (!soundEnabled || !audioContext) return;
 
-    const progressName =
-        document.getElementById("progressName");
+    try {
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
 
-    const progressPercent =
-        document.getElementById("progressPercent");
+        oscillator.type = "sawtooth";
+        oscillator.frequency.value = frequency;
 
-    const progressBar =
-        document.getElementById("progressBar");
+        gain.gain.setValueAtTime(volume, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(
+            0.001,
+            audioContext.currentTime + duration
+        );
 
-    const terminal =
-        document.getElementById("terminal");
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
 
-    const currentFile =
-        document.getElementById("currentFile");
+        oscillator.start();
+        oscillator.stop(audioContext.currentTime + duration);
+    } catch (error) {
+        // Sound is optional.
+    }
+}
 
-    const dataStatus =
-        document.getElementById("dataStatus");
+function warningBeep() {
+    beep(130, 0.25, 0.12);
 
-    const signal =
-        document.getElementById("signal");
+    setTimeout(() => {
+        beep(90, 0.3, 0.1);
+    }, 280);
+}
 
-    const security =
-        document.getElementById("security");
+function speak(text) {
+    if (!("speechSynthesis" in window)) return;
 
-    const warningScreen =
-        document.getElementById("warningScreen");
+    window.speechSynthesis.cancel();
 
-    const warningCountdown =
-        document.getElementById("warningCountdown");
+    const voice = new SpeechSynthesisUtterance(text);
+    voice.lang = "en-US";
+    voice.rate = 0.72;
+    voice.pitch = 0.45;
+    voice.volume = 1;
 
-    const finalScreen =
-        document.getElementById("finalScreen");
+    window.speechSynthesis.speak(voice);
+}
 
-    const flash =
-        document.getElementById("flash");
+function addTerminalLine(text) {
+    const line = document.createElement("div");
+    line.className = "terminal-line";
+    line.textContent = "> " + text;
 
+    terminal.appendChild(line);
 
-    /* =====================================================
-       AUDIO
-    ===================================================== */
+    while (terminal.children.length > 8) {
+        terminal.removeChild(terminal.firstChild);
+    }
 
-    let audioContext = null;
-    let soundEnabled = false;
-    let started = false;
+    terminal.scrollTop = terminal.scrollHeight;
+    beep(300 + Math.random() * 200, 0.04, 0.025);
+}
 
+function updateProgress(value) {
+    progressBar.style.width = value + "%";
+    progressText.textContent = value + "%";
+}
 
-    function initializeSound() {
+function wait(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds));
+}
 
-        try {
+async function animateProgress(start, end, duration) {
+    const steps = Math.max(1, end - start);
+    const delay = duration / steps;
 
-            const AudioContext =
-                window.AudioContext ||
-                window.webkitAudioContext;
+    for (let value = start; value <= end; value++) {
+        updateProgress(value);
+        await wait(delay);
+    }
+}
 
-            if (!AudioContext) {
+async function runHackSequence() {
+    showScreen(hack);
 
-                soundStatus.textContent =
-                    "Audio is not supported.";
+    connectionStatus.textContent = "CONNECTION ACTIVE";
+    stageNumber.textContent = "STAGE 01";
 
-                return false;
-            }
-
-            audioContext =
-                new AudioContext();
-
-            if (
-                audioContext.state === "suspended"
-            ) {
-                audioContext.resume();
-            }
-
-            soundEnabled = true;
-
-            soundStatus.textContent =
-                "✓ SOUND INITIALIZED";
-
-            return true;
-
-        } catch (error) {
-
-            console.log(
-                "Sound initialization failed:",
-                error
-            );
-
-            soundStatus.textContent =
-                "Sound initialization failed.";
-
-            return false;
+    const stages = [
+        {
+            title: "ESTABLISHING REMOTE CONNECTION...",
+            process: "REMOTE_CONNECTION",
+            lines: [
+                "Searching for target device...",
+                "Target signal detected.",
+                "Connecting to simulated terminal...",
+                "Remote channel established."
+            ]
+        },
+        {
+            title: "ANALYZING DEVICE SECURITY...",
+            process: "SECURITY_ANALYSIS",
+            lines: [
+                "Scanning simulated security layers...",
+                "Checking system response...",
+                "Analyzing virtual permissions...",
+                "Security analysis complete."
+            ]
+        },
+        {
+            title: "DOWNLOADING HACKER PACKAGE...",
+            process: "PACKAGE_DOWNLOAD",
+            lines: [
+                "Preparing simulated package...",
+                "Downloading visual modules...",
+                "Checking package signature...",
+                "Package download complete."
+            ]
+        },
+        {
+            title: "INSTALLING SYSTEM MODULES...",
+            process: "FAKE_INSTALLATION",
+            lines: [
+                "Unpacking simulated modules...",
+                "Loading interface components...",
+                "Installing visual system layer...",
+                "Starting simulated process..."
+            ]
+        },
+        {
+            title: "INDEXING SIMULATED DEVICE DATA...",
+            process: "DATA_INDEXING",
+            lines: [
+                "Creating virtual file index...",
+                "Reading simulated directory map...",
+                "Generating fake file records...",
+                "Virtual index created."
+            ]
+        },
+        {
+            title: "COPYING SIMULATED FILES...",
+            process: "FAKE_FILE_COPY",
+            lines: [
+                "Preparing fake file transfer...",
+                "Copying simulated records...",
+                "Verifying virtual file blocks...",
+                "Copy operation complete."
+            ]
+        },
+        {
+            title: "TRANSFERRING SIMULATED DATA...",
+            process: "DATA_TRANSFER",
+            lines: [
+                "Opening simulated transfer channel...",
+                "Encrypting visual transfer stream...",
+                "Sending fake data packets...",
+                "Transfer sequence complete."
+            ]
+        },
+        {
+            title: "FINAL SYSTEM ACCESS...",
+            process: "FINAL_ACCESS",
+            lines: [
+                "Checking simulated access level...",
+                "Final access layer reached.",
+                "System response locked.",
+                "WARNING SEQUENCE ARMED."
+            ]
         }
-    }
-
-
-    function beep(
-        frequency = 440,
-        duration = 0.08,
-        type = "square",
-        volume = 0.035
-    ) {
-
-        if (
-            !soundEnabled ||
-            !audioContext
-        ) {
-            return;
-        }
-
-        try {
-
-            const oscillator =
-                audioContext.createOscillator();
-
-            const gain =
-                audioContext.createGain();
-
-            oscillator.type =
-                type;
-
-            oscillator.frequency.setValueAtTime(
-                frequency,
-                audioContext.currentTime
-            );
-
-            gain.gain.setValueAtTime(
-                volume,
-                audioContext.currentTime
-            );
-
-            gain.gain.exponentialRampToValueAtTime(
-                0.001,
-                audioContext.currentTime + duration
-            );
-
-            oscillator.connect(gain);
-            gain.connect(audioContext.destination);
-
-            oscillator.start();
-
-            oscillator.stop(
-                audioContext.currentTime + duration
-            );
-
-        } catch (error) {
-
-            console.log(
-                "Audio playback error:",
-                error
-            );
-        }
-    }
-
-
-    function bootSound() {
-
-        beep(160, 0.15, "sawtooth", 0.05);
-
-        setTimeout(() => {
-            beep(240, 0.15, "sawtooth", 0.05);
-        }, 180);
-
-        setTimeout(() => {
-            beep(360, 0.18, "sawtooth", 0.05);
-        }, 360);
-
-        setTimeout(() => {
-            beep(520, 0.25, "sawtooth", 0.045);
-        }, 540);
-    }
-
-
-    function terminalBeep() {
-        beep(750, 0.025, "square", 0.018);
-    }
-
-
-    function transferBeep() {
-        beep(390, 0.045, "square", 0.025);
-    }
-
-
-    function warningSound() {
-
-        beep(110, 0.2, "sawtooth", 0.07);
-
-        setTimeout(() => {
-            beep(70, 0.2, "sawtooth", 0.07);
-        }, 260);
-
-        setTimeout(() => {
-            beep(110, 0.2, "sawtooth", 0.07);
-        }, 520);
-
-        setTimeout(() => {
-            beep(70, 0.2, "sawtooth", 0.07);
-        }, 780);
-    }
-
-
-    function finalSound() {
-
-        beep(330, 0.15, "sine", 0.035);
-
-        setTimeout(() => {
-            beep(440, 0.15, "sine", 0.035);
-        }, 180);
-
-        setTimeout(() => {
-            beep(660, 0.3, "sine", 0.04);
-        }, 360);
-    }
-
-
-    /* =====================================================
-       HELPERS
-    ===================================================== */
-
-    function wait(ms) {
-
-        return new Promise(resolve => {
-            setTimeout(resolve, ms);
-        });
-    }
-
-
-    async function typeText(
-        element,
-        text,
-        speed = 45
-    ) {
-
-        element.textContent = "";
-
-        for (
-            let i = 0;
-            i < text.length;
-            i++
-        ) {
-
-            element.textContent += text[i];
-
-            if (
-                soundEnabled &&
-                i % 2 === 0
-            ) {
-                beep(
-                    500,
-                    0.018,
-                    "square",
-                    0.012
-                );
-            }
-
-            await wait(speed);
-        }
-    }
-
-
-    function addTerminalLine(text) {
-
-        const line =
-            document.createElement("div");
-
-        line.className =
-            "terminalLine";
-
-        line.textContent =
-            text;
-
-        terminal.appendChild(line);
-
-        while (
-            terminal.children.length > 7
-        ) {
-            terminal.removeChild(
-                terminal.firstChild
-            );
-        }
-
-        terminalBeep();
-    }
-
-
-    async function progress(
-        title,
-        start,
-        end,
-        duration
-    ) {
-
-        progressName.textContent =
-            title;
-
-        const steps =
-            Math.max(1, end - start);
-
-        const delay =
-            duration / steps;
-
-        for (
-            let value = start;
-            value <= end;
-            value++
-        ) {
-
-            progressPercent.textContent =
-                value + "%";
-
-            progressBar.style.width =
-                value + "%";
-
-            if (
-                value % 4 === 0
-            ) {
-                transferBeep();
-            }
-
-            await wait(delay);
-        }
-    }
-
-
-    async function flashScreen(
-        amount = 2
-    ) {
-
-        for (
-            let i = 0;
-            i < amount;
-            i++
-        ) {
-
-            flash.style.opacity =
-                "0.75";
-
-            await wait(90);
-
-            flash.style.opacity =
-                "0";
-
-            await wait(130);
-        }
-    }
-
-
-    /* =====================================================
-       FAKE SYSTEM FILES
-    ===================================================== */
+    ];
 
     const fakeFiles = [
-
-        "boot_sector.bin",
         "system_registry.dat",
         "device_profile.db",
-        "application_cache.tmp",
-        "media_index.db",
-        "message_cache.dat",
         "gallery_database.db",
-        "download_history.log",
+        "message_cache.dat",
         "browser_session.tmp",
         "contact_index.dat",
         "system_backup.bin",
-        "private_cache.tmp",
         "network_profile.dat",
-        "account_session.log",
-        "security_token.bin",
         "device_snapshot.dat",
-        "system_report.log",
-        "backup_fragment.tmp"
+        "security_token.bin"
     ];
 
+    for (let i = 0; i < stages.length; i++) {
+        const stage = stages[i];
 
-    async function fakeInstallation() {
-
-        const installationSteps = [
-
-            "Preparing installation package...",
-            "Checking package signature...",
-            "Unpacking simulated modules...",
-            "Loading interface components...",
-            "Installing visual system layer...",
-            "Registering fake background service...",
-            "Starting simulated process...",
-            "Installation sequence complete."
-        ];
-
-        for (
-            const step of installationSteps
-        ) {
-
-            addTerminalLine(step);
-
-            await wait(
-                350 + Math.random() * 300
-            );
-        }
-    }
-
-
-    async function fakeCopying() {
-
-        for (
-            let i = 0;
-            i < fakeFiles.length;
-            i++
-        ) {
-
-            const file =
-                fakeFiles[i];
-
-            currentFile.textContent =
-                "FILE: " + file;
-
-            dataStatus.textContent =
-                "COPYING BLOCK " +
-                (i + 1) +
-                " / " +
-                fakeFiles.length;
-
-            transferBeep();
-
-            await wait(
-                220 + Math.random() * 280
-            );
-
-            if (
-                i % 3 === 0
-            ) {
-
-                addTerminalLine(
-                    "Copying " + file
-                );
-            }
-        }
-    }
-
-
-    /* =====================================================
-       MAIN SEQUENCE
-    ===================================================== */
-
-    async function runExperience() {
-
-        intro.classList.add("hidden");
-
-        hackScreen.classList.remove(
-            "hidden"
-        );
-
-        bootSound();
-
-        await wait(500);
-
-        statusText.textContent =
-            "REMOTE CONNECTION ESTABLISHED";
-
+        stageTitle.textContent = stage.title;
         stageNumber.textContent =
-            "STAGE 01 / CONNECTION";
+            "STAGE " + String(i + 1).padStart(2, "0");
 
-        signal.textContent =
-            "SIGNAL: LOCKED";
+        activeProcess.textContent = stage.process;
+        fileStatus.textContent = "PROCESSING";
 
-        security.textContent =
-            "SECURITY: CHECKING";
-
-        addTerminalLine(
-            "Opening remote terminal..."
-        );
-
-        addTerminalLine(
-            "Establishing encrypted channel..."
-        );
-
-        await progress(
-            "CONNECTION INITIALIZATION",
-            0,
-            14,
-            1100
-        );
-
-        await wait(400);
-
-        statusText.textContent =
-            "DEVICE RESPONSE DETECTED";
-
-        stageNumber.textContent =
-            "STAGE 02 / DEVICE DETECTION";
-
-        addTerminalLine(
-            "Searching for active device..."
-        );
-
-        addTerminalLine(
-            "Android device response found."
-        );
-
-        await progress(
-            "DEVICE DETECTION",
-            14,
-            27,
-            1000
-        );
-
-        signal.textContent =
-            "SIGNAL: FOUND";
-
-        await wait(350);
-
-        statusText.textContent =
-            "SECURITY LAYER IDENTIFIED";
-
-        stageNumber.textContent =
-            "STAGE 03 / SECURITY ANALYSIS";
-
-        addTerminalLine(
-            "Analyzing security permissions..."
-        );
-
-        addTerminalLine(
-            "Checking application response..."
-        );
-
-        addTerminalLine(
-            "Checking system configuration..."
-        );
-
-        await progress(
-            "SECURITY ANALYSIS",
-            27,
-            42,
-            1200
-        );
-
-        security.textContent =
-            "SECURITY: WEAK";
-
-        await wait(400);
-
-        statusText.textContent =
-            "INSTALLATION PACKAGE PREPARING";
-
-        stageNumber.textContent =
-            "STAGE 04 / PACKAGE INSTALLATION";
-
-        addTerminalLine(
-            "Preparing simulated installation..."
-        );
-
-        addTerminalLine(
-            "Downloading visual package..."
-        );
-
-        await progress(
-            "PACKAGE DOWNLOAD",
-            42,
-            55,
-            1000
-        );
-
-        await fakeInstallation();
-
-        await progress(
-            "INSTALLATION",
-            55,
-            66,
-            1000
-        );
-
-        await wait(400);
-
-        statusText.textContent =
-            "DATA INDEX FOUND";
-
-        stageNumber.textContent =
-            "STAGE 05 / DATA INDEXING";
-
-        addTerminalLine(
-            "Searching indexed data blocks..."
-        );
-
-        addTerminalLine(
-            "Preparing simulated file list..."
-        );
-
-        await progress(
-            "DATA INDEXING",
-            66,
-            72,
-            800
-        );
-
-        await wait(350);
-
-        statusText.textContent =
-            "COPYING SYSTEM DATA";
-
-        stageNumber.textContent =
-            "STAGE 06 / COPYING";
-
-        security.textContent =
-            "SECURITY: CRITICAL";
-
-        dataStatus.textContent =
-            "COPY OPERATION STARTING";
-
-        addTerminalLine(
-            "COPY OPERATION STARTING..."
-        );
-
-        addTerminalLine(
-            "Reading simulated data blocks..."
-        );
-
-        await fakeCopying();
-
-        await progress(
-            "DATA COPYING",
-            72,
-            84,
-            1500
-        );
-
-        await wait(400);
-
-        statusText.textContent =
-            "TRANSFERRING DATA";
-
-        stageNumber.textContent =
-            "STAGE 07 / TRANSFER";
-
-        signal.textContent =
-            "SIGNAL: ACTIVE";
-
-        dataStatus.textContent =
-            "SENDING SIMULATED DATA";
-
-        addTerminalLine(
-            "Transfer channel activated..."
-        );
-
-        addTerminalLine(
-            "Sending simulated data blocks..."
-        );
-
-        await progress(
-            "DATA TRANSFER",
-            84,
-            94,
-            1300
-        );
-
-        await wait(400);
-
-        statusText.textContent =
-            "FINAL ACCESS SEQUENCE";
-
-        stageNumber.textContent =
-            "STAGE 08 / FINAL ACCESS";
-
-        addTerminalLine(
-            "Final security bypass attempt..."
-        );
-
-        addTerminalLine(
-            "Trace signal detected..."
-        );
-
-        security.textContent =
-            "SECURITY: BREACHED";
-
-        await progress(
-            "FINAL ACCESS",
-            94,
-            99,
-            900
-        );
-
-        await wait(500);
-
-        statusText.classList.add(
-            "shake"
-        );
-
-        statusText.textContent =
-            "⚠ SYSTEM RESPONSE DETECTED ⚠";
-
-        addTerminalLine(
-            "WARNING: SYSTEM RESPONSE DETECTED"
-        );
-
-        addTerminalLine(
-            "WARNING: TRACE SIGNAL ACTIVE"
-        );
-
-        await flashScreen(2);
-
-        await wait(700);
-
-        hackScreen.classList.add(
-            "hidden"
-        );
-
-        warningScreen.classList.remove(
-            "hidden"
-        );
-
-        warningSound();
-
-        let count = 10;
-
-        warningCountdown.textContent =
-            count;
-
-        for (
-            let i = 0;
-            i < 10;
-            i++
-        ) {
-
-            await wait(700);
-
-            count--;
-
-            warningCountdown.textContent =
-                count;
-
-            beep(
-                140,
-                0.1,
-                "square",
-                0.04
-            );
-
-            if (
-                count === 7 ||
-                count === 4 ||
-                count === 2
-            ) {
-                await flashScreen(1);
-            }
+        for (const line of stage.lines) {
+            addTerminalLine(line);
+            await wait(420);
         }
 
-        await wait(600);
-
-        await flashScreen(3);
-
-        warningScreen.classList.add(
-            "hidden"
-        );
-
-        finalScreen.classList.remove(
-            "hidden"
-        );
-
-        finalSound();
-    }
-
-
-    /* =====================================================
-       START
-    ===================================================== */
-
-    startButton.addEventListener(
-        "click",
-        async function() {
-
-            if (started) {
-                return;
+        if (i === 5) {
+            for (const file of fakeFiles) {
+                currentFile.textContent = file;
+                fileStatus.textContent = "COPYING";
+                addTerminalLine("Copying simulated file: " + file);
+                await wait(260);
             }
 
-            started = true;
-
-            startButton.disabled =
-                true;
-
-            startButton.textContent =
-                "INITIALIZING...";
-
-            /*
-             * Audio starts directly after
-             * the user's tap.
-             */
-            initializeSound();
-
-            await wait(350);
-
-            await typeText(
-                introText,
-                "WELCOME TO THE WORLD OF HACKING",
-                48
-            );
-
-            await wait(900);
-
-            await typeText(
-                introText,
-                "DON'T LOOK AWAY...",
-                55
-            );
-
-            await wait(1000);
-
-            runExperience();
+            fileStatus.textContent = "COPIED";
         }
+
+        if (i === 6) {
+            for (let packet = 1; packet <= 8; packet++) {
+                currentFile.textContent =
+                    "fake_packet_" + String(packet).padStart(2, "0");
+
+                fileStatus.textContent = "TRANSFERRING";
+                addTerminalLine("Transferring fake packet " + packet + "/8");
+                await wait(300);
+            }
+
+            fileStatus.textContent = "TRANSFERRED";
+        }
+
+        await animateProgress(
+            Math.round((i / stages.length) * 100),
+            Math.round(((i + 1) / stages.length) * 100),
+            700
+        );
+    }
+
+    currentFile.textContent = "ACCESS_GRANTED.sim";
+    fileStatus.textContent = "ACCESS GRANTED";
+
+    addTerminalLine("FINAL ACCESS GRANTED.");
+    addTerminalLine("WARNING SYSTEM ACTIVATED.");
+    addTerminalLine("DEVICE CONTROL SIMULATION LOCKED.");
+
+    await wait(1300);
+
+    showScreen(warning);
+
+    warningBeep();
+
+    speak(
+        "Warning. Your device has been hacked. " +
+        "Unauthorized access detected. " +
+        "Do not underestimate the power of a hacker."
     );
 
+    let time = 10;
+    countdown.textContent = time;
 
-    document.addEventListener(
-        "contextmenu",
-        function(event) {
-            event.preventDefault();
+    const timer = setInterval(() => {
+        time--;
+        countdown.textContent = time;
+        warningBeep();
+
+        if (time <= 0) {
+            clearInterval(timer);
+
+            if ("speechSynthesis" in window) {
+                window.speechSynthesis.cancel();
+            }
+
+            showScreen(finalScreen);
+
+            speak(
+                "Just kidding. Nothing was actually hacked."
+            );
         }
-    );
+    }, 1000);
+}
 
+startButton.addEventListener("click", () => {
+    initializeSound();
+
+    startButton.disabled = true;
+    startButton.textContent = "INITIALIZING...";
+
+    beep(180, 0.3, 0.1);
+
+    setTimeout(() => {
+        runHackSequence();
+    }, 700);
+});
+
+document.addEventListener("contextmenu", event => {
+    event.preventDefault();
+});
 </script>
 
 </body>
