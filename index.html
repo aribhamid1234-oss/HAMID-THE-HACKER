@@ -24,7 +24,7 @@
             background: #000;
             color: #fff;
             font-family: "Courier New", monospace;
-            overflow-x: hidden;
+            overflow: hidden;
         }
 
         body {
@@ -35,83 +35,129 @@
             font-family: inherit;
         }
 
-        #screen {
-            position: relative;
+        #app {
+            position: fixed;
+            inset: 0;
             width: 100%;
-            min-height: 100svh;
-            min-height: 100dvh;
+            height: 100svh;
+            height: 100dvh;
             background:
                 radial-gradient(
                     circle at center,
-                    rgba(100, 0, 0, 0.35),
-                    rgba(0, 0, 0, 0.98) 75%
+                    rgba(90, 0, 0, 0.28),
+                    #000 72%
                 );
-            overflow-x: hidden;
-            overflow-y: auto;
-            padding:
-                max(16px, env(safe-area-inset-top))
-                max(12px, env(safe-area-inset-right))
-                max(16px, env(safe-area-inset-bottom))
-                max(12px, env(safe-area-inset-left));
+            overflow: hidden;
+        }
+
+        /* =====================================================
+           BACKGROUND
+        ===================================================== */
+
+        #grid {
+            position: absolute;
+            inset: 0;
+            opacity: 0.18;
+            background-image:
+                linear-gradient(rgba(255, 0, 0, 0.12) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.12) 1px, transparent 1px);
+            background-size: 35px 35px;
+            animation: gridMove 10s linear infinite;
+        }
+
+        @keyframes gridMove {
+            from {
+                background-position: 0 0, 0 0;
+            }
+
+            to {
+                background-position: 35px 35px, 35px 35px;
+            }
         }
 
         #scanlines {
-            position: fixed;
+            position: absolute;
             inset: 0;
             pointer-events: none;
-            z-index: 50;
+            z-index: 80;
+
             background: repeating-linear-gradient(
                 to bottom,
-                rgba(255, 255, 255, 0.025) 0px,
-                rgba(255, 255, 255, 0.025) 1px,
+                rgba(255,255,255,0.025) 0px,
+                rgba(255,255,255,0.025) 1px,
                 transparent 2px,
                 transparent 4px
             );
         }
 
         #vignette {
-            position: fixed;
+            position: absolute;
             inset: 0;
             pointer-events: none;
-            z-index: 49;
-            box-shadow: inset 0 0 100px #000;
+            z-index: 81;
+
+            box-shadow:
+                inset 0 0 100px #000,
+                inset 0 0 180px rgba(255,0,0,0.18);
         }
 
-        #glow {
-            position: fixed;
-            inset: 0;
+        #redGlow {
+            position: absolute;
+            inset: -20%;
             pointer-events: none;
-            z-index: 1;
-            background: radial-gradient(
-                circle,
-                rgba(255, 0, 0, 0.1),
-                transparent 65%
-            );
-            animation: pulseGlow 3s infinite alternate;
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(255,0,0,0.16),
+                    transparent 62%
+                );
+            animation: redPulse 3s infinite alternate;
         }
 
-        @keyframes pulseGlow {
+        @keyframes redPulse {
             from {
-                opacity: 0.3;
+                transform: scale(0.9);
+                opacity: 0.35;
             }
 
             to {
+                transform: scale(1.15);
                 opacity: 1;
             }
         }
 
-        .page {
+        /* =====================================================
+           MAIN STAGE
+        ===================================================== */
+
+        #stage {
             position: relative;
-            z-index: 5;
+            z-index: 10;
+
             width: 100%;
-            max-width: 1000px;
-            min-height: calc(100svh - 32px);
-            min-height: calc(100dvh - 32px);
-            margin: auto;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            padding:
+                max(12px, env(safe-area-inset-top))
+                max(10px, env(safe-area-inset-right))
+                max(12px, env(safe-area-inset-bottom))
+                max(10px, env(safe-area-inset-left));
+        }
+
+        .screen {
+            width: 100%;
+            max-width: 980px;
+            height: 100%;
+
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
             text-align: center;
         }
 
@@ -119,66 +165,69 @@
             display: none !important;
         }
 
-        .red {
-            color: #ff2020;
-        }
-
-        .green {
-            color: #00ff66;
-        }
-
-        .white {
-            color: #fff;
-        }
+        /* =====================================================
+           INTRO
+        ===================================================== */
 
         #intro {
             width: 100%;
-            padding: 20px 8px;
+            padding: 12px;
         }
 
-        #intro h1 {
-            color: #ff2020;
-            font-size: clamp(22px, 6vw, 58px);
-            line-height: 1.2;
+        #introTitle {
+            color: #ff1717;
+            font-size: clamp(25px, 8vw, 70px);
+            line-height: 1.12;
             letter-spacing: 2px;
+
             text-shadow:
-                0 0 8px red,
-                0 0 25px red;
-            overflow-wrap: anywhere;
+                0 0 10px red,
+                0 0 28px red,
+                0 0 55px rgba(255,0,0,0.7);
         }
 
-        #typed {
-            margin-top: 22px;
-            min-height: 34px;
+        #introSubtitle {
+            margin-top: 18px;
+            min-height: 28px;
+
             color: #00ff66;
-            font-size: clamp(14px, 4vw, 28px);
+            font-size: clamp(13px, 4vw, 24px);
             line-height: 1.5;
+
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
-        #introSub {
-            margin-top: 16px;
-            color: #aaa;
-            font-size: clamp(11px, 3vw, 17px);
+        #introWarning {
+            margin-top: 14px;
+
+            color: #888;
+            font-size: clamp(10px, 2.8vw, 15px);
             line-height: 1.6;
-            overflow-wrap: anywhere;
         }
 
         #startButton {
             margin-top: 28px;
+
+            min-width: 220px;
+            max-width: 90vw;
+
             padding: 14px 22px;
-            max-width: 100%;
-            border: 2px solid #ff2020;
-            border-radius: 8px;
+
             color: #fff;
-            background: #180000;
+            background: #160000;
+
+            border: 2px solid red;
+            border-radius: 8px;
+
             box-shadow:
-                0 0 10px rgba(255, 0, 0, 0.5),
-                inset 0 0 12px rgba(255, 0, 0, 0.2);
-            font-size: clamp(12px, 3.5vw, 18px);
+                0 0 12px rgba(255,0,0,0.5),
+                inset 0 0 12px rgba(255,0,0,0.15);
+
+            font-size: clamp(12px, 3.6vw, 18px);
             font-weight: bold;
             letter-spacing: 1px;
+
             cursor: pointer;
         }
 
@@ -187,94 +236,223 @@
         }
 
         #soundStatus {
-            margin-top: 14px;
-            color: #777;
-            font-size: 11px;
+            margin-top: 12px;
+
+            color: #666;
+            font-size: 10px;
             line-height: 1.5;
-            overflow-wrap: anywhere;
         }
 
-        #experience {
+        /* =====================================================
+           MAIN HACKING SCENE
+        ===================================================== */
+
+        #hackScene {
             width: 100%;
-            padding: 12px 4px 25px;
+            height: 100%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            padding-top: 3px;
+            padding-bottom: 3px;
         }
 
-        #name {
+        #topBar {
             width: 100%;
-            color: #ff2020;
-            font-size: clamp(18px, 5vw, 42px);
-            font-weight: bold;
-            line-height: 1.3;
-            letter-spacing: 1px;
-            text-shadow: 0 0 15px red;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            padding: 5px 4px;
+
+            color: #ff2929;
+            font-size: clamp(8px, 2.4vw, 13px);
+
+            border-bottom: 1px solid rgba(255,0,0,0.35);
+        }
+
+        #topLeft,
+        #topRight {
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
-        #maskContainer {
+        #maskWrap {
             width: 100%;
+
             display: flex;
             justify-content: center;
             align-items: center;
-            margin: 18px auto 12px;
+
+            padding: 4px 0;
         }
 
         #hackerImage {
             display: block;
-            width: min(82vw, 440px);
-            height: auto;
-            max-width: 100%;
-            max-height: 38svh;
-            max-height: 38dvh;
+
+            width: min(52vw, 330px);
+            max-width: 68vw;
+
+            max-height: 20svh;
+            max-height: 20dvh;
+
             object-fit: contain;
+
             filter:
-                drop-shadow(0 0 12px red)
-                drop-shadow(0 0 30px rgba(255, 0, 0, 0.5));
-            animation: maskPulse 2.5s infinite alternate;
+                drop-shadow(0 0 10px red)
+                drop-shadow(0 0 25px rgba(255,0,0,0.55));
+
+            animation: maskPulse 2.2s infinite alternate;
         }
 
         @keyframes maskPulse {
             from {
                 transform: scale(0.98);
+
                 filter:
-                    drop-shadow(0 0 10px red)
-                    drop-shadow(0 0 20px rgba(255, 0, 0, 0.35));
+                    drop-shadow(0 0 8px red)
+                    drop-shadow(0 0 18px rgba(255,0,0,0.4));
             }
 
             to {
-                transform: scale(1.02);
+                transform: scale(1.03);
+
                 filter:
-                    drop-shadow(0 0 18px red)
-                    drop-shadow(0 0 38px rgba(255, 0, 0, 0.75));
+                    drop-shadow(0 0 15px red)
+                    drop-shadow(0 0 35px rgba(255,0,0,0.8));
             }
         }
 
-        #sceneText {
+        #mainStatus {
             width: 100%;
-            margin: 8px auto 15px;
-            color: #ff3030;
-            font-size: clamp(13px, 3.7vw, 23px);
-            line-height: 1.5;
+
+            color: #ff2222;
+
+            font-size: clamp(12px, 3.8vw, 22px);
             font-weight: bold;
+            line-height: 1.4;
+
+            overflow-wrap: anywhere;
+            word-break: break-word;
+
+            text-shadow: 0 0 10px red;
+        }
+
+        /* =====================================================
+           PROGRESS BOX
+        ===================================================== */
+
+        .progressBox {
+            width: 100%;
+            max-width: 800px;
+
+            margin-top: 6px;
+
+            padding: 8px;
+
+            background: rgba(0,0,0,0.75);
+            border: 1px solid #3b0000;
+            border-radius: 6px;
+        }
+
+        .progressLabel {
+            width: 100%;
+
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+
+            color: #ddd;
+
+            font-size: clamp(9px, 2.7vw, 14px);
+            line-height: 1.4;
+
+            text-align: left;
+
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
+        .progressLabel span:first-child {
+            color: #ff2d2d;
+        }
+
+        .progressTrack {
+            width: 100%;
+            height: 12px;
+
+            margin-top: 5px;
+
+            background: #180000;
+            border: 1px solid #460000;
+
+            overflow: hidden;
+        }
+
+        .progressBar {
+            width: 0%;
+            height: 100%;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #550000,
+                    #ff0000,
+                    #ff5757
+                );
+
+            box-shadow:
+                0 0 10px red;
+
+            transition: width 0.15s linear;
+        }
+
+        /* =====================================================
+           TERMINAL
+        ===================================================== */
+
+        #terminalBox {
+            width: 100%;
+            max-width: 800px;
+
+            height: 17svh;
+            height: 17dvh;
+
+            min-height: 80px;
+
+            margin-top: 6px;
+
+            padding: 8px;
+
+            background: rgba(0,0,0,0.88);
+
+            border: 1px solid #313131;
+            border-radius: 5px;
+
+            overflow: hidden;
+
+            text-align: left;
+
+            box-shadow:
+                inset 0 0 20px rgba(255,0,0,0.05),
+                0 0 12px rgba(255,0,0,0.12);
+        }
+
         #terminal {
             width: 100%;
-            max-width: 850px;
-            margin: 10px auto 18px;
-            padding: 14px;
-            border: 1px solid #333;
-            border-radius: 8px;
-            background: rgba(0, 0, 0, 0.78);
-            box-shadow:
-                0 0 15px rgba(255, 0, 0, 0.18),
-                inset 0 0 18px rgba(255, 0, 0, 0.06);
-            text-align: left;
+            height: 100%;
+
+            overflow: hidden;
+
             color: #00ff66;
-            font-size: clamp(10px, 2.9vw, 16px);
-            line-height: 1.65;
+
+            font-size: clamp(8px, 2.4vw, 13px);
+            line-height: 1.45;
+
             overflow-wrap: anywhere;
             word-break: break-word;
         }
@@ -283,7 +461,6 @@
             width: 100%;
             overflow-wrap: anywhere;
             word-break: break-word;
-            white-space: normal;
         }
 
         .terminalLine::before {
@@ -291,247 +468,339 @@
             color: #ff2020;
         }
 
-        #messageLayer {
+        /* =====================================================
+           DATA TRANSFER
+        ===================================================== */
+
+        #dataPanel {
             width: 100%;
-            min-height: 120px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 10px 4px;
+            max-width: 800px;
+
+            margin-top: 6px;
+
+            padding: 7px 8px;
+
+            border: 1px solid #380000;
+            background: rgba(40,0,0,0.35);
         }
 
-        #message {
-            width: 100%;
+        #dataTitle {
+            color: #ff3030;
+
+            font-size: clamp(9px, 2.5vw, 13px);
+            line-height: 1.4;
+
+            text-align: left;
+
+            overflow-wrap: anywhere;
+        }
+
+        #fileName {
+            margin-top: 4px;
+
             color: #fff;
-            font-size: clamp(15px, 4.8vw, 34px);
-            line-height: 1.45;
-            font-weight: bold;
-            text-align: center;
+
+            font-size: clamp(9px, 2.7vw, 14px);
+            line-height: 1.4;
+
+            text-align: left;
+
+            overflow-wrap: anywhere;
+            word-break: break-all;
+        }
+
+        #transferStatus {
+            margin-top: 2px;
+
+            color: #ff6666;
+
+            font-size: clamp(8px, 2.3vw, 12px);
+            line-height: 1.4;
+
+            text-align: left;
+
+            overflow-wrap: anywhere;
+        }
+
+        /* =====================================================
+           BOTTOM STATUS
+        ===================================================== */
+
+        #bottomBar {
+            width: 100%;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+
+            padding: 4px;
+
+            border-top: 1px solid rgba(255,0,0,0.25);
+
+            color: #777;
+
+            font-size: clamp(8px, 2.3vw, 12px);
+
+            text-align: left;
+        }
+
+        #bottomBar div {
             overflow-wrap: anywhere;
             word-break: break-word;
-            text-shadow: 0 0 12px red;
         }
 
-        #timer {
-            margin-top: 8px;
-            color: #ff2020;
-            font-size: clamp(20px, 7vw, 48px);
-            font-weight: bold;
-            line-height: 1.2;
-            overflow-wrap: anywhere;
-        }
+        /* =====================================================
+           FULL WARNING
+        ===================================================== */
 
-        #time {
-            color: #fff;
-        }
-
-        #warning {
+        #warningScene {
             width: 100%;
-            padding: 25px 6px;
-            text-align: center;
+            padding: 10px;
         }
 
-        #warningContent {
+        #warningPanel {
             width: 100%;
+
+            padding: clamp(14px, 5vw, 32px);
+
             border: 2px solid red;
             border-radius: 8px;
-            padding: clamp(16px, 5vw, 35px);
-            background:
-                linear-gradient(
-                    rgba(90, 0, 0, 0.3),
-                    rgba(0, 0, 0, 0.95)
-                );
-            box-shadow:
-                0 0 18px red,
-                inset 0 0 20px rgba(255, 0, 0, 0.15);
-        }
 
-        #warningSmall {
-            color: #ff6060;
-            font-size: clamp(11px, 3vw, 18px);
-            line-height: 1.6;
-            overflow-wrap: anywhere;
-        }
-
-        #warningBig {
-            margin-top: 18px;
-            color: red;
-            font-size: clamp(23px, 8vw, 65px);
-            line-height: 1.15;
-            font-weight: bold;
-            text-shadow: 0 0 15px red;
-            overflow-wrap: anywhere;
-            word-break: break-word;
-        }
-
-        #warningBottom {
-            margin-top: 20px;
-            color: #fff;
-            font-size: clamp(11px, 3.2vw, 19px);
-            line-height: 1.6;
-            overflow-wrap: anywhere;
-        }
-
-        #flash {
-            position: fixed;
-            inset: 0;
-            z-index: 100;
-            background: red;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #final {
-            width: 100%;
-            padding: 20px 6px;
-        }
-
-        #finalBox {
-            width: 100%;
-            border: 2px solid #00ff66;
-            border-radius: 8px;
-            padding: clamp(18px, 6vw, 40px);
             background:
                 radial-gradient(
                     circle,
-                    rgba(0, 100, 40, 0.2),
-                    rgba(0, 0, 0, 0.95)
+                    rgba(110,0,0,0.38),
+                    rgba(0,0,0,0.96)
                 );
+
             box-shadow:
-                0 0 20px rgba(0, 255, 100, 0.5),
-                inset 0 0 20px rgba(0, 255, 100, 0.1);
+                0 0 20px red,
+                inset 0 0 25px rgba(255,0,0,0.12);
+
+            animation: warningPulse 0.8s infinite alternate;
+        }
+
+        @keyframes warningPulse {
+            from {
+                box-shadow:
+                    0 0 10px red,
+                    inset 0 0 12px rgba(255,0,0,0.08);
+            }
+
+            to {
+                box-shadow:
+                    0 0 35px red,
+                    inset 0 0 30px rgba(255,0,0,0.2);
+            }
+        }
+
+        #warningSmall {
+            color: #ff5555;
+
+            font-size: clamp(10px, 3vw, 17px);
+            line-height: 1.5;
+        }
+
+        #warningBig {
+            margin-top: 14px;
+
+            color: red;
+
+            font-size: clamp(24px, 8vw, 65px);
+            line-height: 1.15;
+
+            font-weight: bold;
+
+            text-shadow:
+                0 0 12px red,
+                0 0 30px red;
+
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        #warningDetail {
+            margin-top: 16px;
+
+            color: #fff;
+
+            font-size: clamp(10px, 3vw, 17px);
+            line-height: 1.65;
+
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        #countdown {
+            margin-top: 18px;
+
+            color: red;
+
+            font-size: clamp(22px, 7vw, 45px);
+            line-height: 1.2;
+
+            font-weight: bold;
+        }
+
+        /* =====================================================
+           FINAL REVEAL
+        ===================================================== */
+
+        #finalScene {
+            width: 100%;
+            padding: 10px;
+        }
+
+        #finalPanel {
+            width: 100%;
+
+            padding: clamp(18px, 6vw, 42px);
+
+            border: 2px solid #00ff66;
+            border-radius: 8px;
+
+            background:
+                radial-gradient(
+                    circle,
+                    rgba(0,90,35,0.25),
+                    rgba(0,0,0,0.95)
+                );
+
+            box-shadow:
+                0 0 25px rgba(0,255,100,0.45),
+                inset 0 0 25px rgba(0,255,100,0.08);
         }
 
         #finalTitle {
             color: #00ff66;
-            font-size: clamp(24px, 8vw, 70px);
-            line-height: 1.2;
+
+            font-size: clamp(28px, 9vw, 75px);
+            line-height: 1.15;
+
             font-weight: bold;
+
             text-shadow: 0 0 15px #00ff66;
+
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
-        #finalText {
-            margin-top: 20px;
+        #finalMessage {
+            margin-top: 18px;
+
             color: #fff;
-            font-size: clamp(13px, 4vw, 25px);
-            line-height: 1.6;
+
+            font-size: clamp(12px, 3.7vw, 23px);
+            line-height: 1.65;
+
             overflow-wrap: anywhere;
             word-break: break-word;
         }
 
         #signature {
-            margin-top: 24px;
-            color: #ff2020;
-            font-size: clamp(12px, 3.5vw, 22px);
+            margin-top: 20px;
+
+            color: red;
+
+            font-size: clamp(11px, 3vw, 18px);
             line-height: 1.5;
             font-weight: bold;
-            overflow-wrap: anywhere;
+        }
+
+        /* =====================================================
+           FLASH
+        ===================================================== */
+
+        #flash {
+            position: fixed;
+            inset: 0;
+
+            z-index: 100;
+
+            background: red;
+
+            opacity: 0;
+
+            pointer-events: none;
         }
 
         .shake {
-            animation: shake 0.12s infinite;
+            animation: shake 0.11s infinite;
         }
 
         @keyframes shake {
             0% {
-                transform: translate(0, 0);
+                transform: translate(0,0);
             }
 
             25% {
-                transform: translate(-2px, 1px);
+                transform: translate(-2px,1px);
             }
 
             50% {
-                transform: translate(2px, -1px);
+                transform: translate(2px,-1px);
             }
 
             75% {
-                transform: translate(-1px, -2px);
+                transform: translate(-1px,-2px);
             }
 
             100% {
-                transform: translate(1px, 2px);
+                transform: translate(1px,2px);
             }
         }
+
+        /* =====================================================
+           SMALL PHONES
+        ===================================================== */
 
         @media (max-width: 480px) {
-            #screen {
-                padding-left: 10px;
-                padding-right: 10px;
-            }
-
-            .page {
-                min-height: calc(100svh - 20px);
-                min-height: calc(100dvh - 20px);
-            }
-
-            #intro {
-                padding-top: 15px;
-                padding-bottom: 15px;
-            }
 
             #hackerImage {
-                width: min(78vw, 330px);
-                max-height: 31svh;
-                max-height: 31dvh;
+                width: min(48vw, 250px);
+                max-height: 17dvh;
             }
 
-            #terminal {
-                padding: 11px;
-                font-size: 11px;
-                line-height: 1.55;
+            #terminalBox {
+                height: 15dvh;
             }
 
-            #messageLayer {
-                min-height: 105px;
+            #dataPanel {
+                padding: 6px;
             }
 
-            #message {
-                font-size: 18px;
-            }
-
-            #warningContent {
-                padding: 18px 12px;
+            .progressTrack {
+                height: 10px;
             }
         }
 
-        @media (max-height: 600px) and (orientation: landscape) {
-            .page {
-                justify-content: flex-start;
-            }
+        /* =====================================================
+           LANDSCAPE PHONES
+        ===================================================== */
 
-            #experience {
-                padding-top: 5px;
-            }
+        @media (orientation: landscape) and (max-height: 600px) {
 
             #hackerImage {
-                width: min(38vw, 280px);
-                max-height: 42svh;
-                max-height: 42dvh;
+                width: min(28vw, 230px);
+                max-height: 18dvh;
             }
 
-            #maskContainer {
-                margin: 8px auto;
+            #terminalBox {
+                height: 15dvh;
             }
 
-            #terminal {
-                margin-top: 8px;
-                margin-bottom: 8px;
+            #maskWrap {
+                padding: 1px 0;
             }
 
-            #messageLayer {
-                min-height: 75px;
+            #progressBox,
+            .progressBox {
+                margin-top: 3px;
             }
-        }
 
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
+            #dataPanel {
+                margin-top: 3px;
             }
         }
     </style>
@@ -539,23 +808,27 @@
 
 <body>
 
-<div id="screen">
+<div id="app">
 
-    <div id="glow"></div>
-    <div id="scanlines"></div>
-    <div id="vignette"></div>
+    <div id="grid"></div>
+    <div id="redGlow"></div>
 
-    <main class="page">
+    <!-- =====================================================
+         INTRO
+    ===================================================== -->
 
-        <!-- INTRO -->
-        <section id="intro">
+    <div id="stage">
 
-            <h1>HAMID THE HACKER</h1>
+        <section id="intro" class="screen">
 
-            <div id="typed"></div>
+            <div id="introTitle">
+                HAMID THE HACKER
+            </div>
 
-            <div id="introSub">
-                A cinematic hacker simulation experience
+            <div id="introSubtitle"></div>
+
+            <div id="introWarning">
+                CINEMATIC SECURITY SIMULATION
             </div>
 
             <button id="startButton">
@@ -563,19 +836,28 @@
             </button>
 
             <div id="soundStatus">
-                Sound is disabled until you tap START EXPERIENCE.
+                Sound starts after pressing START.
             </div>
 
         </section>
 
-        <!-- MAIN EXPERIENCE -->
-        <section id="experience" class="hidden">
+        <!-- =================================================
+             HACKING SCENE
+        ================================================= -->
 
-            <div id="name">
-                HAMID THE HACKER
+        <section id="hackScene" class="screen hidden">
+
+            <div id="topBar">
+                <div id="topLeft">
+                    SECURE TERMINAL
+                </div>
+
+                <div id="topRight">
+                    CONNECTION: ACTIVE
+                </div>
             </div>
 
-            <div id="maskContainer">
+            <div id="maskWrap">
                 <img
                     id="hackerImage"
                     src="hacker-mask.png"
@@ -583,61 +865,119 @@
                 >
             </div>
 
-            <div id="sceneText">
-                CONNECTION ESTABLISHED...
+            <div id="mainStatus">
+                INITIALIZING REMOTE SYSTEM...
             </div>
 
-            <div id="terminal"></div>
+            <div class="progressBox">
 
-            <div id="messageLayer">
-                <div id="message"></div>
+                <div class="progressLabel">
+                    <span id="progressTitle">
+                        SYSTEM ANALYSIS
+                    </span>
+
+                    <span id="progressPercent">
+                        0%
+                    </span>
+                </div>
+
+                <div class="progressTrack">
+                    <div
+                        id="progressBar"
+                        class="progressBar"
+                    ></div>
+                </div>
+
             </div>
 
-            <div id="timer">
-                SYSTEM COUNTDOWN:
-                <span id="time">10</span>
+            <div id="terminalBox">
+                <div id="terminal"></div>
+            </div>
+
+            <div id="dataPanel">
+
+                <div id="dataTitle">
+                    DATA TRANSFER MONITOR
+                </div>
+
+                <div id="fileName">
+                    Waiting for target...
+                </div>
+
+                <div id="transferStatus">
+                    TRANSFER: 0 MB / 0 MB
+                </div>
+
+            </div>
+
+            <div id="bottomBar">
+
+                <div id="networkStatus">
+                    SIGNAL: SEARCHING...
+                </div>
+
+                <div id="securityStatus">
+                    SECURITY: UNKNOWN
+                </div>
+
             </div>
 
         </section>
 
-        <!-- WARNING -->
-        <section id="warning" class="hidden">
+        <!-- =================================================
+             WARNING SCENE
+        ================================================= -->
 
-            <div id="warningContent">
+        <section id="warningScene" class="screen hidden">
+
+            <div id="warningPanel">
 
                 <div id="warningSmall">
-                    ⚠ SECURITY ALERT ⚠
+                    ⚠ CRITICAL SECURITY ALERT ⚠
                 </div>
 
                 <div id="warningBig">
                     SYSTEM COMPROMISED
                 </div>
 
-                <div id="warningBottom">
-                    DO NOT CLOSE THIS SCREEN
+                <div id="warningDetail">
+                    UNAUTHORIZED ACCESS SEQUENCE DETECTED
                     <br>
-                    FINAL SECURITY CHECK IN PROGRESS...
+                    DATA TRANSFER CHANNEL ACTIVE
+                    <br>
+                    FINAL SECURITY CHECK IN PROGRESS
+                </div>
+
+                <div id="countdown">
+                    10
                 </div>
 
             </div>
 
         </section>
 
-        <!-- FINAL -->
-        <section id="final" class="hidden">
+        <!-- =================================================
+             FINAL SCENE
+        ================================================= -->
 
-            <div id="finalBox">
+        <section id="finalScene" class="screen hidden">
+
+            <div id="finalPanel">
 
                 <div id="finalTitle">
                     JUST KIDDING 😈
                 </div>
 
-                <div id="finalText">
+                <div id="finalMessage">
                     NOTHING WAS ACTUALLY HACKED.
                     <br><br>
-                    This was only a visual prank.
+                    No files were copied.
                     <br>
-                    Your phone and data are safe.
+                    No data was transferred.
+                    <br>
+                    No camera or device information was accessed.
+                    <br>
+                    This entire experience was a visual prank.
                 </div>
 
                 <div id="signature">
@@ -648,80 +988,139 @@
 
         </section>
 
-    </main>
+    </div>
 
 </div>
 
 <div id="flash"></div>
 
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
+
 <script>
+
+    /* =========================================================
+       ELEMENTS
+    ========================================================= */
+
     const intro = document.getElementById("intro");
-    const typed = document.getElementById("typed");
+    const introSubtitle = document.getElementById("introSubtitle");
     const startButton = document.getElementById("startButton");
     const soundStatus = document.getElementById("soundStatus");
 
-    const experience = document.getElementById("experience");
-    const sceneText = document.getElementById("sceneText");
-    const terminal = document.getElementById("terminal");
-    const message = document.getElementById("message");
-    const time = document.getElementById("time");
+    const hackScene = document.getElementById("hackScene");
+    const mainStatus = document.getElementById("mainStatus");
 
-    const warning = document.getElementById("warning");
-    const finalScreen = document.getElementById("final");
+    const progressTitle =
+        document.getElementById("progressTitle");
 
-    const flash = document.getElementById("flash");
+    const progressPercent =
+        document.getElementById("progressPercent");
+
+    const progressBar =
+        document.getElementById("progressBar");
+
+    const terminal =
+        document.getElementById("terminal");
+
+    const fileName =
+        document.getElementById("fileName");
+
+    const transferStatus =
+        document.getElementById("transferStatus");
+
+    const networkStatus =
+        document.getElementById("networkStatus");
+
+    const securityStatus =
+        document.getElementById("securityStatus");
+
+    const warningScene =
+        document.getElementById("warningScene");
+
+    const countdown =
+        document.getElementById("countdown");
+
+    const finalScene =
+        document.getElementById("finalScene");
+
+    const flash =
+        document.getElementById("flash");
+
+
+    /* =========================================================
+       AUDIO
+    ========================================================= */
 
     let audioContext = null;
     let soundEnabled = false;
     let started = false;
 
+
     function initializeSound() {
+
         try {
+
             const AudioContext =
                 window.AudioContext ||
                 window.webkitAudioContext;
 
             if (!AudioContext) {
+
                 soundStatus.textContent =
-                    "Audio is not supported on this browser.";
+                    "Audio is not supported by this browser.";
+
                 return false;
             }
 
             audioContext = new AudioContext();
 
             if (audioContext.state === "suspended") {
+
                 audioContext.resume();
             }
 
             soundEnabled = true;
 
             soundStatus.textContent =
-                "Sound initialized successfully.";
+                "✓ SOUND INITIALIZED";
 
             return true;
 
         } catch (error) {
+
+            console.log("Audio initialization error:", error);
+
             soundStatus.textContent =
-                "Sound could not be initialized.";
+                "Sound initialization failed.";
+
             return false;
         }
     }
 
-    function playTone(
-        frequency = 440,
-        duration = 0.12,
+
+    function tone(
+        frequency,
+        duration,
         type = "square",
-        volume = 0.04
+        volume = 0.035
     ) {
+
         if (!soundEnabled || !audioContext) {
             return;
         }
 
         try {
-            const oscillator = audioContext.createOscillator();
-            const gain = audioContext.createGain();
+
+            const oscillator =
+                audioContext.createOscillator();
+
+            const gain =
+                audioContext.createGain();
 
             oscillator.type = type;
+
             oscillator.frequency.setValueAtTime(
                 frequency,
                 audioContext.currentTime
@@ -741,261 +1140,589 @@
             gain.connect(audioContext.destination);
 
             oscillator.start();
+
             oscillator.stop(
                 audioContext.currentTime + duration
             );
 
         } catch (error) {
-            console.log("Audio error:", error);
+
+            console.log("Tone error:", error);
         }
     }
 
+
     function startupSound() {
-        playTone(220, 0.15, "sawtooth", 0.05);
+
+        tone(170, 0.15, "sawtooth", 0.05);
 
         setTimeout(() => {
-            playTone(330, 0.15, "sawtooth", 0.05);
-        }, 160);
-
-        setTimeout(() => {
-            playTone(440, 0.25, "sawtooth", 0.05);
-        }, 320);
-    }
-
-    function terminalSound() {
-        playTone(700, 0.035, "square", 0.025);
-    }
-
-    function messageSound() {
-        playTone(180, 0.12, "sawtooth", 0.04);
-
-        setTimeout(() => {
-            playTone(90, 0.18, "sawtooth", 0.035);
-        }, 130);
-    }
-
-    function warningSound() {
-        playTone(100, 0.2, "sawtooth", 0.07);
-
-        setTimeout(() => {
-            playTone(70, 0.2, "sawtooth", 0.07);
-        }, 250);
-
-        setTimeout(() => {
-            playTone(100, 0.2, "sawtooth", 0.07);
-        }, 500);
-    }
-
-    function finalSound() {
-        playTone(330, 0.15, "sine", 0.04);
-
-        setTimeout(() => {
-            playTone(440, 0.15, "sine", 0.04);
+            tone(240, 0.15, "sawtooth", 0.05);
         }, 180);
 
         setTimeout(() => {
-            playTone(660, 0.3, "sine", 0.04);
+            tone(340, 0.18, "sawtooth", 0.05);
+        }, 360);
+
+        setTimeout(() => {
+            tone(500, 0.25, "sawtooth", 0.045);
+        }, 540);
+    }
+
+
+    function computerBeep() {
+        tone(800, 0.025, "square", 0.018);
+    }
+
+
+    function transferBeep() {
+        tone(420, 0.05, "square", 0.025);
+    }
+
+
+    function warningSound() {
+
+        tone(110, 0.18, "sawtooth", 0.07);
+
+        setTimeout(() => {
+            tone(75, 0.18, "sawtooth", 0.07);
+        }, 250);
+
+        setTimeout(() => {
+            tone(110, 0.18, "sawtooth", 0.07);
+        }, 500);
+
+        setTimeout(() => {
+            tone(75, 0.18, "sawtooth", 0.07);
+        }, 750);
+    }
+
+
+    function finalSound() {
+
+        tone(330, 0.15, "sine", 0.035);
+
+        setTimeout(() => {
+            tone(440, 0.15, "sine", 0.035);
+        }, 180);
+
+        setTimeout(() => {
+            tone(660, 0.3, "sine", 0.04);
         }, 360);
     }
 
-    function typeText(element, text, speed = 45) {
+
+    /* =========================================================
+       UTILITY
+    ========================================================= */
+
+    function wait(ms) {
+
         return new Promise(resolve => {
-            element.textContent = "";
-
-            let index = 0;
-
-            const interval = setInterval(() => {
-                element.textContent += text[index];
-                index++;
-
-                if (soundEnabled) {
-                    playTone(500, 0.025, "square", 0.015);
-                }
-
-                if (index >= text.length) {
-                    clearInterval(interval);
-                    resolve();
-                }
-            }, speed);
+            setTimeout(resolve, ms);
         });
     }
 
-    function wait(milliseconds) {
-        return new Promise(resolve => {
-            setTimeout(resolve, milliseconds);
-        });
+
+    async function typeText(element, text, speed = 45) {
+
+        element.textContent = "";
+
+        for (let i = 0; i < text.length; i++) {
+
+            element.textContent += text[i];
+
+            if (soundEnabled && i % 2 === 0) {
+                tone(500, 0.018, "square", 0.012);
+            }
+
+            await wait(speed);
+        }
     }
 
-    function addTerminalLine(text) {
-        const line = document.createElement("div");
-        line.className = "terminalLine";
-        line.textContent = text;
+
+    function addTerminal(text) {
+
+        const line =
+            document.createElement("div");
+
+        line.className =
+            "terminalLine";
+
+        line.textContent =
+            text;
 
         terminal.appendChild(line);
 
-        terminal.scrollTop = terminal.scrollHeight;
+        computerBeep();
 
-        terminalSound();
+        while (terminal.children.length > 7) {
+            terminal.removeChild(
+                terminal.firstChild
+            );
+        }
     }
 
-    async function showMessage(text, duration = 1300) {
-        message.textContent = text;
-        message.classList.remove("shake");
 
-        void message.offsetWidth;
+    async function animateProgress(
+        title,
+        start,
+        end,
+        duration
+    ) {
 
-        message.classList.add("shake");
+        progressTitle.textContent =
+            title;
 
-        messageSound();
+        const steps =
+            Math.max(1, end - start);
 
-        await wait(duration);
+        const delay =
+            duration / steps;
 
-        message.classList.remove("shake");
+        for (let value = start; value <= end; value++) {
+
+            progressPercent.textContent =
+                value + "%";
+
+            progressBar.style.width =
+                value + "%";
+
+            if (value % 5 === 0) {
+                transferBeep();
+            }
+
+            await wait(delay);
+        }
     }
 
-    async function runExperience() {
+
+    /* =========================================================
+       FAKE FILE NAMES
+    ========================================================= */
+
+    const fakeFiles = [
+
+        "system_cache.dat",
+        "device_config.bin",
+        "media_index.db",
+        "user_profile.tmp",
+        "messages_cache.dat",
+        "gallery_index.db",
+        "download_history.log",
+        "browser_session.tmp",
+        "private_cache.bin",
+        "system_status.dat",
+        "contact_index.db",
+        "application_data.tmp",
+        "backup_fragment.bin",
+        "account_session.log",
+        "device_backup.dat",
+        "network_cache.tmp"
+    ];
+
+
+    async function fakeDataTransfer() {
+
+        for (
+            let i = 0;
+            i < fakeFiles.length;
+            i++
+        ) {
+
+            const currentFile =
+                fakeFiles[i];
+
+            fileName.textContent =
+                "FILE: " + currentFile;
+
+            const mb =
+                (Math.random() * 8 + 1).toFixed(2);
+
+            transferStatus.textContent =
+                "TRANSFERRING: " +
+                mb +
+                " MB";
+
+            transferBeep();
+
+            await wait(
+                250 + Math.random() * 300
+            );
+
+            transferStatus.textContent =
+                "COPYING... " +
+                Math.floor(
+                    ((i + 1) /
+                        fakeFiles.length) *
+                        100
+                ) +
+                "%";
+
+            await wait(
+                180 + Math.random() * 250
+            );
+        }
+    }
+
+
+    /* =========================================================
+       SCREEN FLASH
+    ========================================================= */
+
+    async function redFlash(times = 2) {
+
+        for (let i = 0; i < times; i++) {
+
+            flash.style.opacity = "0.75";
+
+            await wait(90);
+
+            flash.style.opacity = "0";
+
+            await wait(120);
+        }
+    }
+
+
+    /* =========================================================
+       MAIN DRAMATIC SEQUENCE
+    ========================================================= */
+
+    async function runHackScene() {
+
         intro.classList.add("hidden");
-        experience.classList.remove("hidden");
+        hackScene.classList.remove("hidden");
 
         startupSound();
 
-        await wait(700);
-
-        sceneText.textContent = "CONNECTION ESTABLISHED...";
-        await showMessage("DEVICE SIGNAL DETECTED", 1100);
-
-        addTerminalLine("Initializing secure terminal...");
-        await wait(300);
-
-        addTerminalLine("Connecting to remote interface...");
-        await wait(300);
-
-        addTerminalLine("Checking system response...");
-        await wait(300);
-
-        addTerminalLine("Scanning available signals...");
-        await wait(400);
-
-        await showMessage("UNKNOWN ANDROID DEVICE", 1200);
-
-        addTerminalLine("Access layer detected...");
-        await wait(300);
-
-        addTerminalLine("Security protocol loading...");
-        await wait(300);
-
-        addTerminalLine("Analyzing device response...");
-        await wait(400);
-
-        await showMessage("ANALYZING SIGNAL...", 1200);
-
-        addTerminalLine("Searching for visible system information...");
-        await wait(350);
-
-        addTerminalLine("Checking connection status...");
-        await wait(350);
-
-        addTerminalLine("Checking device name...");
-        await wait(350);
-
-        addTerminalLine("Checking battery status...");
-        await wait(350);
-
-        await showMessage("SECURITY LAYER FOUND", 1200);
-
-        addTerminalLine("Preparing simulated access sequence...");
-        await wait(350);
-
-        addTerminalLine("COPYING FAKE SYSTEM LOGS...");
-        await wait(350);
-
-        addTerminalLine("SENDING SIMULATED DATA...");
-        await wait(350);
-
-        addTerminalLine("ACCESSING DEMO INTERFACE...");
         await wait(500);
 
-        await showMessage("ACCESS SEQUENCE STARTING...", 1300);
+        mainStatus.textContent =
+            "CONNECTION ESTABLISHED...";
 
-        addTerminalLine("Scanning visual interface...");
-        await wait(300);
+        networkStatus.textContent =
+            "SIGNAL: LOCKED";
 
-        addTerminalLine("Scanning system response...");
-        await wait(300);
+        securityStatus.textContent =
+            "SECURITY: ANALYZING";
 
-        addTerminalLine("Scanning network signal...");
-        await wait(300);
+        addTerminal(
+            "Initializing secure terminal..."
+        );
 
-        await showMessage("SYSTEM RESPONSE DETECTED", 1200);
-
-        addTerminalLine("Security level: CRITICAL");
         await wait(350);
 
-        addTerminalLine("Trace signal: ACTIVE");
-        await wait(350);
+        addTerminal(
+            "Searching for active device..."
+        );
 
-        addTerminalLine("Final security check...");
+        await animateProgress(
+            "DEVICE SCAN",
+            0,
+            18,
+            1100
+        );
+
+        addTerminal(
+            "Android device detected..."
+        );
+
+        await wait(400);
+
+        mainStatus.textContent =
+            "UNKNOWN DEVICE DETECTED";
+
+        networkStatus.textContent =
+            "SIGNAL: FOUND";
+
+        await animateProgress(
+            "SIGNAL ANALYSIS",
+            18,
+            34,
+            1100
+        );
+
+        addTerminal(
+            "Device response detected."
+        );
+
+        addTerminal(
+            "Security layer identified."
+        );
+
+        await wait(400);
+
+        mainStatus.textContent =
+            "ANALYZING DEVICE DATA...";
+
+        await animateProgress(
+            "SYSTEM ANALYSIS",
+            34,
+            49,
+            1200
+        );
+
+        addTerminal(
+            "System information located..."
+        );
+
+        addTerminal(
+            "Preparing transfer channel..."
+        );
+
+        securityStatus.textContent =
+            "SECURITY: WEAK";
+
         await wait(500);
 
-        await showMessage("FINAL SECURITY CHECK...", 1300);
+        mainStatus.textContent =
+            "DATA CHANNEL OPEN";
 
-        experience.classList.add("hidden");
-        warning.classList.remove("hidden");
+        await animateProgress(
+            "DATA LOADING",
+            49,
+            61,
+            900
+        );
+
+        addTerminal(
+            "Data loading sequence started."
+        );
+
+        addTerminal(
+            "Preparing file index..."
+        );
+
+        await wait(400);
+
+        mainStatus.textContent =
+            "COPYING DATA...";
+
+        securityStatus.textContent =
+            "SECURITY: CRITICAL";
+
+        await fakeDataTransfer();
+
+        await animateProgress(
+            "DATA COPYING",
+            61,
+            76,
+            1400
+        );
+
+        addTerminal(
+            "COPY OPERATION IN PROGRESS..."
+        );
+
+        addTerminal(
+            "DATA BLOCKS RECEIVED."
+        );
+
+        await wait(500);
+
+        mainStatus.textContent =
+            "TRANSFERRING DATA...";
+
+        networkStatus.textContent =
+            "SIGNAL: SECURE";
+
+        await animateProgress(
+            "DATA TRANSFER",
+            76,
+            88,
+            1200
+        );
+
+        addTerminal(
+            "Transfer channel active."
+        );
+
+        addTerminal(
+            "Sending encrypted blocks..."
+        );
+
+        await wait(500);
+
+        mainStatus.textContent =
+            "FINALIZING TRANSFER...";
+
+        await animateProgress(
+            "FINAL TRANSFER",
+            88,
+            96,
+            900
+        );
+
+        addTerminal(
+            "Transfer almost complete..."
+        );
+
+        await wait(400);
+
+        mainStatus.classList.add("shake");
+
+        mainStatus.textContent =
+            "⚠ FINAL SECURITY BYPASS ⚠";
+
+        await redFlash(2);
+
+        addTerminal(
+            "WARNING: SECURITY RESPONSE DETECTED"
+        );
+
+        addTerminal(
+            "TRACE SIGNAL ACTIVE."
+        );
+
+        networkStatus.textContent =
+            "SIGNAL: TRACED";
+
+        securityStatus.textContent =
+            "SECURITY: BREACHED";
+
+        await wait(600);
+
+        mainStatus.textContent =
+            "ACCESSING FINAL SYSTEM LAYER...";
+
+        await animateProgress(
+            "ACCESS SEQUENCE",
+            96,
+            99,
+            800
+        );
+
+        await wait(500);
+
+        addTerminal(
+            "FINAL ACCESS REQUEST..."
+        );
+
+        addTerminal(
+            "WAITING FOR SYSTEM RESPONSE..."
+        );
+
+        await wait(900);
+
+        /*
+         * DRAMATIC STOP
+         */
+
+        hackScene.classList.add("hidden");
+
+        warningScene.classList.remove("hidden");
 
         warningSound();
 
-        await wait(1200);
+        let number = 10;
 
-        flash.style.opacity = "0.8";
+        countdown.textContent =
+            number;
 
-        setTimeout(() => {
-            flash.style.opacity = "0";
-        }, 120);
+        for (
+            let i = 0;
+            i < 10;
+            i++
+        ) {
 
-        await wait(1200);
+            await wait(700);
 
-        warning.classList.add("hidden");
-        finalScreen.classList.remove("hidden");
+            number--;
+
+            countdown.textContent =
+                number;
+
+            tone(
+                150,
+                0.08,
+                "square",
+                0.035
+            );
+
+            if (
+                number === 7 ||
+                number === 4 ||
+                number === 2
+            ) {
+                await redFlash(1);
+            }
+        }
+
+        await wait(500);
+
+        await redFlash(3);
+
+        warningScene.classList.add("hidden");
+
+        finalScene.classList.remove("hidden");
 
         finalSound();
     }
 
-    startButton.addEventListener("click", async () => {
-        if (started) {
-            return;
+
+    /* =========================================================
+       START BUTTON
+    ========================================================= */
+
+    startButton.addEventListener(
+        "click",
+        async function () {
+
+            if (started) {
+                return;
+            }
+
+            started = true;
+
+            startButton.disabled =
+                true;
+
+            startButton.textContent =
+                "INITIALIZING...";
+
+            /*
+             * IMPORTANT:
+             * Audio initialization happens
+             * directly from the user's tap.
+             */
+            initializeSound();
+
+            await wait(350);
+
+            await typeText(
+                introSubtitle,
+                "WELCOME TO THE WORLD OF HACKING",
+                50
+            );
+
+            await wait(900);
+
+            await typeText(
+                introSubtitle,
+                "DON'T LOOK AWAY...",
+                55
+            );
+
+            await wait(1000);
+
+            runHackScene();
         }
+    );
 
-        started = true;
-        startButton.disabled = true;
-        startButton.textContent = "INITIALIZING...";
 
-        initializeSound();
+    /* =========================================================
+       PREVENT LONG PRESS MENU / RIGHT CLICK
+    ========================================================= */
 
-        await wait(400);
+    document.addEventListener(
+        "contextmenu",
+        function(event) {
+            event.preventDefault();
+        }
+    );
 
-        await typeText(
-            typed,
-            "WELCOME TO THE WORLD OF HACKING",
-            55
-        );
-
-        await wait(1000);
-
-        await typeText(
-            typed,
-            "DON'T LOOK AWAY...",
-            65
-        );
-
-        await wait(1200);
-
-        runExperience();
-    });
-
-    document.addEventListener("contextmenu", event => {
-        event.preventDefault();
-    });
 </script>
 
 </body>
-    </html>
+</html>
